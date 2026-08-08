@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"mint"
+display_name = "М'ята"
+description = "Городня м'ята — заспокійливий інгредієнт для повсякденних зіль."
+source = 1
+rarity = 1
+season_start_day = 1
+season_end_day = 366
+festival_id = &""
+placeholder_color = Color(0.4, 0.75, 0.55, 1)

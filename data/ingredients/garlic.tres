@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"garlic"
+display_name = "Часник"
+description = "Городній часник — простий і надійний захисний засіб проти нечистої сили."
+source = 1
+rarity = 1
+season_start_day = 1
+season_end_day = 366
+festival_id = &""
+placeholder_color = Color(0.7, 0.8, 0.4, 1)

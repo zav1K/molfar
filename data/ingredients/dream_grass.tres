@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"dream_grass"
+display_name = "Сон-трава"
+description = "Дика гірська сон-трава, коротке весняне цвітіння. Використовується у ворожбі та снодійних зіллях."
+source = 0
+rarity = 4
+season_start_day = 60
+season_end_day = 90
+festival_id = &""
+placeholder_color = Color(0.5, 0.35, 0.65, 1)
