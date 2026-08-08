@@ -2,6 +2,11 @@ extends Node2D
 ## Root controller for the molfar's hut scene. Wires up each InteractionZone
 ## to its (not-yet-built) mechanic: brewing, garden, carving, client visits.
 
+## Zones that are portals to another scene, keyed by zone_id.
+const ZONE_SCENES := {
+	&"garden_window": "res://scenes/Garden.tscn",
+}
+
 @onready var zones: Array[InteractionZone] = [
 	$Zones/Cauldron,
 	$Zones/GardenWindow,
@@ -14,5 +19,8 @@ func _ready() -> void:
 		zone.activated.connect(_on_zone_activated)
 
 func _on_zone_activated(zone: InteractionZone) -> void:
-	# TODO: route to the real mechanic once brewing/garden/carving/dialogue scenes exist.
+	if ZONE_SCENES.has(zone.zone_id):
+		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
+		return
+	# TODO: route remaining zones to their mechanic once those scenes exist.
 	print("Zone activated: %s (%s)" % [zone.zone_label, zone.zone_id])
