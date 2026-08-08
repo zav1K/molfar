@@ -63,10 +63,10 @@ ingredient_id = &"garlic"
 position = Vector2(340, 110)
 
 [node name="Bundle" type="TextureRect" parent="Anchors/BeamBundle2"]
-offset_left = -69.0
+offset_left = -52.0
 offset_top = 0.0
-offset_right = 66.0
-offset_bottom = 202.0
+offset_right = 52.0
+offset_bottom = 155.0
 expand_mode = 1
 stretch_mode = 0
 script = ExtResource("8")
@@ -76,10 +76,10 @@ ingredient_id = &"wormwood"
 position = Vector2(520, 110)
 
 [node name="Bundle" type="TextureRect" parent="Anchors/BeamBundle3"]
-offset_left = -69.0
+offset_left = -53.0
 offset_top = 0.0
-offset_right = 66.0
-offset_bottom = 202.0
+offset_right = 52.0
+offset_bottom = 157.0
 expand_mode = 1
 stretch_mode = 0
 script = ExtResource("8")

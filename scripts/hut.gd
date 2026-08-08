@@ -20,8 +20,8 @@ func _ready() -> void:
 		zone.activated.connect(_on_zone_activated)
 	# DEBUG: seed the inventory so the beam bundles have something to react to
 	# until the garden/gathering loop actually grants ingredients. Remove once
-	# that exists. Ingredients without bundle art (everything but garlic right
-	# now) should stay hidden despite being "held" — that's the fallback working.
+	# that exists. dream_grass/kupala_dew have no bundle art yet and aren't
+	# seeded here — nothing to show for them regardless of inventory state.
 	if not PlayerInventory.has(&"garlic"):
 		PlayerInventory.add(&"garlic", 3)
 	if not PlayerInventory.has(&"wormwood"):
