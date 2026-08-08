@@ -6,7 +6,7 @@
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="4"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
-size = Vector2(160, 180)
+size = Vector2(140, 200)
 
 [sub_resource type="RectangleShape2D" id="Shape_garden"]
 size = Vector2(160, 100)
@@ -34,10 +34,10 @@ stretch_mode = 0
 [node name="Anchors" type="Node2D" parent="."]
 
 [node name="CauldronAnchor" type="Marker2D" parent="Anchors"]
-position = Vector2(742, 460)
+position = Vector2(742, 340)
 
 [node name="ShelvesAnchor" type="Marker2D" parent="Anchors"]
-position = Vector2(860, 150)
+position = Vector2(560, 155)
 
 [node name="ChestAnchor" type="Marker2D" parent="Anchors"]
 position = Vector2(170, 460)
@@ -60,7 +60,7 @@ position = Vector2(880, 110)
 [node name="Zones" type="Node2D" parent="."]
 
 [node name="Cauldron" type="Area2D" parent="Zones"]
-position = Vector2(742, 460)
+position = Vector2(742, 340)
 script = ExtResource("2")
 zone_id = &"cauldron"
 zone_label = "Казан"
@@ -71,18 +71,18 @@ shape = SubResource("Shape_cauldron")
 
 [node name="Visual" type="ColorRect" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -80.0
-offset_top = -180.0
-offset_right = 80.0
-offset_bottom = 20.0
+offset_left = -70.0
+offset_top = -190.0
+offset_right = 70.0
+offset_bottom = 10.0
 color = Color(0.35, 0.35, 0.4, 0.25)
 
 [node name="Label" type="Label" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -80.0
-offset_top = 25.0
-offset_right = 80.0
-offset_bottom = 50.0
+offset_left = -70.0
+offset_top = 15.0
+offset_right = 70.0
+offset_bottom = 40.0
 horizontal_alignment = 1
 text = "Казан"
 
@@ -117,7 +117,7 @@ script = ExtResource("4")
 max_alpha = 1.0
 
 [node name="Shelves" type="Area2D" parent="Zones"]
-position = Vector2(860, 150)
+position = Vector2(560, 155)
 script = ExtResource("2")
 zone_id = &"shelves"
 zone_label = "Полиці"
