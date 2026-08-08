@@ -11,6 +11,7 @@ const ZONE_SCENES := {
 	$Zones/Cauldron,
 	$Zones/GardenWindow,
 	$Zones/Shelves,
+	$Zones/Chest,
 	$Zones/Entrance,
 ]
 

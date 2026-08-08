@@ -1,4 +1,4 @@
-[gd_scene load_steps=9 format=3]
+[gd_scene load_steps=11 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -6,16 +6,19 @@
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="4"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
-size = Vector2(120, 120)
+size = Vector2(160, 180)
 
 [sub_resource type="RectangleShape2D" id="Shape_garden"]
 size = Vector2(160, 100)
 
 [sub_resource type="RectangleShape2D" id="Shape_shelves"]
-size = Vector2(140, 160)
+size = Vector2(170, 190)
 
 [sub_resource type="RectangleShape2D" id="Shape_entrance"]
 size = Vector2(100, 140)
+
+[sub_resource type="RectangleShape2D" id="Shape_chest"]
+size = Vector2(180, 110)
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -28,31 +31,58 @@ texture = ExtResource("3")
 expand_mode = 1
 stretch_mode = 0
 
+[node name="Anchors" type="Node2D" parent="."]
+
+[node name="CauldronAnchor" type="Marker2D" parent="Anchors"]
+position = Vector2(742, 460)
+
+[node name="ShelvesAnchor" type="Marker2D" parent="Anchors"]
+position = Vector2(860, 150)
+
+[node name="ChestAnchor" type="Marker2D" parent="Anchors"]
+position = Vector2(170, 460)
+
+[node name="BeamBundle1" type="Marker2D" parent="Anchors"]
+position = Vector2(160, 110)
+
+[node name="BeamBundle2" type="Marker2D" parent="Anchors"]
+position = Vector2(340, 110)
+
+[node name="BeamBundle3" type="Marker2D" parent="Anchors"]
+position = Vector2(520, 110)
+
+[node name="BeamBundle4" type="Marker2D" parent="Anchors"]
+position = Vector2(700, 110)
+
+[node name="BeamBundle5" type="Marker2D" parent="Anchors"]
+position = Vector2(880, 110)
+
 [node name="Zones" type="Node2D" parent="."]
 
 [node name="Cauldron" type="Area2D" parent="Zones"]
-position = Vector2(742, 430)
+position = Vector2(742, 460)
 script = ExtResource("2")
 zone_id = &"cauldron"
 zone_label = "Казан"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Cauldron"]
+position = Vector2(0, -90)
 shape = SubResource("Shape_cauldron")
 
 [node name="Visual" type="ColorRect" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -60.0
-offset_top = -60.0
-offset_right = 60.0
-offset_bottom = 60.0
+offset_left = -80.0
+offset_top = -180.0
+offset_right = 80.0
+offset_bottom = 20.0
 color = Color(0.35, 0.35, 0.4, 0.25)
 
 [node name="Label" type="Label" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -60.0
-offset_top = 65.0
-offset_right = 60.0
-offset_bottom = 90.0
+offset_left = -80.0
+offset_top = 25.0
+offset_right = 80.0
+offset_bottom = 50.0
 horizontal_alignment = 1
 text = "Казан"
 
@@ -87,7 +117,7 @@ script = ExtResource("4")
 max_alpha = 1.0
 
 [node name="Shelves" type="Area2D" parent="Zones"]
-position = Vector2(900, 160)
+position = Vector2(860, 150)
 script = ExtResource("2")
 zone_id = &"shelves"
 zone_label = "Полиці"
@@ -97,20 +127,47 @@ shape = SubResource("Shape_shelves")
 
 [node name="Visual" type="ColorRect" parent="Zones/Shelves"]
 mouse_filter = 2
-offset_left = -70.0
-offset_top = -80.0
-offset_right = 70.0
-offset_bottom = 80.0
+offset_left = -85.0
+offset_top = -95.0
+offset_right = 85.0
+offset_bottom = 95.0
 color = Color(0.45, 0.35, 0.2, 0.25)
 
 [node name="Label" type="Label" parent="Zones/Shelves"]
 mouse_filter = 2
-offset_left = -70.0
-offset_top = 85.0
-offset_right = 70.0
-offset_bottom = 110.0
+offset_left = -85.0
+offset_top = 100.0
+offset_right = 85.0
+offset_bottom = 125.0
 horizontal_alignment = 1
 text = "Полиці"
+
+[node name="Chest" type="Area2D" parent="Zones"]
+position = Vector2(170, 460)
+script = ExtResource("2")
+zone_id = &"chest"
+zone_label = "Скриня"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Chest"]
+position = Vector2(0, -55)
+shape = SubResource("Shape_chest")
+
+[node name="Visual" type="ColorRect" parent="Zones/Chest"]
+mouse_filter = 2
+offset_left = -90.0
+offset_top = -110.0
+offset_right = 90.0
+offset_bottom = 10.0
+color = Color(0.3, 0.22, 0.15, 0.25)
+
+[node name="Label" type="Label" parent="Zones/Chest"]
+mouse_filter = 2
+offset_left = -90.0
+offset_top = 15.0
+offset_right = 90.0
+offset_bottom = 40.0
+horizontal_alignment = 1
+text = "Скриня"
 
 [node name="Entrance" type="Area2D" parent="Zones"]
 position = Vector2(480, 505)
