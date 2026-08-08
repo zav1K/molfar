@@ -8,7 +8,7 @@
 [ext_resource type="Texture2D" path="res://assets/hut/shelves.png" id="6"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
-size = Vector2(120, 170)
+size = Vector2(100, 146)
 
 [sub_resource type="RectangleShape2D" id="Shape_garden"]
 size = Vector2(110, 150)
@@ -36,7 +36,7 @@ stretch_mode = 0
 [node name="Anchors" type="Node2D" parent="."]
 
 [node name="CauldronAnchor" type="Marker2D" parent="Anchors"]
-position = Vector2(780, 335)
+position = Vector2(780, 328)
 
 [node name="ShelvesAnchor" type="Marker2D" parent="Anchors"]
 position = Vector2(560, 155)
@@ -62,30 +62,30 @@ position = Vector2(880, 110)
 [node name="Zones" type="Node2D" parent="."]
 
 [node name="Cauldron" type="Area2D" parent="Zones"]
-position = Vector2(780, 335)
+position = Vector2(780, 328)
 script = ExtResource("2")
 zone_id = &"cauldron"
 zone_label = "Казан"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Cauldron"]
-position = Vector2(0, -85)
+position = Vector2(0, -73)
 shape = SubResource("Shape_cauldron")
 
 [node name="Sprite" type="TextureRect" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -78.0
-offset_top = -196.0
-offset_right = 79.0
-offset_bottom = 31.0
+offset_left = -65.0
+offset_top = -169.0
+offset_right = 66.0
+offset_bottom = 27.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 0
 
 [node name="Label" type="Label" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -60.0
+offset_left = -50.0
 offset_top = 15.0
-offset_right = 60.0
+offset_right = 50.0
 offset_bottom = 40.0
 horizontal_alignment = 1
 text = "Казан"
