@@ -1,9 +1,11 @@
-[gd_scene load_steps=11 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
 [ext_resource type="Texture2D" path="res://assets/hut/background.png" id="3"]
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="4"]
+[ext_resource type="Texture2D" path="res://assets/hut/cauldron.png" id="5"]
+[ext_resource type="Texture2D" path="res://assets/hut/shelves.png" id="6"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(120, 170)
@@ -66,16 +68,18 @@ zone_id = &"cauldron"
 zone_label = "Казан"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Cauldron"]
-position = Vector2(0, -75)
+position = Vector2(0, -85)
 shape = SubResource("Shape_cauldron")
 
-[node name="Visual" type="ColorRect" parent="Zones/Cauldron"]
+[node name="Sprite" type="TextureRect" parent="Zones/Cauldron"]
 mouse_filter = 2
-offset_left = -60.0
-offset_top = -160.0
-offset_right = 60.0
-offset_bottom = 10.0
-color = Color(0.35, 0.35, 0.4, 0.25)
+offset_left = -78.0
+offset_top = -196.0
+offset_right = 79.0
+offset_bottom = 31.0
+texture = ExtResource("5")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Label" type="Label" parent="Zones/Cauldron"]
 mouse_filter = 2
@@ -125,13 +129,15 @@ zone_label = "Полиці"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Shelves"]
 shape = SubResource("Shape_shelves")
 
-[node name="Visual" type="ColorRect" parent="Zones/Shelves"]
+[node name="Sprite" type="TextureRect" parent="Zones/Shelves"]
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -95.0
-offset_right = 85.0
-offset_bottom = 95.0
-color = Color(0.45, 0.35, 0.2, 0.25)
+offset_left = -96.0
+offset_top = -129.0
+offset_right = 97.0
+offset_bottom = 160.0
+texture = ExtResource("6")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Label" type="Label" parent="Zones/Shelves"]
 mouse_filter = 2
