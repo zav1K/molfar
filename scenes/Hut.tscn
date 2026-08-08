@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=3]
+[gd_scene load_steps=14 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -6,6 +6,7 @@
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/hut/shelves.png" id="6"]
+[ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="7"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(100, 146)
@@ -20,7 +21,7 @@ size = Vector2(170, 190)
 size = Vector2(100, 140)
 
 [sub_resource type="RectangleShape2D" id="Shape_chest"]
-size = Vector2(180, 110)
+size = Vector2(115, 154)
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -155,22 +156,24 @@ zone_id = &"chest"
 zone_label = "Скриня"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Zones/Chest"]
-position = Vector2(0, -55)
+position = Vector2(0, -77)
 shape = SubResource("Shape_chest")
 
-[node name="Visual" type="ColorRect" parent="Zones/Chest"]
+[node name="Sprite" type="TextureRect" parent="Zones/Chest"]
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -110.0
-offset_right = 90.0
-offset_bottom = 10.0
-color = Color(0.3, 0.22, 0.15, 0.25)
+offset_left = -72.0
+offset_top = -179.0
+offset_right = 70.0
+offset_bottom = 35.0
+texture = ExtResource("7")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Label" type="Label" parent="Zones/Chest"]
 mouse_filter = 2
-offset_left = -90.0
+offset_left = -57.0
 offset_top = 15.0
-offset_right = 90.0
+offset_right = 57.0
 offset_bottom = 40.0
 horizontal_alignment = 1
 text = "Скриня"
