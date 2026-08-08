@@ -1,4 +1,4 @@
-[gd_scene load_steps=14 format=3]
+[gd_scene load_steps=16 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron.png" id="5"]
 [ext_resource type="Texture2D" path="res://assets/hut/shelfs.PNG" id="6"]
 [ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="7"]
+[ext_resource type="Script" path="res://scripts/beam_bundle.gd" id="8"]
+[ext_resource type="Texture2D" path="res://assets/hut/garlic.png" id="9"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(90, 132)
@@ -47,6 +49,17 @@ position = Vector2(170, 460)
 
 [node name="BeamBundle1" type="Marker2D" parent="Anchors"]
 position = Vector2(160, 110)
+
+[node name="Garlic" type="TextureRect" parent="Anchors/BeamBundle1"]
+offset_left = -69.0
+offset_top = 0.0
+offset_right = 66.0
+offset_bottom = 202.0
+texture = ExtResource("9")
+expand_mode = 1
+stretch_mode = 0
+script = ExtResource("8")
+ingredient_id = &"garlic"
 
 [node name="BeamBundle2" type="Marker2D" parent="Anchors"]
 position = Vector2(340, 110)
