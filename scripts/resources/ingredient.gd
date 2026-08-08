@@ -21,3 +21,8 @@ enum Source { WILD, GARDEN }
 
 ## Stand-in visuals until final hand-painted art exists.
 @export var placeholder_color: Color = Color.WEB_GREEN
+
+## Drying-bundle art shown on the hut's beam while the player holds this
+## ingredient. Null until an artist provides one — the bundle just stays
+## hidden in that case, no placeholder box.
+@export var bundle_icon: Texture2D

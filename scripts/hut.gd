@@ -18,11 +18,16 @@ const ZONE_SCENES := {
 func _ready() -> void:
 	for zone in zones:
 		zone.activated.connect(_on_zone_activated)
-	# DEBUG: seed the inventory so the beam bundle has something to react to
+	# DEBUG: seed the inventory so the beam bundles have something to react to
 	# until the garden/gathering loop actually grants ingredients. Remove once
-	# that exists.
+	# that exists. Ingredients without bundle art (everything but garlic right
+	# now) should stay hidden despite being "held" — that's the fallback working.
 	if not PlayerInventory.has(&"garlic"):
-		PlayerInventory.add(&"garlic")
+		PlayerInventory.add(&"garlic", 3)
+	if not PlayerInventory.has(&"wormwood"):
+		PlayerInventory.add(&"wormwood", 2)
+	if not PlayerInventory.has(&"mint"):
+		PlayerInventory.add(&"mint", 1)
 
 func _on_zone_activated(zone: InteractionZone) -> void:
 	if ZONE_SCENES.has(zone.zone_id):
