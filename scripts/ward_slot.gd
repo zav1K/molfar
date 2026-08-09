@@ -8,6 +8,7 @@ extends InteractionZone
 
 @onready var visual: ColorRect = $Visual
 @onready var label: Label = $Label
+@onready var icon: TextureRect = $Icon
 
 func _ready() -> void:
 	super._ready()
@@ -34,10 +35,13 @@ func _refresh() -> void:
 	if occupant == &"":
 		label.text = "Гачок"
 		visual.color = Color(0.3, 0.22, 0.15, 0.2)
-	else:
-		var ingredient := IngredientDatabase.get_ingredient(occupant)
-		label.text = ingredient.display_name if ingredient else str(occupant)
-		visual.color = Color(0.45, 0.35, 0.15, 0.4)
+		icon.visible = false
+		return
+	var ingredient := IngredientDatabase.get_ingredient(occupant)
+	label.text = ingredient.display_name if ingredient else str(occupant)
+	visual.color = Color(0.45, 0.35, 0.15, 0.4)
+	icon.texture = ingredient.bundle_icon if ingredient else null
+	icon.visible = icon.texture != null
 
 func _wardable_ingredient_ids() -> Array[StringName]:
 	var ids: Array[StringName] = [&""]

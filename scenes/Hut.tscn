@@ -140,12 +140,21 @@ offset_right = 25.0
 offset_bottom = 20.0
 color = Color(0.3, 0.22, 0.15, 0.2)
 
+[node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot1"]
+mouse_filter = 2
+offset_left = -22.0
+offset_top = 5.0
+offset_right = 22.0
+offset_bottom = 70.0
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Label" type="Label" parent="PanelCenter/Zones/WardSlot1"]
 mouse_filter = 2
 offset_left = -35.0
-offset_top = 22.0
+offset_top = 74.0
 offset_right = 35.0
-offset_bottom = 40.0
+offset_bottom = 92.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 text = "Гачок"
@@ -168,12 +177,21 @@ offset_right = 25.0
 offset_bottom = 20.0
 color = Color(0.3, 0.22, 0.15, 0.2)
 
+[node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot2"]
+mouse_filter = 2
+offset_left = -22.0
+offset_top = 5.0
+offset_right = 22.0
+offset_bottom = 70.0
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Label" type="Label" parent="PanelCenter/Zones/WardSlot2"]
 mouse_filter = 2
 offset_left = -35.0
-offset_top = 22.0
+offset_top = 74.0
 offset_right = 35.0
-offset_bottom = 40.0
+offset_bottom = 92.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 text = "Гачок"
@@ -196,12 +214,21 @@ offset_right = 25.0
 offset_bottom = 20.0
 color = Color(0.3, 0.22, 0.15, 0.2)
 
+[node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot3"]
+mouse_filter = 2
+offset_left = -22.0
+offset_top = 5.0
+offset_right = 22.0
+offset_bottom = 70.0
+expand_mode = 1
+stretch_mode = 5
+
 [node name="Label" type="Label" parent="PanelCenter/Zones/WardSlot3"]
 mouse_filter = 2
 offset_left = -35.0
-offset_top = 22.0
+offset_top = 74.0
 offset_right = 35.0
-offset_bottom = 40.0
+offset_bottom = 92.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 text = "Гачок"
