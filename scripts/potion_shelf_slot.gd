@@ -31,7 +31,7 @@ func _build_icon(potion: Potion, count: int) -> TextureRect:
 	icon.texture = potion.icon
 	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.custom_minimum_size = Vector2(20, 43)
+	icon.custom_minimum_size = Vector2(30, 65)
 	icon.mouse_filter = Control.MOUSE_FILTER_STOP
 	icon.tooltip_text = "%s ×%d" % [potion.display_name, count]
 	return icon

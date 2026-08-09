@@ -88,15 +88,15 @@ text = "Казан"
 [node name="PotionShelf" type="Control" parent="PanelLeft"]
 mouse_filter = 2
 offset_left = 550.0
-offset_top = 95.0
+offset_top = 85.0
 offset_right = 650.0
-offset_bottom = 145.0
+offset_bottom = 155.0
 script = ExtResource("14")
 
 [node name="Row" type="HBoxContainer" parent="PanelLeft/PotionShelf"]
 mouse_filter = 2
 offset_right = 100.0
-offset_bottom = 50.0
+offset_bottom = 70.0
 alignment = 1
 
 [node name="PanelCenter" type="Node2D" parent="."]
