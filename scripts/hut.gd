@@ -19,6 +19,7 @@ const ZONE_SCENES := {
 @onready var nav_right: Button = $UI/NavRight
 @onready var door: Door = $PanelCenter/Zones/Door
 @onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
+@onready var brewing_ui: BrewingUI = $BrewingUI
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
@@ -34,6 +35,7 @@ func _ready() -> void:
 		zone.activated.connect(_on_zone_activated)
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
+	brewing_ui.closed.connect(_on_brewing_closed)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
@@ -66,7 +68,7 @@ func _ready() -> void:
 	door.knock(debug_visitor, WardRack.check_visitor(debug_visitor))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible:
+	if threshold_dialogue.visible or brewing_ui.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -95,11 +97,20 @@ func _update_nav_buttons() -> void:
 	nav_right.disabled = current_panel == PANEL_COUNT - 1
 
 func _on_zone_activated(zone: InteractionZone) -> void:
+	if zone.zone_id == &"cauldron":
+		nav_left.visible = false
+		nav_right.visible = false
+		brewing_ui.open()
+		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
 		return
 	# TODO: route remaining zones to their mechanic once those scenes exist.
 	print("Zone activated: %s (%s)" % [zone.zone_label, zone.zone_id])
+
+func _on_brewing_closed() -> void:
+	nav_left.visible = true
+	nav_right.visible = true
 
 func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
 	nav_left.visible = false
