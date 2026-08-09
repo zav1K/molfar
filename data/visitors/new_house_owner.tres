@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Молодий господар"
+problem_text = "\"Хату щойно поставив, ще не заселявся — хочу одвірок оберегти, поки лихе не прибилось першим...\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+satisfied_text = "Гарна робота, мольфаре. Тепер спокійно заселюся."
+unhelped_text = "Хм... не схоже це на справжній оберіг."

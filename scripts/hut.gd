@@ -19,6 +19,7 @@ const ZONE_SCENES := {
 @onready var nav_right: Button = $UI/NavRight
 @onready var door: Door = $PanelCenter/Zones/Door
 @onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
+@onready var reception_ui: ReceptionUI = $ReceptionUI
 @onready var brewing_ui: BrewingUI = $BrewingUI
 @onready var potion_shelf: PotionShelf = $PanelLeft/PotionShelf
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
@@ -39,6 +40,7 @@ func _ready() -> void:
 		zone.activated.connect(_on_zone_activated)
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
+	reception_ui.closed.connect(_on_reception_closed)
 	brewing_ui.closed.connect(_on_brewing_closed)
 	carving_ui.closed.connect(_on_carving_closed)
 	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
@@ -64,19 +66,10 @@ func _ready() -> void:
 	if WardRack.get_slot(0) == &"":
 		WardRack.hang(0, &"garlic")
 
-	# DEBUG: put a visitor at the door so the threshold flow is testable.
-	# Marked as UNDEAD so the garlic ward above has a real chance to react —
-	# swap to Threat.Type.NONE to see an ordinary, silent knock instead.
-	# Replace this whole block with a real scheduling/quest trigger once
-	# one exists.
-	var debug_visitor := Visitor.new()
-	debug_visitor.display_name = "Молода жінка"
-	debug_visitor.problem_text = "\"Дитина кашляє вже третю ніч, а мольфар-сусід каже — то не застуда...\""
-	debug_visitor.true_threat = Threat.Type.UNDEAD
-	door.knock(debug_visitor, WardRack.check_visitor(debug_visitor))
+	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -138,14 +131,30 @@ func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
 	tw.finished.connect(func() -> void: threshold_dialogue.show_visitor(visitor), CONNECT_ONE_SHOT)
 
 func _on_visitor_resolved(invited: bool) -> void:
-	nav_left.visible = true
-	nav_right.visible = true
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
 	if invited:
-		# TODO: actual client-reception mechanic (diagnosis/dialogue) goes here.
-		print("Запрошено досередини — механіка прийому клієнта ще не реалізована.")
-	else:
-		print("Відмовлено — двері зачинились.")
+		var visitor := door.current_visitor
+		door.clear()
+		reception_ui.show_visitor(visitor)
+		return
 	door.clear()
+	nav_left.visible = true
+	nav_right.visible = true
+	_schedule_next_knock()
+
+func _on_reception_closed() -> void:
+	nav_left.visible = true
+	nav_right.visible = true
+	_schedule_next_knock()
+
+func _schedule_next_knock() -> void:
+	await get_tree().create_timer(2.0).timeout
+	_knock_with_random_visitor()
+
+func _knock_with_random_visitor() -> void:
+	var visitor := VisitorDatabase.get_random()
+	if visitor == null:
+		return
+	door.knock(visitor, WardRack.check_visitor(visitor))

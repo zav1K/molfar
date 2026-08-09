@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Молода жінка"
+problem_text = "\"Дитина кашляє вже третю ніч, а мольфар-сусід каже — то не застуда...\""
+true_threat = 2
+desired_result_id = &"cold_remedy"
+satisfied_text = "Дякую, мольфаре. Кашель ущух ще тої ж ночі."
+unhelped_text = "Це не помогло... дитині й не легше."

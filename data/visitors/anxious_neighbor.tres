@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Господиня з сусіднього хутора"
+problem_text = "\"Серце як не своє, тривога заїдає, спокою собі не найду відколи чоловік поїхав на полонину...\""
+true_threat = 0
+desired_result_id = &"calming_remedy"
+satisfied_text = "Ох, полегшало... дякую, мольфаре."
+unhelped_text = "Не те... тривога й досі точить."
