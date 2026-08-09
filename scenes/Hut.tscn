@@ -1,4 +1,4 @@
-[gd_scene load_steps=22 format=3]
+[gd_scene load_steps=24 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -16,6 +16,7 @@
 [ext_resource type="Script" path="res://scripts/potion_shelf_slot.gd" id="14"]
 [ext_resource type="Script" path="res://scripts/potion_detail_popup.gd" id="15"]
 [ext_resource type="Script" path="res://scripts/stir_cauldron.gd" id="16"]
+[ext_resource type="Shader" path="res://shaders/liquid.gdshader" id="17"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(150, 220)
@@ -34,6 +35,9 @@ size = Vector2(115, 154)
 
 [sub_resource type="RectangleShape2D" id="Shape_gardenwindow"]
 size = Vector2(140, 180)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_liquid"]
+shader = ExtResource("17")
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -476,16 +480,16 @@ horizontal_alignment = 1
 text = "Варіння зілля"
 
 [node name="IngredientList" type="VBoxContainer" parent="BrewingUI/Panel"]
-offset_left = 330.0
+offset_left = 20.0
 offset_top = 90.0
-offset_right = 630.0
-offset_bottom = 380.0
+offset_right = 340.0
+offset_bottom = 400.0
 
 [node name="StatusLabel" type="Label" parent="BrewingUI/Panel"]
-offset_left = 230.0
-offset_top = 390.0
-offset_right = 730.0
-offset_bottom = 415.0
+offset_left = 20.0
+offset_top = 405.0
+offset_right = 930.0
+offset_bottom = 428.0
 horizontal_alignment = 1
 
 [node name="BrewButton" type="Button" parent="BrewingUI/Panel"]
@@ -493,7 +497,7 @@ offset_left = 340.0
 offset_top = 430.0
 offset_right = 470.0
 offset_bottom = 470.0
-text = "Варити"
+text = "Скинути"
 
 [node name="BackButton" type="Button" parent="BrewingUI/Panel"]
 offset_left = 490.0
@@ -503,11 +507,24 @@ offset_bottom = 470.0
 text = "Назад"
 
 [node name="StirCauldron" type="Control" parent="BrewingUI/Panel"]
-offset_left = 250.0
+offset_left = 470.0
 offset_top = 90.0
-offset_right = 710.0
+offset_right = 930.0
 offset_bottom = 430.0
 script = ExtResource("16")
+
+[node name="Liquid" type="ColorRect" parent="BrewingUI/Panel/StirCauldron"]
+mouse_filter = 2
+offset_left = 90.0
+offset_top = 30.0
+offset_right = 370.0
+offset_bottom = 310.0
+material = SubResource("ShaderMaterial_liquid")
+
+[node name="Tokens" type="Control" parent="BrewingUI/Panel/StirCauldron"]
+mouse_filter = 2
+offset_right = 460.0
+offset_bottom = 340.0
 
 [node name="ProgressLabel" type="Label" parent="BrewingUI/Panel/StirCauldron"]
 mouse_filter = 2

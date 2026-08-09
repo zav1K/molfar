@@ -1,13 +1,16 @@
 class_name BrewingUI
 extends CanvasLayer
-## Brewing interface: pick how many of each ingredient you currently hold
-## (2-3 total), then physically stir the cauldron (see stir_cauldron.gd).
-## Stir direction picks the recipe's white/black path result; rotation
-## count and rhythm evenness decide brew quality. Ingredients only leave
-## the inventory once a matched recipe is actually stirred — picking an
-## unknown combination costs nothing, so experimentation stays free.
+## Brewing interface: the ingredient list and the cauldron are visible
+## together. Add ingredients by pressing a row's + button or by dragging
+## its icon into the cauldron (see ingredient_drag_icon.gd / stir_cauldron.gd)
+## — either way spawns a token floating in the liquid. Stirring the
+## cauldron in a circle resolves the brew: direction picks the matched
+## recipe's white/black path result, rotation count and rhythm evenness
+## grade its quality. Ingredients only leave the inventory once a real
+## recipe is actually stirred — an unrecognized combination costs
+## nothing, so picking ingredients stays free to experiment with; only
+## the physical stir carries real stakes.
 
-const MIN_INGREDIENTS := 2
 const MAX_INGREDIENTS := 3
 
 ## Rotation/evenness thresholds that grade a stir. Evenness is a
@@ -28,26 +31,26 @@ const QUALITY_LABEL := {
 signal closed
 
 @onready var ingredient_list: VBoxContainer = $Panel/IngredientList
-@onready var brew_button: Button = $Panel/BrewButton
+@onready var reset_button: Button = $Panel/BrewButton
 @onready var back_button: Button = $Panel/BackButton
 @onready var status_label: Label = $Panel/StatusLabel
 @onready var stir_cauldron: StirCauldron = $Panel/StirCauldron
 
 var _selected: Dictionary = {} # StringName -> int
-var _pending_recipe: Recipe
 
 func _ready() -> void:
 	visible = false
-	brew_button.pressed.connect(_on_brew_pressed)
+	reset_button.text = "Скинути"
+	reset_button.pressed.connect(_on_reset_pressed)
 	back_button.pressed.connect(_on_back_pressed)
 	stir_cauldron.finished.connect(_on_stir_finished)
-	stir_cauldron.visible = false
+	stir_cauldron.ingredient_dropped.connect(_add_ingredient)
 
 func open() -> void:
 	_selected.clear()
-	_pending_recipe = null
 	status_label.text = ""
-	_show_ingredient_phase()
+	stir_cauldron.clear_tokens()
+	stir_cauldron.reset_liquid()
 	_rebuild_ingredient_list()
 	visible = true
 
@@ -59,12 +62,22 @@ func _rebuild_ingredient_list() -> void:
 		if held <= 0:
 			continue
 		ingredient_list.add_child(_build_ingredient_row(ingredient, held))
-	_update_brew_button()
+	_update_reset_button()
 
 func _build_ingredient_row(ingredient: Ingredient, held: int) -> HBoxContainer:
 	var picked: int = _selected.get(ingredient.id, 0)
 
 	var row := HBoxContainer.new()
+
+	if ingredient.bundle_icon != null:
+		var drag_icon := IngredientDragIcon.new()
+		drag_icon.ingredient_id = ingredient.id
+		drag_icon.texture = ingredient.bundle_icon
+		drag_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+		drag_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+		drag_icon.custom_minimum_size = Vector2(24, 24)
+		drag_icon.tooltip_text = "Перетягни в казан"
+		row.add_child(drag_icon)
 
 	var name_label := Label.new()
 	name_label.custom_minimum_size.x = 160
@@ -74,7 +87,7 @@ func _build_ingredient_row(ingredient: Ingredient, held: int) -> HBoxContainer:
 	var minus_button := Button.new()
 	minus_button.text = "-"
 	minus_button.disabled = picked <= 0
-	minus_button.pressed.connect(_on_count_changed.bind(ingredient.id, -1))
+	minus_button.pressed.connect(_remove_ingredient.bind(ingredient.id))
 	row.add_child(minus_button)
 
 	var count_label := Label.new()
@@ -86,18 +99,29 @@ func _build_ingredient_row(ingredient: Ingredient, held: int) -> HBoxContainer:
 	var plus_button := Button.new()
 	plus_button.text = "+"
 	plus_button.disabled = picked >= held or _total_selected() >= MAX_INGREDIENTS
-	plus_button.pressed.connect(_on_count_changed.bind(ingredient.id, 1))
+	plus_button.pressed.connect(_add_ingredient.bind(ingredient.id))
 	row.add_child(plus_button)
 
 	return row
 
-func _on_count_changed(ingredient_id: StringName, delta: int) -> void:
+func _add_ingredient(ingredient_id: StringName) -> void:
 	var held := PlayerInventory.get_count(ingredient_id)
-	var new_count: int = clampi(int(_selected.get(ingredient_id, 0)) + delta, 0, held)
-	if new_count == 0:
+	var current: int = _selected.get(ingredient_id, 0)
+	if current >= held or _total_selected() >= MAX_INGREDIENTS:
+		return
+	_selected[ingredient_id] = current + 1
+	stir_cauldron.add_token(IngredientDatabase.get_ingredient(ingredient_id))
+	_rebuild_ingredient_list()
+
+func _remove_ingredient(ingredient_id: StringName) -> void:
+	var current: int = _selected.get(ingredient_id, 0)
+	if current <= 0:
+		return
+	if current == 1:
 		_selected.erase(ingredient_id)
 	else:
-		_selected[ingredient_id] = new_count
+		_selected[ingredient_id] = current - 1
+	stir_cauldron.remove_token(ingredient_id)
 	_rebuild_ingredient_list()
 
 func _total_selected() -> int:
@@ -106,21 +130,21 @@ func _total_selected() -> int:
 		total += count
 	return total
 
-func _update_brew_button() -> void:
-	var total := _total_selected()
-	brew_button.disabled = total < MIN_INGREDIENTS or total > MAX_INGREDIENTS
+func _update_reset_button() -> void:
+	reset_button.disabled = _selected.is_empty()
 
-func _on_brew_pressed() -> void:
+func _on_reset_pressed() -> void:
+	_selected.clear()
+	stir_cauldron.clear_tokens()
+	status_label.text = ""
+	_rebuild_ingredient_list()
+
+func _on_stir_finished(direction: int, rotations: float, evenness: float) -> void:
 	var recipe := RecipeDatabase.find_recipe(_selected)
 	if recipe == null:
 		status_label.text = "Невідома комбінація — спробуй інше поєднання."
 		return
-	_pending_recipe = recipe
-	_show_stir_phase()
-	stir_cauldron.start()
 
-func _on_stir_finished(direction: int, rotations: float, evenness: float) -> void:
-	var recipe := _pending_recipe
 	var quality := _resolve_quality(rotations, evenness)
 	for ingredient_id in _selected:
 		PlayerInventory.remove(ingredient_id, _selected[ingredient_id])
@@ -139,8 +163,8 @@ func _on_stir_finished(direction: int, rotations: float, evenness: float) -> voi
 			status_label.text = "Готово (%s): %s" % [QUALITY_LABEL[quality], potion_name]
 
 	_selected.clear()
-	_pending_recipe = null
-	_show_ingredient_phase()
+	stir_cauldron.clear_tokens()
+	stir_cauldron.reset_liquid()
 	_rebuild_ingredient_list()
 
 func _resolve_quality(rotations: float, evenness: float) -> Quality:
@@ -151,18 +175,6 @@ func _resolve_quality(rotations: float, evenness: float) -> Quality:
 	if rotations >= GOOD_ROTATIONS and evenness < EVEN_CV_GOOD:
 		return Quality.GOOD
 	return Quality.NORMAL
-
-func _show_ingredient_phase() -> void:
-	ingredient_list.visible = true
-	brew_button.visible = true
-	back_button.visible = true
-	stir_cauldron.visible = false
-
-func _show_stir_phase() -> void:
-	ingredient_list.visible = false
-	brew_button.visible = false
-	back_button.visible = false
-	status_label.text = ""
 
 func _on_back_pressed() -> void:
 	visible = false
