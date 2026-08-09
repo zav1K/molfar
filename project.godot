@@ -16,6 +16,15 @@ run/main_scene="res://scenes/Hut.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[display]
+
+window/size/viewport_width=960
+window/size/viewport_height=540
+window/size/window_width_override=1440
+window/size/window_height_override=810
+window/stretch/mode="canvas_items"
+window/stretch/aspect="keep"
+
 [autoload]
 
 IngredientDatabase="*res://scripts/autoload/ingredient_database.gd"
