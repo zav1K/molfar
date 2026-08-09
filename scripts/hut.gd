@@ -1,12 +1,13 @@
 extends Node2D
 ## Root controller for the molfar's hut: three fixed camera panels
-## (казан+піч / стіл+вікно / скриня+полиці+вікно-город), navigated by
+## (казан+піч / стіл+двері / скриня+полиці+вікно-город), navigated by
 ## arrow keys or on-screen buttons, plus zone click routing.
 
 const PANEL_WIDTH := 960.0
 const PANEL_HEIGHT := 540.0
 const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
+const DOOR_ZOOM := 1.6
 
 ## Zones that are portals to another scene, keyed by zone_id.
 const ZONE_SCENES := {
@@ -16,11 +17,11 @@ const ZONE_SCENES := {
 @onready var camera: Camera2D = $Camera2D
 @onready var nav_left: Button = $UI/NavLeft
 @onready var nav_right: Button = $UI/NavRight
-@onready var client_dialogue: CanvasLayer = $ClientDialogue
+@onready var door: Door = $PanelCenter/Zones/Door
+@onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
-	$PanelCenter/Zones/DeskWindow,
 	$PanelRight/Zones/Shelves,
 	$PanelRight/Zones/Chest,
 	$PanelRight/Zones/GardenWindow,
@@ -31,6 +32,8 @@ var current_panel: int = 1 # start centered on the desk
 func _ready() -> void:
 	for zone in zones:
 		zone.activated.connect(_on_zone_activated)
+	door.visitor_engaged.connect(_on_visitor_engaged)
+	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
@@ -47,7 +50,16 @@ func _ready() -> void:
 	if not PlayerInventory.has(&"mint"):
 		PlayerInventory.add(&"mint", 1)
 
+	# DEBUG: put a visitor at the door so the threshold flow is testable.
+	# Replace with a real scheduling/quest trigger once one exists.
+	var debug_visitor := Visitor.new()
+	debug_visitor.display_name = "Молода жінка"
+	debug_visitor.problem_text = "\"Дитина кашляє вже третю ніч, а мольфар-сусід каже — то не застуда...\""
+	door.knock(debug_visitor)
+
 func _unhandled_input(event: InputEvent) -> void:
+	if threshold_dialogue.visible:
+		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
 	elif event.is_action_pressed(&"ui_right"):
@@ -64,7 +76,7 @@ func _go_right() -> void:
 		_move_camera()
 
 func _move_camera() -> void:
-	create_tween().tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_IN_OUT)
+	create_tween().tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	_update_nav_buttons()
 
 func _panel_center(panel_index: int) -> Vector2:
@@ -75,13 +87,29 @@ func _update_nav_buttons() -> void:
 	nav_right.disabled = current_panel == PANEL_COUNT - 1
 
 func _on_zone_activated(zone: InteractionZone) -> void:
-	if zone.zone_id == &"desk_window":
-		# TODO: tween the camera in further, per the concept doc, once there's
-		# art worth zooming into. For now just switch straight to the mode.
-		client_dialogue.visible = true
-		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
 		return
 	# TODO: route remaining zones to their mechanic once those scenes exist.
 	print("Zone activated: %s (%s)" % [zone.zone_label, zone.zone_id])
+
+func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
+	nav_left.visible = false
+	nav_right.visible = false
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(camera, "position", engaged_door.global_position, TWEEN_TIME)
+	tw.tween_property(camera, "zoom", Vector2(DOOR_ZOOM, DOOR_ZOOM), TWEEN_TIME)
+	tw.finished.connect(func() -> void: threshold_dialogue.show_visitor(visitor), CONNECT_ONE_SHOT)
+
+func _on_visitor_resolved(invited: bool) -> void:
+	nav_left.visible = true
+	nav_right.visible = true
+	var tw := create_tween().set_parallel(true)
+	tw.tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
+	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
+	if invited:
+		# TODO: actual client-reception mechanic (diagnosis/dialogue) goes here.
+		print("Запрошено досередини — механіка прийому клієнта ще не реалізована.")
+	else:
+		print("Відмовлено — двері зачинились.")
+	door.clear()

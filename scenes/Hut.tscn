@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=3]
+[gd_scene load_steps=13 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -6,12 +6,13 @@
 [ext_resource type="Texture2D" path="res://assets/hut/shelfs.PNG" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="5"]
 [ext_resource type="Script" path="res://scripts/beam_bundle.gd" id="6"]
-[ext_resource type="Script" path="res://scripts/client_dialogue.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/threshold_dialogue.gd" id="7"]
+[ext_resource type="Script" path="res://scripts/door.gd" id="8"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(90, 132)
 
-[sub_resource type="RectangleShape2D" id="Shape_deskwindow"]
+[sub_resource type="RectangleShape2D" id="Shape_door"]
 size = Vector2(160, 180)
 
 [sub_resource type="RectangleShape2D" id="Shape_shelves"]
@@ -96,35 +97,35 @@ offset_left = 16.0
 offset_top = 12.0
 offset_right = 400.0
 offset_bottom = 34.0
-text = "Центр — стіл, вікно (робоче місце)"
+text = "Центр — стіл, двері (робоче місце)"
 
 [node name="Zones" type="Node2D" parent="PanelCenter"]
 
-[node name="DeskWindow" type="Area2D" parent="PanelCenter/Zones"]
+[node name="Door" type="Area2D" parent="PanelCenter/Zones"]
 position = Vector2(480, 190)
-script = ExtResource("2")
-zone_id = &"desk_window"
-zone_label = "Вікно"
+script = ExtResource("8")
+zone_id = &"desk_door"
+zone_label = "Двері"
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/DeskWindow"]
-shape = SubResource("Shape_deskwindow")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Door"]
+shape = SubResource("Shape_door")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/DeskWindow"]
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
 offset_left = -80.0
 offset_top = -90.0
 offset_right = 80.0
 offset_bottom = 90.0
-color = Color(0.3, 0.35, 0.45, 0.25)
+color = Color(0.3, 0.22, 0.15, 0.25)
 
-[node name="Label" type="Label" parent="PanelCenter/Zones/DeskWindow"]
+[node name="Label" type="Label" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
 offset_left = -80.0
 offset_top = 95.0
 offset_right = 80.0
 offset_bottom = 120.0
 horizontal_alignment = 1
-text = "Вікно (двір)"
+text = "Двері"
 
 [node name="PanelRight" type="Node2D" parent="."]
 position = Vector2(1920, 0)
@@ -320,26 +321,41 @@ offset_right = 940.0
 offset_bottom = 290.0
 text = "▶"
 
-[node name="ClientDialogue" type="CanvasLayer" parent="."]
+[node name="ThresholdDialogue" type="CanvasLayer" parent="."]
 script = ExtResource("7")
 
-[node name="Panel" type="ColorRect" parent="ClientDialogue"]
+[node name="Panel" type="ColorRect" parent="ThresholdDialogue"]
 offset_right = 960.0
 offset_bottom = 540.0
-color = Color(0.05, 0.05, 0.05, 0.75)
+color = Color(0.05, 0.05, 0.05, 0.8)
 
-[node name="Label" type="Label" parent="ClientDialogue/Panel"]
+[node name="NameLabel" type="Label" parent="ThresholdDialogue/Panel"]
 offset_left = 280.0
-offset_top = 220.0
+offset_top = 170.0
 offset_right = 680.0
-offset_bottom = 280.0
+offset_bottom = 200.0
 horizontal_alignment = 1
-text = "Клієнт: \"...\" (плейсхолдер — діалог/діагностика ще не реалізовані)"
-autowrap_mode = 2
+text = "Ім'я"
 
-[node name="BackButton" type="Button" parent="ClientDialogue/Panel"]
-offset_left = 430.0
-offset_top = 320.0
-offset_right = 530.0
-offset_bottom = 360.0
-text = "Назад"
+[node name="ProblemLabel" type="Label" parent="ThresholdDialogue/Panel"]
+offset_left = 230.0
+offset_top = 210.0
+offset_right = 730.0
+offset_bottom = 300.0
+horizontal_alignment = 1
+autowrap_mode = 2
+text = "..."
+
+[node name="InviteButton" type="Button" parent="ThresholdDialogue/Panel"]
+offset_left = 340.0
+offset_top = 340.0
+offset_right = 470.0
+offset_bottom = 380.0
+text = "Запросити"
+
+[node name="RefuseButton" type="Button" parent="ThresholdDialogue/Panel"]
+offset_left = 490.0
+offset_top = 340.0
+offset_right = 620.0
+offset_bottom = 380.0
+text = "Відмовити"
