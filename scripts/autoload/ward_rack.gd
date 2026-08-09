@@ -6,7 +6,7 @@ extends Node
 
 signal changed(slot_index: int)
 
-const SLOT_COUNT := 6
+const SLOT_COUNT := 3
 ## Chance a correctly-matched ward actually gives a signal. Deliberately
 ## short of certain — silence never confirms "human" and a signal never
 ## confirms "not human" on its own.
