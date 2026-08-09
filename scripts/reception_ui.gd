@@ -5,14 +5,17 @@ extends CanvasLayer
 ## what they actually needed. No "reading the client" diagnosis mechanic
 ## yet (see CONCEPT.md) — this just checks the given item's id against
 ## the visitor's hidden desired_result_id. Giving nothing is a valid
-## choice too, always available.
+## choice too, always available — but so is asking them to wait instead
+## of turning them away outright (see hut.gd's patience timer).
 
 signal closed
+signal wait_requested(visitor: Visitor)
 
 @onready var name_label: Label = $Panel/NameLabel
 @onready var problem_label: Label = $Panel/ProblemLabel
 @onready var item_list: VBoxContainer = $Panel/ItemList
 @onready var send_away_button: Button = $Panel/SendAwayButton
+@onready var wait_button: Button = $Panel/WaitButton
 @onready var result_label: Label = $Panel/ResultLabel
 @onready var finish_button: Button = $Panel/FinishButton
 
@@ -22,6 +25,7 @@ var _resolved: bool = false
 func _ready() -> void:
 	visible = false
 	send_away_button.pressed.connect(_on_send_away_pressed)
+	wait_button.pressed.connect(_on_wait_pressed)
 	finish_button.pressed.connect(_on_finish_pressed)
 
 func show_visitor(visitor: Visitor) -> void:
@@ -37,6 +41,7 @@ func _rebuild_item_list() -> void:
 	for child in item_list.get_children():
 		child.queue_free()
 	send_away_button.visible = not _resolved
+	wait_button.visible = not _resolved
 	finish_button.visible = _resolved
 	if _resolved:
 		return
@@ -70,6 +75,10 @@ func _on_give_pressed(item_id: StringName) -> void:
 
 func _on_send_away_pressed() -> void:
 	_resolve(false)
+
+func _on_wait_pressed() -> void:
+	visible = false
+	wait_requested.emit(_visitor)
 
 func _resolve(satisfied: bool) -> void:
 	_resolved = true

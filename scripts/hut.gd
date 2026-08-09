@@ -8,6 +8,7 @@ const PANEL_HEIGHT := 540.0
 const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
+const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
 
 ## Zones that are portals to another scene, keyed by zone_id.
 const ZONE_SCENES := {
@@ -24,6 +25,7 @@ const ZONE_SCENES := {
 @onready var potion_shelf: PotionShelf = $PanelLeft/PotionShelf
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
+@onready var waiting_indicator: Button = $UI/WaitingIndicator
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
@@ -34,6 +36,8 @@ const ZONE_SCENES := {
 ]
 
 var current_panel: int = 1 # start centered on the desk
+var _waiting_visitor: Visitor
+var _wait_token: int = 0
 
 func _ready() -> void:
 	for zone in zones:
@@ -41,6 +45,8 @@ func _ready() -> void:
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	reception_ui.closed.connect(_on_reception_closed)
+	reception_ui.wait_requested.connect(_on_visitor_wait_requested)
+	waiting_indicator.pressed.connect(_on_waiting_indicator_pressed)
 	brewing_ui.closed.connect(_on_brewing_closed)
 	carving_ui.closed.connect(_on_carving_closed)
 	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
@@ -147,6 +153,36 @@ func _on_visitor_resolved(invited: bool) -> void:
 func _on_reception_closed() -> void:
 	nav_left.visible = true
 	nav_right.visible = true
+	_waiting_visitor = null
+	_wait_token += 1
+	waiting_indicator.visible = false
+	_schedule_next_knock()
+
+func _on_visitor_wait_requested(visitor: Visitor) -> void:
+	nav_left.visible = true
+	nav_right.visible = true
+	_waiting_visitor = visitor
+	waiting_indicator.text = "Клієнт чекає: %s" % visitor.display_name
+	waiting_indicator.visible = true
+	_wait_token += 1
+	_run_patience_timer(_wait_token)
+
+func _on_waiting_indicator_pressed() -> void:
+	if _waiting_visitor == null:
+		return
+	waiting_indicator.visible = false
+	nav_left.visible = false
+	nav_right.visible = false
+	_wait_token += 1 # invalidate the running patience timer while they're served again
+	reception_ui.show_visitor(_waiting_visitor)
+
+func _run_patience_timer(token: int) -> void:
+	await get_tree().create_timer(PATIENCE_SECONDS).timeout
+	if token != _wait_token:
+		return
+	# Gave up waiting — leaves unhelped, same as an explicit refusal.
+	_waiting_visitor = null
+	waiting_indicator.visible = false
 	_schedule_next_knock()
 
 func _schedule_next_knock() -> void:
