@@ -83,9 +83,12 @@ func _drop_data(_at_position: Vector2, data: Variant) -> void:
 	ingredient_dropped.emit(data["ingredient_id"])
 
 func _gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.pressed:
-			var offset := event.position - _center
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index != MOUSE_BUTTON_LEFT:
+			return
+		if mb.pressed:
+			var offset: Vector2 = mb.position - _center
 			if offset.length() < DEAD_ZONE_RADIUS:
 				return
 			_dragging = true
@@ -97,7 +100,8 @@ func _gui_input(event: InputEvent) -> void:
 			_dragging = false
 			_on_release()
 	elif event is InputEventMouseMotion and _dragging:
-		var offset: Vector2 = event.position - _center
+		var mm := event as InputEventMouseMotion
+		var offset: Vector2 = mm.position - _center
 		if offset.length() < DEAD_ZONE_RADIUS * 0.5:
 			return
 		var angle := offset.angle()
