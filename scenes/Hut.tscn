@@ -1,4 +1,4 @@
-[gd_scene load_steps=24 format=3]
+[gd_scene load_steps=27 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -17,6 +17,8 @@
 [ext_resource type="Script" path="res://scripts/potion_detail_popup.gd" id="15"]
 [ext_resource type="Script" path="res://scripts/stir_cauldron.gd" id="16"]
 [ext_resource type="Shader" path="res://shaders/liquid.gdshader" id="17"]
+[ext_resource type="Script" path="res://scripts/carving_ui.gd" id="18"]
+[ext_resource type="Script" path="res://scripts/carving_canvas.gd" id="19"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(150, 220)
@@ -38,6 +40,9 @@ size = Vector2(140, 180)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_liquid"]
 shader = ExtResource("17")
+
+[sub_resource type="RectangleShape2D" id="Shape_desk"]
+size = Vector2(140, 90)
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -143,6 +148,32 @@ offset_right = 125.0
 offset_bottom = 189.0
 horizontal_alignment = 1
 text = "Двері"
+
+[node name="Desk" type="Area2D" parent="PanelCenter/Zones"]
+position = Vector2(150, 450)
+script = ExtResource("2")
+zone_id = &"desk_carving"
+zone_label = "Стіл для різьблення"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Desk"]
+shape = SubResource("Shape_desk")
+
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Desk"]
+mouse_filter = 2
+offset_left = -70.0
+offset_top = -45.0
+offset_right = 70.0
+offset_bottom = 45.0
+color = Color(0.3, 0.22, 0.15, 0.18)
+
+[node name="Label" type="Label" parent="PanelCenter/Zones/Desk"]
+mouse_filter = 2
+offset_left = -70.0
+offset_top = 50.0
+offset_right = 70.0
+offset_bottom = 75.0
+horizontal_alignment = 1
+text = "Різьблення"
 
 [node name="WardSlot1" type="Area2D" parent="PanelCenter/Zones"]
 position = Vector2(413, 30)
@@ -532,6 +563,56 @@ offset_right = 460.0
 offset_bottom = 25.0
 horizontal_alignment = 1
 text = "Оберти: 0.0"
+
+[node name="CarvingUI" type="CanvasLayer" parent="."]
+script = ExtResource("18")
+
+[node name="Panel" type="ColorRect" parent="CarvingUI"]
+offset_right = 960.0
+offset_bottom = 540.0
+color = Color(0.05, 0.05, 0.05, 0.85)
+
+[node name="Title" type="Label" parent="CarvingUI/Panel"]
+offset_left = 280.0
+offset_top = 40.0
+offset_right = 680.0
+offset_bottom = 70.0
+horizontal_alignment = 1
+text = "Різьблення"
+
+[node name="SigilList" type="VBoxContainer" parent="CarvingUI/Panel"]
+offset_left = 280.0
+offset_top = 90.0
+offset_right = 680.0
+offset_bottom = 390.0
+
+[node name="CarvingCanvas" type="Control" parent="CarvingUI/Panel"]
+offset_left = 330.0
+offset_top = 90.0
+offset_right = 630.0
+offset_bottom = 390.0
+script = ExtResource("19")
+
+[node name="StatusLabel" type="Label" parent="CarvingUI/Panel"]
+offset_left = 230.0
+offset_top = 400.0
+offset_right = 730.0
+offset_bottom = 425.0
+horizontal_alignment = 1
+
+[node name="BackButton" type="Button" parent="CarvingUI/Panel"]
+offset_left = 340.0
+offset_top = 430.0
+offset_right = 470.0
+offset_bottom = 470.0
+text = "Назад"
+
+[node name="CancelButton" type="Button" parent="CarvingUI/Panel"]
+offset_left = 490.0
+offset_top = 430.0
+offset_right = 620.0
+offset_bottom = 470.0
+text = "Скасувати"
 
 [node name="PotionDetailPopup" type="CanvasLayer" parent="."]
 script = ExtResource("15")

@@ -22,12 +22,14 @@ const ZONE_SCENES := {
 @onready var brewing_ui: BrewingUI = $BrewingUI
 @onready var potion_shelf: PotionShelf = $PanelLeft/PotionShelf
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
+@onready var carving_ui: CarvingUI = $CarvingUI
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
 	$PanelRight/Zones/Shelves,
 	$PanelRight/Zones/Chest,
 	$PanelRight/Zones/GardenWindow,
+	$PanelCenter/Zones/Desk,
 ]
 
 var current_panel: int = 1 # start centered on the desk
@@ -38,6 +40,7 @@ func _ready() -> void:
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	brewing_ui.closed.connect(_on_brewing_closed)
+	carving_ui.closed.connect(_on_carving_closed)
 	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
@@ -73,7 +76,7 @@ func _ready() -> void:
 	door.knock(debug_visitor, WardRack.check_visitor(debug_visitor))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -107,6 +110,11 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 		nav_right.visible = false
 		brewing_ui.open()
 		return
+	if zone.zone_id == &"desk_carving":
+		nav_left.visible = false
+		nav_right.visible = false
+		carving_ui.open()
+		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
 		return
@@ -114,6 +122,10 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 	print("Zone activated: %s (%s)" % [zone.zone_label, zone.zone_id])
 
 func _on_brewing_closed() -> void:
+	nav_left.visible = true
+	nav_right.visible = true
+
+func _on_carving_closed() -> void:
 	nav_left.visible = true
 	nav_right.visible = true
 

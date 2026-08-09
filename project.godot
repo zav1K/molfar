@@ -33,6 +33,8 @@ PlayerInventory="*res://scripts/autoload/player_inventory.gd"
 WardRack="*res://scripts/autoload/ward_rack.gd"
 PotionDatabase="*res://scripts/autoload/potion_database.gd"
 RecipeDatabase="*res://scripts/autoload/recipe_database.gd"
+SigilDatabase="*res://scripts/autoload/sigil_database.gd"
+VisitorDatabase="*res://scripts/autoload/visitor_database.gd"
 
 [rendering]
 
