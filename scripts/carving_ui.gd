@@ -35,7 +35,6 @@ func _ready() -> void:
 
 func open() -> void:
 	status_label.text = ""
-	_rebuild_sigil_list()
 	_show_list_phase()
 	visible = true
 
