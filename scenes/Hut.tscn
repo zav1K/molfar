@@ -226,7 +226,7 @@ position = Vector2(698, 149)
 position = Vector2(150, 430)
 
 [node name="GardenWindowAnchor" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(760, 230)
+position = Vector2(150, 180)
 
 [node name="BeamBundle1" type="Marker2D" parent="PanelRight/Anchors"]
 position = Vector2(360, 60)
@@ -334,7 +334,7 @@ horizontal_alignment = 1
 text = "Скриня"
 
 [node name="GardenWindow" type="Area2D" parent="PanelRight/Zones"]
-position = Vector2(760, 230)
+position = Vector2(150, 180)
 script = ExtResource("2")
 zone_id = &"garden_window"
 zone_label = "Вікно (город)"
