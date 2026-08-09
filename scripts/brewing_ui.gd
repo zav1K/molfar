@@ -1,13 +1,12 @@
 class_name BrewingUI
 extends CanvasLayer
-## Minimal brewing interface: pick 2-3 ingredients you currently hold and
-## brew them into a single placeholder potion. No tactile Potion-Craft-style
-## mechanic and no branching recipe table yet — any valid selection
-## produces the same test result. Both land later.
+## Minimal brewing interface: pick how many of each ingredient you currently
+## hold (2-3 total), brew, and get whatever RecipeDatabase says that exact
+## combination makes — or nothing, if it doesn't match a known recipe. No
+## tactile Potion-Craft-style mechanic yet, that's separate future work.
 
 const MIN_INGREDIENTS := 2
 const MAX_INGREDIENTS := 3
-const RESULT_POTION_ID := &"simple_potion"
 
 signal closed
 
@@ -16,7 +15,7 @@ signal closed
 @onready var back_button: Button = $Panel/BackButton
 @onready var status_label: Label = $Panel/StatusLabel
 
-var _selected: Array[StringName] = []
+var _selected: Dictionary = {} # StringName -> int
 
 func _ready() -> void:
 	visible = false
@@ -33,38 +32,71 @@ func _rebuild_ingredient_list() -> void:
 	for child in ingredient_list.get_children():
 		child.queue_free()
 	for ingredient in IngredientDatabase.get_all():
-		var count := PlayerInventory.get_count(ingredient.id)
-		if count <= 0:
+		var held := PlayerInventory.get_count(ingredient.id)
+		if held <= 0:
 			continue
-		var button := Button.new()
-		button.toggle_mode = true
-		button.text = "%s ×%d" % [ingredient.display_name, count]
-		button.button_pressed = ingredient.id in _selected
-		button.toggled.connect(_on_ingredient_toggled.bind(ingredient.id))
-		ingredient_list.add_child(button)
+		ingredient_list.add_child(_build_ingredient_row(ingredient, held))
 	_update_brew_button()
 
-func _on_ingredient_toggled(pressed: bool, ingredient_id: StringName) -> void:
-	if pressed:
-		if _selected.size() >= MAX_INGREDIENTS:
-			# Reject the pick past the cap and resync button states instead
-			# of leaving this one visually pressed with nothing behind it.
-			_rebuild_ingredient_list()
-			return
-		_selected.append(ingredient_id)
-	else:
+func _build_ingredient_row(ingredient: Ingredient, held: int) -> HBoxContainer:
+	var picked: int = _selected.get(ingredient.id, 0)
+
+	var row := HBoxContainer.new()
+
+	var name_label := Label.new()
+	name_label.custom_minimum_size.x = 160
+	name_label.text = "%s (є %d)" % [ingredient.display_name, held]
+	row.add_child(name_label)
+
+	var minus_button := Button.new()
+	minus_button.text = "-"
+	minus_button.disabled = picked <= 0
+	minus_button.pressed.connect(_on_count_changed.bind(ingredient.id, -1))
+	row.add_child(minus_button)
+
+	var count_label := Label.new()
+	count_label.custom_minimum_size.x = 30
+	count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	count_label.text = str(picked)
+	row.add_child(count_label)
+
+	var plus_button := Button.new()
+	plus_button.text = "+"
+	plus_button.disabled = picked >= held or _total_selected() >= MAX_INGREDIENTS
+	plus_button.pressed.connect(_on_count_changed.bind(ingredient.id, 1))
+	row.add_child(plus_button)
+
+	return row
+
+func _on_count_changed(ingredient_id: StringName, delta: int) -> void:
+	var held := PlayerInventory.get_count(ingredient_id)
+	var new_count: int = clampi(int(_selected.get(ingredient_id, 0)) + delta, 0, held)
+	if new_count == 0:
 		_selected.erase(ingredient_id)
-	_update_brew_button()
+	else:
+		_selected[ingredient_id] = new_count
+	_rebuild_ingredient_list()
+
+func _total_selected() -> int:
+	var total := 0
+	for count in _selected.values():
+		total += count
+	return total
 
 func _update_brew_button() -> void:
-	brew_button.disabled = _selected.size() < MIN_INGREDIENTS or _selected.size() > MAX_INGREDIENTS
+	var total := _total_selected()
+	brew_button.disabled = total < MIN_INGREDIENTS or total > MAX_INGREDIENTS
 
 func _on_brew_pressed() -> void:
+	var recipe := RecipeDatabase.find_recipe(_selected)
+	if recipe == null:
+		status_label.text = "Невідома комбінація — спробуй інше поєднання."
+		return
 	for ingredient_id in _selected:
-		PlayerInventory.remove(ingredient_id)
-	PlayerInventory.add(RESULT_POTION_ID)
-	var potion := PotionDatabase.get_potion(RESULT_POTION_ID)
-	status_label.text = "Готово: %s" % (potion.display_name if potion else String(RESULT_POTION_ID))
+		PlayerInventory.remove(ingredient_id, _selected[ingredient_id])
+	PlayerInventory.add(recipe.result_potion_id)
+	var potion := PotionDatabase.get_potion(recipe.result_potion_id)
+	status_label.text = "Готово: %s" % (potion.display_name if potion else String(recipe.result_potion_id))
 	_selected.clear()
 	_rebuild_ingredient_list()
 

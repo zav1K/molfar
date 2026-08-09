@@ -32,6 +32,7 @@ GameCalendar="*res://scripts/autoload/game_calendar.gd"
 PlayerInventory="*res://scripts/autoload/player_inventory.gd"
 WardRack="*res://scripts/autoload/ward_rack.gd"
 PotionDatabase="*res://scripts/autoload/potion_database.gd"
+RecipeDatabase="*res://scripts/autoload/recipe_database.gd"
 
 [rendering]
 

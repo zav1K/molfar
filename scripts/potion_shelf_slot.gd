@@ -1,10 +1,8 @@
 extends Control
-## Shows a brewed potion sitting on the shelf beside the cauldron, mirroring
+## Shows brewed potions sitting on the shelf beside the cauldron, mirroring
 ## PlayerInventory the same way beam_bundle.gd mirrors it for drying herbs.
-## No potion art exists yet, so this is a text label instead of an icon —
-## swap in a TextureRect once Potion.icon is set.
-
-@export var potion_id: StringName
+## Lists every potion currently held — no potion art exists yet, so this is
+## a text summary instead of icons.
 
 @onready var label: Label = $Label
 
@@ -13,11 +11,14 @@ func _ready() -> void:
 	_refresh()
 
 func _on_inventory_changed(changed_id: StringName) -> void:
-	if changed_id == potion_id:
+	if PotionDatabase.get_potion(changed_id) != null:
 		_refresh()
 
 func _refresh() -> void:
-	var count := PlayerInventory.get_count(potion_id)
-	visible = count > 0
-	var potion := PotionDatabase.get_potion(potion_id)
-	label.text = "%s ×%d" % [potion.display_name if potion else String(potion_id), count]
+	var lines: Array[String] = []
+	for potion in PotionDatabase.get_all():
+		var count := PlayerInventory.get_count(potion.id)
+		if count > 0:
+			lines.append("%s ×%d" % [potion.display_name, count])
+	visible = not lines.is_empty()
+	label.text = "\n".join(lines)

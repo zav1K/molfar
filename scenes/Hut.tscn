@@ -90,17 +90,16 @@ mouse_filter = 2
 offset_left = 520.0
 offset_top = 90.0
 offset_right = 660.0
-offset_bottom = 130.0
+offset_bottom = 160.0
 script = ExtResource("14")
-potion_id = &"simple_potion"
 
 [node name="Label" type="Label" parent="PanelLeft/PotionShelf"]
 mouse_filter = 2
 offset_right = 140.0
-offset_bottom = 40.0
+offset_bottom = 70.0
 horizontal_alignment = 1
 autowrap_mode = 2
-text = "Настоянка ×0"
+text = ""
 
 [node name="PanelCenter" type="Node2D" parent="."]
 position = Vector2(960, 0)
