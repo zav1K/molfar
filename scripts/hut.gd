@@ -48,9 +48,11 @@ func _ready() -> void:
 	if not PlayerInventory.has(&"garlic"):
 		PlayerInventory.add(&"garlic", 3)
 	if not PlayerInventory.has(&"wormwood"):
-		PlayerInventory.add(&"wormwood", 2)
+		PlayerInventory.add(&"wormwood", 3)
 	if not PlayerInventory.has(&"mint"):
-		PlayerInventory.add(&"mint", 1)
+		PlayerInventory.add(&"mint", 2)
+	if not PlayerInventory.has(&"dream_grass"):
+		PlayerInventory.add(&"dream_grass", 3)
 
 	# DEBUG: hang a garlic ward so the door hint hook is testable too.
 	if WardRack.get_slot(0) == &"":

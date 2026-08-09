@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1")
 ingredients = {
-&"wormwood": 2,
+&"dream_grass": 2,
 &"mint": 1
 }
-result_potion_id = &"green_potion"
+result_potion_id = &"sleep_remedy"

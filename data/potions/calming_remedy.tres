@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"calming_remedy"
+display_name = "Заспокійливий відвар"
+description = "М'ята заспокоює, сон-трава поглиблює ефект — для тривоги й неспокою."
