@@ -19,5 +19,16 @@ extends Resource
 @export_multiline var satisfied_text: String = "Дякую, мольфаре. Мені вже легше."
 @export_multiline var unhelped_text: String = "...це не те, що мені було треба."
 
+## Shown in ThresholdDialogue while deciding whether to invite them in.
+@export var portrait_door: Texture2D
+
+## Shown in ReceptionUI once they're waiting inside for a potion/ward.
+## Falls back to portrait_door until a second pose exists — see
+## get_waiting_portrait().
+@export var portrait_waiting: Texture2D
+
 func is_human() -> bool:
 	return true_threat == Threat.Type.NONE
+
+func get_waiting_portrait() -> Texture2D:
+	return portrait_waiting if portrait_waiting != null else portrait_door

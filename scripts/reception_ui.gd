@@ -11,6 +11,7 @@ extends CanvasLayer
 signal closed
 signal wait_requested(visitor: Visitor)
 
+@onready var portrait: TextureRect = $Panel/Portrait
 @onready var name_label: Label = $Panel/NameLabel
 @onready var problem_label: Label = $Panel/ProblemLabel
 @onready var item_list: VBoxContainer = $Panel/ItemList
@@ -31,6 +32,9 @@ func _ready() -> void:
 func show_visitor(visitor: Visitor) -> void:
 	_visitor = visitor
 	_resolved = false
+	var waiting_portrait := visitor.get_waiting_portrait()
+	portrait.texture = waiting_portrait
+	portrait.visible = waiting_portrait != null
 	name_label.text = visitor.display_name
 	problem_label.text = visitor.problem_text
 	result_label.text = ""

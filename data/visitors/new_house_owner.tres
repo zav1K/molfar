@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/new_house_owner.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -10,3 +11,4 @@ true_threat = 0
 desired_result_id = &"zigzag_ward"
 satisfied_text = "Гарна робота, мольфаре. Тепер спокійно заселюся."
 unhelped_text = "Хм... не схоже це на справжній оберіг."
+portrait_door = ExtResource("2")
