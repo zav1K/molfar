@@ -15,6 +15,8 @@ extends Control
 ## then clip_contents cuts off whatever overflows the bottom (legs)
 ## against the table line.
 
+const WIDTH_FILL := 0.88 ## leaves a small side margin instead of the figure touching the door frame.
+
 signal clicked
 
 @onready var icon: TextureRect = $Icon
@@ -32,9 +34,10 @@ func show_visitor(visitor: Visitor) -> void:
 	icon.texture = tex
 	var rect := visitor.waiting_portrait_content_rect
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
-	var content_scale := size.x / (rect.size.x * tex_size.x)
+	var content_scale := (size.x * WIDTH_FILL) / (rect.size.x * tex_size.x)
 	icon.size = tex_size * content_scale
-	icon.position = -Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
+	var side_margin := size.x * (1.0 - WIDTH_FILL) / 2.0
+	icon.position = Vector2(side_margin, 0.0) - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
 
 func hide_visitor() -> void:
 	visible = false
