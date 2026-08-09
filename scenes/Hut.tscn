@@ -308,7 +308,7 @@ clip_contents = true
 offset_left = 390.0
 offset_top = 90.0
 offset_right = 560.0
-offset_bottom = 350.0
+offset_bottom = 390.0
 script = ExtResource("22")
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/WaitingVisitorDisplay"]
