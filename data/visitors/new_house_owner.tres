@@ -12,3 +12,4 @@ desired_result_id = &"zigzag_ward"
 satisfied_text = "Гарна робота, мольфаре. Тепер спокійно заселюся."
 unhelped_text = "Хм... не схоже це на справжній оберіг."
 portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.242188, 0.046875, 0.535156, 0.877604)

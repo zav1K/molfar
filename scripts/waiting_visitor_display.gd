@@ -7,12 +7,13 @@ extends Control
 ##
 ## Fills this control's width with the actual painted figure — not the
 ## raw canvas, which on these portraits has huge transparent margins
-## (~25% on each side, generated-image padding) that made the figure
-## render small and floating with a gap above the table line. Image.
-## get_used_rect() finds the real non-transparent content bounds; the
-## Icon child is scaled and shifted so that content's top-left lands at
-## this control's top-left, then clip_contents cuts off whatever
-## overflows the bottom (legs) against the table line.
+## (generated-image padding) that made the figure render small and
+## floating with a gap above the table line. Uses Visitor's offline-
+## measured waiting_portrait_content_rect (see that field's comment for
+## why this can't just be computed at runtime) to scale/shift the Icon
+## child so the content's top-left lands at this control's top-left,
+## then clip_contents cuts off whatever overflows the bottom (legs)
+## against the table line.
 
 signal clicked
 
@@ -29,10 +30,11 @@ func show_visitor(visitor: Visitor) -> void:
 	if tex == null:
 		return
 	icon.texture = tex
-	var used := tex.get_image().get_used_rect()
-	var content_scale := size.x / float(used.size.x)
-	icon.size = Vector2(tex.get_width(), tex.get_height()) * content_scale
-	icon.position = -Vector2(used.position) * content_scale
+	var rect := visitor.waiting_portrait_content_rect
+	var tex_size := Vector2(tex.get_width(), tex.get_height())
+	var content_scale := size.x / (rect.size.x * tex_size.x)
+	icon.size = tex_size * content_scale
+	icon.position = -Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
 
 func hide_visitor() -> void:
 	visible = false

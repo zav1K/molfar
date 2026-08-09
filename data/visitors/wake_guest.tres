@@ -12,3 +12,4 @@ desired_result_id = &"cleansing_remedy"
 satisfied_text = "Наче камінь із душі зняли. Дякую, мольфаре."
 unhelped_text = "Не відпускає й досі..."
 portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.25, 0.083333, 0.521484, 0.820313)
