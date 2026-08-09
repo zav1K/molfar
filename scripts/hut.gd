@@ -20,6 +20,8 @@ const ZONE_SCENES := {
 @onready var door: Door = $PanelCenter/Zones/Door
 @onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
 @onready var brewing_ui: BrewingUI = $BrewingUI
+@onready var potion_shelf: PotionShelf = $PanelLeft/PotionShelf
+@onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
@@ -36,6 +38,7 @@ func _ready() -> void:
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	brewing_ui.closed.connect(_on_brewing_closed)
+	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
@@ -70,7 +73,7 @@ func _ready() -> void:
 	door.knock(debug_visitor, WardRack.check_visitor(debug_visitor))
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
