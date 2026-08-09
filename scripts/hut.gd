@@ -22,7 +22,8 @@ const ZONE_SCENES := {
 @onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
 @onready var reception_ui: ReceptionUI = $ReceptionUI
 @onready var brewing_ui: BrewingUI = $BrewingUI
-@onready var inventory_panel: InventoryPanel = $InventoryPanel
+@onready var ingredient_inventory_panel: InventoryPanel = $IngredientInventoryPanel
+@onready var potion_inventory_panel: InventoryPanel = $PotionInventoryPanel
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
@@ -53,8 +54,9 @@ func _ready() -> void:
 	waiting_visitor_display.clicked.connect(_on_waiting_indicator_pressed)
 	brewing_ui.closed.connect(_on_brewing_closed)
 	carving_ui.closed.connect(_on_carving_closed)
-	inventory_panel.closed.connect(_on_inventory_panel_closed)
-	inventory_panel.potion_selected.connect(potion_detail_popup.show_potion)
+	ingredient_inventory_panel.closed.connect(_on_inventory_panel_closed)
+	potion_inventory_panel.closed.connect(_on_inventory_panel_closed)
+	potion_inventory_panel.potion_selected.connect(potion_detail_popup.show_potion)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
@@ -79,7 +81,7 @@ func _ready() -> void:
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or inventory_panel.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -118,10 +120,15 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 		nav_right.visible = false
 		carving_ui.open()
 		return
-	if zone.zone_id == &"drying_beam" or zone.zone_id == &"potion_shelf":
+	if zone.zone_id == &"drying_beam":
 		nav_left.visible = false
 		nav_right.visible = false
-		inventory_panel.open()
+		ingredient_inventory_panel.open()
+		return
+	if zone.zone_id == &"potion_shelf":
+		nav_left.visible = false
+		nav_right.visible = false
+		potion_inventory_panel.open()
 		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
