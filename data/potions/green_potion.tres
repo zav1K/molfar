@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Potion" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/potion_green.png" id="2"]
 
 [resource]
 script = ExtResource("1")
 id = &"green_potion"
 display_name = "Зелене зілля"
 description = "Трав'яний відвар полину й м'яти — гіркувато-свіжого духу."
+icon = ExtResource("2")

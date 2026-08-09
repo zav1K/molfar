@@ -87,19 +87,17 @@ text = "Казан"
 
 [node name="PotionShelf" type="Control" parent="PanelLeft"]
 mouse_filter = 2
-offset_left = 520.0
-offset_top = 90.0
-offset_right = 660.0
-offset_bottom = 160.0
+offset_left = 490.0
+offset_top = 60.0
+offset_right = 710.0
+offset_bottom = 180.0
 script = ExtResource("14")
 
-[node name="Label" type="Label" parent="PanelLeft/PotionShelf"]
+[node name="Row" type="HBoxContainer" parent="PanelLeft/PotionShelf"]
 mouse_filter = 2
-offset_right = 140.0
-offset_bottom = 70.0
-horizontal_alignment = 1
-autowrap_mode = 2
-text = ""
+offset_right = 220.0
+offset_bottom = 120.0
+alignment = 1
 
 [node name="PanelCenter" type="Node2D" parent="."]
 position = Vector2(960, 0)
