@@ -26,6 +26,7 @@ const ZONE_SCENES := {
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
+@onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
@@ -47,6 +48,7 @@ func _ready() -> void:
 	reception_ui.closed.connect(_on_reception_closed)
 	reception_ui.wait_requested.connect(_on_visitor_wait_requested)
 	waiting_indicator.pressed.connect(_on_waiting_indicator_pressed)
+	waiting_visitor_display.clicked.connect(_on_waiting_indicator_pressed)
 	brewing_ui.closed.connect(_on_brewing_closed)
 	carving_ui.closed.connect(_on_carving_closed)
 	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
@@ -156,6 +158,7 @@ func _on_reception_closed() -> void:
 	_waiting_visitor = null
 	_wait_token += 1
 	waiting_indicator.visible = false
+	waiting_visitor_display.hide_visitor()
 	_schedule_next_knock()
 
 func _on_visitor_wait_requested(visitor: Visitor) -> void:
@@ -164,6 +167,7 @@ func _on_visitor_wait_requested(visitor: Visitor) -> void:
 	_waiting_visitor = visitor
 	waiting_indicator.text = "Клієнт чекає: %s" % visitor.display_name
 	waiting_indicator.visible = true
+	waiting_visitor_display.show_visitor(visitor)
 	_wait_token += 1
 	_run_patience_timer(_wait_token)
 
@@ -171,6 +175,7 @@ func _on_waiting_indicator_pressed() -> void:
 	if _waiting_visitor == null:
 		return
 	waiting_indicator.visible = false
+	waiting_visitor_display.hide_visitor()
 	nav_left.visible = false
 	nav_right.visible = false
 	_wait_token += 1 # invalidate the running patience timer while they're served again
@@ -183,6 +188,7 @@ func _run_patience_timer(token: int) -> void:
 	# Gave up waiting — leaves unhelped, same as an explicit refusal.
 	_waiting_visitor = null
 	waiting_indicator.visible = false
+	waiting_visitor_display.hide_visitor()
 	_schedule_next_knock()
 
 func _schedule_next_knock() -> void:
