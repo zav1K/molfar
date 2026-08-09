@@ -74,8 +74,13 @@ func _build_row(item_id: StringName, label_text: String) -> HBoxContainer:
 	return row
 
 func _on_give_pressed(item_id: StringName) -> void:
+	if item_id != _visitor.desired_result_id:
+		# Wrong guess — say so but don't waste the item, same "free to
+		# experiment" reasoning as brewing/carving elsewhere.
+		result_label.text = "Це не те, що мені треба..."
+		return
 	PlayerInventory.remove(item_id)
-	_resolve(item_id == _visitor.desired_result_id)
+	_resolve(true)
 
 func _on_send_away_pressed() -> void:
 	_resolve(false)
