@@ -50,12 +50,20 @@ func _ready() -> void:
 	if not PlayerInventory.has(&"mint"):
 		PlayerInventory.add(&"mint", 1)
 
+	# DEBUG: hang a garlic ward so the door hint hook is testable too.
+	if WardRack.get_slot(0) == &"":
+		WardRack.hang(0, &"garlic")
+
 	# DEBUG: put a visitor at the door so the threshold flow is testable.
-	# Replace with a real scheduling/quest trigger once one exists.
+	# Marked as UNDEAD so the garlic ward above has a real chance to react —
+	# swap to Threat.Type.NONE to see an ordinary, silent knock instead.
+	# Replace this whole block with a real scheduling/quest trigger once
+	# one exists.
 	var debug_visitor := Visitor.new()
 	debug_visitor.display_name = "Молода жінка"
 	debug_visitor.problem_text = "\"Дитина кашляє вже третю ніч, а мольфар-сусід каже — то не застуда...\""
-	door.knock(debug_visitor)
+	debug_visitor.true_threat = Threat.Type.UNDEAD
+	door.knock(debug_visitor, WardRack.check_visitor(debug_visitor))
 
 func _unhandled_input(event: InputEvent) -> void:
 	if threshold_dialogue.visible:

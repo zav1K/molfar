@@ -15,3 +15,5 @@ season_end_day = 366
 festival_id = &""
 placeholder_color = Color(0.7, 0.8, 0.4, 1)
 bundle_icon = ExtResource("2")
+ward_threat = 2
+ward_hint_text = "часник ледь тремтить, хоч вітру немає..."

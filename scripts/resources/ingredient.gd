@@ -26,3 +26,11 @@ enum Source { WILD, GARDEN }
 ## ingredient. Null until an artist provides one — the bundle just stays
 ## hidden in that case, no placeholder box.
 @export var bundle_icon: Texture2D
+
+## Threat category this ingredient wards against when hung over the door,
+## or Threat.Type.NONE if it isn't a ward at all.
+@export var ward_threat: Threat.Type = Threat.Type.NONE
+
+## Ambiguous hint shown near the door when this ward reacts to a knocking
+## visitor's hidden nature — never a flat confirmation, just unease.
+@export var ward_hint_text: String = ""
