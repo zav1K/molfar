@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Колишній вояк"
+problem_text = "\"Вернувся з походу, а спокою нема. Щось причепилось за мною по дорозі, мольфаре...\""
+true_threat = 1
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "Наче... легше стало. Вперше за довгий час."
+unhelped_text = "Не відпускає. Іде за мною, хоч куди піду."

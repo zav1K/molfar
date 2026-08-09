@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Двоє закоханих"
+problem_text = "\"Батьки проти... ми не по приворот, мольфаре — нам би оберіг на дорогу, щоб безпечно дійти і щоб гнів їхній колись ущух...\""
+true_threat = 0
+desired_result_id = &"spiral_ward"
+satisfied_text = "Дякуємо, мольфаре. Тепер дорога буде безпечна."
+unhelped_text = "Що ж... підемо й так. Іншого виходу нема."

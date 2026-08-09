@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Сільський староста"
+problem_text = "\"Хмари над полониною чорніють — громада просить захистити врожай від граду, мольфаре...\""
+true_threat = 0
+satisfied_text = "Громада не забуде цього, мольфаре."
+unhelped_text = "Що ж... якщо не можеш — не можеш. Врожай у Божих руках."

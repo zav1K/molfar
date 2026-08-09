@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Родичка утопленої дівчини"
+problem_text = "\"Небога потонула навесні... тепер, кажуть, кличе живих до води. Боюсь, що то правда...\""
+true_threat = 0
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "Дякую, мольфаре. Хай упокоїться її душа."
+unhelped_text = "Боюсь, вона й далі кличе живих до води..."

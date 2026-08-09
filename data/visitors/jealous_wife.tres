@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Ревнива дружина"
+problem_text = "\"Приворожила його якась... я знаю, відчуваю. Зніми з нього ті чари, або... поверни мені, що моє...\""
+true_threat = 0
+satisfied_text = "Дякую, мольфаре. Тепер я знаю правду."
+unhelped_text = "Ти мені не допоміг. Доведеться самій щось робити."

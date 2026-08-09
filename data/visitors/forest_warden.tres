@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Лісник"
+problem_text = "\"Бачив у лісі... не звір то був, і не людина. Відтоді сам не свій...\""
+true_threat = 3
+satisfied_text = "Може, ти й правий... Піду, подумаю над твоїми словами."
+unhelped_text = "Не знаю, чи хтось взагалі може це зрозуміти."

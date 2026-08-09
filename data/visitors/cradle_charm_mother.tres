@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Молода мати з немовлям"
+problem_text = "\"Тільки народила... прошу, змайструй оберіг на колиску — боюсь вроків, дуже боюсь...\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+satisfied_text = "Дякую, мольфаре. Тепер спатиму спокійніше, знаючи, що дитя під захистом."
+unhelped_text = "Це... не той оберіг. Мені страшно за дитину."

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Вдова"
+problem_text = "\"Кажуть, це я наврочила Гальчину корову... Не знаю вже, до кого йти, крім тебе...\""
+true_threat = 0
+satisfied_text = "Дякую, що вислухав. Хоч трохи легше на душі."
+unhelped_text = "Розумію... нікому я не потрібна, навіть тут."

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Чоловік зі знахідкою"
+problem_text = "\"Знайшов оце на подвір'ї... лялечку якусь, вузлик. Боюсь навіть довше в руках тримати...\""
+true_threat = 0
+satisfied_text = "Дякую, що забрав це від мене."
+unhelped_text = "То я... і далі маю це тримати?"
