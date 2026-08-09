@@ -516,9 +516,9 @@ script = ExtResource("16")
 [node name="Liquid" type="ColorRect" parent="BrewingUI/Panel/StirCauldron"]
 mouse_filter = 2
 offset_left = 90.0
-offset_top = 30.0
+offset_top = 92.0
 offset_right = 370.0
-offset_bottom = 310.0
+offset_bottom = 248.0
 material = SubResource("ShaderMaterial_liquid")
 
 [node name="Tokens" type="Control" parent="BrewingUI/Panel/StirCauldron"]

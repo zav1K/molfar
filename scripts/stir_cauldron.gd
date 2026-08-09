@@ -1,18 +1,24 @@
 class_name StirCauldron
 extends Control
-## The cauldron itself: an always-live circular drop target (drag an
-## ingredient icon in to add it) plus a circular stirring gesture. Hold
-## and drag the mouse in a circle to stir — direction picks the recipe's
-## white/black path (посолонь = clockwise = light, проти сонця =
-## counter-clockwise = dark); rotation count and rhythm evenness (read by
-## brewing_ui.gd) decide brew quality. Each stir gesture is independent —
-## release ends it and the next press starts a fresh one.
+## The cauldron itself: an always-live elliptical drop target (drag an
+## ingredient icon in to add it) plus a circular stirring gesture. The
+## pot's mouth is drawn as an ellipse (looking into it at a slight angle,
+## not straight-on) — RADII below is that ellipse in pixels, and mouse
+## offsets are normalized by it so a natural circular hand motion still
+## reads as a clean rotation. Hold and drag the mouse in a circle to
+## stir — direction picks the recipe's white/black path (посолонь =
+## clockwise = light, проти сонця = counter-clockwise = dark); rotation
+## count and rhythm evenness (read by brewing_ui.gd) decide brew
+## quality. Each stir gesture is independent — release ends it and the
+## next press starts a fresh one.
 
 signal finished(direction: int, rotations: float, evenness: float)
 signal ingredient_dropped(ingredient_id: StringName)
 
-const DEAD_ZONE_RADIUS := 20.0
-const CAULDRON_RADIUS := 140.0
+const RADII := Vector2(140.0, 78.0) ## ellipse half-extents in pixels (x, y).
+const DEAD_ZONE_FRACTION := 0.15 ## of RADII, around the center, that ignores clicks/drags.
+const TOKEN_MIN_FRACTION := 0.3
+const TOKEN_MAX_FRACTION := 0.85
 const MIN_ROTATIONS_TO_COUNT := 0.05 ## below this, a release is a misclick, not an attempt.
 const STIR_FRICTION := 6.0 ## rad/s^2 decay of stir_influence once the drag ends.
 
@@ -41,6 +47,13 @@ func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_liquid()
 
+## Normalizes a screen offset from center by the ellipse radii, so the
+## result behaves like an offset on a unit circle (length 1 = on the rim,
+## angle() = consistent rotation regardless of the ellipse's squash).
+func _to_unit_circle(screen_pos: Vector2) -> Vector2:
+	var offset := screen_pos - _center
+	return Vector2(offset.x / RADII.x, offset.y / RADII.y)
+
 func reset_liquid() -> void:
 	progress_label.text = "Затисни і веди мишею по колу"
 	var mat := liquid.material as ShaderMaterial
@@ -51,8 +64,8 @@ func reset_liquid() -> void:
 func add_token(ingredient: Ingredient) -> void:
 	var token := FloatingToken.new()
 	tokens_root.add_child(token)
-	var r := randf_range(DEAD_ZONE_RADIUS + 10.0, CAULDRON_RADIUS - 20.0)
-	token.setup(ingredient, _center, r, self)
+	var radius_fraction := randf_range(TOKEN_MIN_FRACTION, TOKEN_MAX_FRACTION)
+	token.setup(ingredient, _center, RADII, radius_fraction, self)
 	if not _tokens.has(ingredient.id):
 		_tokens[ingredient.id] = []
 	_tokens[ingredient.id].append(token)
@@ -88,8 +101,8 @@ func _gui_input(event: InputEvent) -> void:
 		if mb.button_index != MOUSE_BUTTON_LEFT:
 			return
 		if mb.pressed:
-			var offset: Vector2 = mb.position - _center
-			if offset.length() < DEAD_ZONE_RADIUS:
+			var offset := _to_unit_circle(mb.position)
+			if offset.length() < DEAD_ZONE_FRACTION:
 				return
 			_dragging = true
 			_cumulative_angle = 0.0
@@ -101,8 +114,8 @@ func _gui_input(event: InputEvent) -> void:
 			_on_release()
 	elif event is InputEventMouseMotion and _dragging:
 		var mm := event as InputEventMouseMotion
-		var offset: Vector2 = mm.position - _center
-		if offset.length() < DEAD_ZONE_RADIUS * 0.5:
+		var offset := _to_unit_circle(mm.position)
+		if offset.length() < DEAD_ZONE_FRACTION * 0.5:
 			return
 		var angle := offset.angle()
 		var delta := wrapf(angle - _last_angle, -PI, PI)

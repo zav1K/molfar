@@ -1,7 +1,11 @@
 shader_type canvas_item;
-// Swirling cauldron liquid: a circular mask over a warped, animated noise
-// field. Rotation speed/direction and the light/dark tint follow the
-// player's stirring (see stir_cauldron.gd) — idles gently on its own too.
+// Swirling cauldron liquid, drawn to fill whatever rect it's given (an
+// ellipse rect looking into the pot at a slight angle, not straight-on
+// — see stir_cauldron.gd). A soft antialiased rim, a dark falloff toward
+// the edge and a highlight blob sell it as a concave surface with some
+// depth rather than a flat painted disc; rotation speed/direction and
+// the light/dark tint follow the player's stirring — idles gently on
+// its own too.
 
 uniform float swirl_amount : hint_range(0.0, 4.0) = 0.4;
 uniform float direction : hint_range(-1.0, 1.0) = 0.0;
@@ -9,6 +13,7 @@ uniform float progress : hint_range(0.0, 1.0) = 0.0;
 uniform vec4 base_color : source_color = vec4(0.35, 0.4, 0.22, 1.0);
 uniform vec4 light_color : source_color = vec4(0.85, 0.7, 0.3, 1.0);
 uniform vec4 dark_color : source_color = vec4(0.25, 0.05, 0.3, 1.0);
+uniform float surface_alpha : hint_range(0.0, 1.0) = 0.88;
 
 float hash(vec2 p) {
 	return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453123);
@@ -28,9 +33,10 @@ float value_noise(vec2 p) {
 void fragment() {
 	vec2 centered = UV - vec2(0.5);
 	float dist = length(centered) * 2.0;
-	if (dist > 1.0) {
+	if (dist > 1.08) {
 		discard;
 	}
+	float edge_alpha = 1.0 - smoothstep(0.9, 1.05, dist);
 
 	float angle = atan(centered.y, centered.x);
 	float dir_sign = direction >= 0.0 ? 1.0 : -1.0;
@@ -44,8 +50,13 @@ void fragment() {
 	n /= 1.5;
 
 	vec4 tint = mix(base_color, direction >= 0.0 ? light_color : dark_color, progress);
-	vec3 col = tint.rgb * (0.75 + 0.5 * n);
-	col *= mix(0.85, 1.05, 1.0 - smoothstep(0.0, 1.0, dist));
+	vec3 col = tint.rgb * (0.7 + 0.5 * n);
 
-	COLOR = vec4(col, 1.0);
+	// Concave-bowl shading: darker toward the rim, soft highlight offset
+	// toward one side like light catching the surface.
+	col *= mix(0.62, 1.0, 1.0 - smoothstep(0.0, 1.0, dist));
+	float highlight = smoothstep(0.4, 0.0, length(centered - vec2(-0.16, -0.22)));
+	col += highlight * 0.22;
+
+	COLOR = vec4(col, surface_alpha * edge_alpha);
 }
