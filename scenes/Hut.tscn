@@ -1,11 +1,10 @@
-[gd_scene load_steps=30 format=3]
+[gd_scene load_steps=31 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron.png" id="3"]
 [ext_resource type="Texture2D" path="res://assets/hut/shelfs.PNG" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="5"]
-[ext_resource type="Script" path="res://scripts/beam_bundle.gd" id="6"]
 [ext_resource type="Script" path="res://scripts/threshold_dialogue.gd" id="7"]
 [ext_resource type="Script" path="res://scripts/door.gd" id="8"]
 [ext_resource type="Script" path="res://scripts/ward_slot.gd" id="9"]
@@ -13,7 +12,6 @@
 [ext_resource type="Texture2D" path="res://assets/hut/panel_center.png" id="11"]
 [ext_resource type="Texture2D" path="res://assets/hut/panel_right.png" id="12"]
 [ext_resource type="Script" path="res://scripts/brewing_ui.gd" id="13"]
-[ext_resource type="Script" path="res://scripts/potion_shelf_slot.gd" id="14"]
 [ext_resource type="Script" path="res://scripts/potion_detail_popup.gd" id="15"]
 [ext_resource type="Script" path="res://scripts/stir_cauldron.gd" id="16"]
 [ext_resource type="Shader" path="res://shaders/liquid.gdshader" id="17"]
@@ -22,6 +20,7 @@
 [ext_resource type="Script" path="res://scripts/reception_ui.gd" id="20"]
 [ext_resource type="Script" path="res://scripts/sigil_wall_display.gd" id="21"]
 [ext_resource type="Script" path="res://scripts/waiting_visitor_display.gd" id="22"]
+[ext_resource type="Script" path="res://scripts/inventory_panel.gd" id="23"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(150, 220)
@@ -46,6 +45,12 @@ shader = ExtResource("17")
 
 [sub_resource type="RectangleShape2D" id="Shape_desk"]
 size = Vector2(140, 90)
+
+[sub_resource type="RectangleShape2D" id="Shape_dryingbeam"]
+size = Vector2(200, 80)
+
+[sub_resource type="RectangleShape2D" id="Shape_potionshelf"]
+size = Vector2(100, 100)
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -99,19 +104,57 @@ offset_bottom = 70.0
 horizontal_alignment = 1
 text = "Казан"
 
-[node name="PotionShelf" type="Control" parent="PanelLeft"]
-mouse_filter = 2
-offset_left = 550.0
-offset_top = 55.0
-offset_right = 650.0
-offset_bottom = 155.0
-script = ExtResource("14")
+[node name="DryingBeam" type="Area2D" parent="PanelLeft/Zones"]
+position = Vector2(450, 90)
+script = ExtResource("2")
+zone_id = &"drying_beam"
+zone_label = "Сволок"
 
-[node name="Row" type="HBoxContainer" parent="PanelLeft/PotionShelf"]
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/DryingBeam"]
+shape = SubResource("Shape_dryingbeam")
+
+[node name="Visual" type="ColorRect" parent="PanelLeft/Zones/DryingBeam"]
 mouse_filter = 2
+offset_left = -100.0
+offset_top = -40.0
 offset_right = 100.0
-offset_bottom = 100.0
-alignment = 1
+offset_bottom = 40.0
+color = Color(0.3, 0.22, 0.15, 0.2)
+
+[node name="Label" type="Label" parent="PanelLeft/Zones/DryingBeam"]
+mouse_filter = 2
+offset_left = -100.0
+offset_top = 45.0
+offset_right = 100.0
+offset_bottom = 70.0
+horizontal_alignment = 1
+text = "Сволок (сушіння)"
+
+[node name="PotionShelf" type="Area2D" parent="PanelLeft/Zones"]
+position = Vector2(600, 105)
+script = ExtResource("2")
+zone_id = &"potion_shelf"
+zone_label = "Полиця з зіллям"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/PotionShelf"]
+shape = SubResource("Shape_potionshelf")
+
+[node name="Visual" type="ColorRect" parent="PanelLeft/Zones/PotionShelf"]
+mouse_filter = 2
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
+color = Color(0.3, 0.22, 0.15, 0.2)
+
+[node name="Label" type="Label" parent="PanelLeft/Zones/PotionShelf"]
+mouse_filter = 2
+offset_left = -60.0
+offset_top = 55.0
+offset_right = 60.0
+offset_bottom = 80.0
+horizontal_alignment = 1
+text = "Полиця з зіллям"
 
 [node name="PanelCenter" type="Node2D" parent="."]
 position = Vector2(960, 0)
@@ -337,71 +380,6 @@ position = Vector2(150, 430)
 
 [node name="GardenWindowAnchor" type="Marker2D" parent="PanelRight/Anchors"]
 position = Vector2(150, 180)
-
-[node name="BeamBundle1" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(360, 60)
-
-[node name="Bundle" type="TextureRect" parent="PanelRight/Anchors/BeamBundle1"]
-offset_left = -69.0
-offset_top = 0.0
-offset_right = 66.0
-offset_bottom = 202.0
-expand_mode = 1
-stretch_mode = 0
-script = ExtResource("6")
-ingredient_id = &"garlic"
-
-[node name="BeamBundle2" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(430, 60)
-
-[node name="Bundle" type="TextureRect" parent="PanelRight/Anchors/BeamBundle2"]
-offset_left = -52.0
-offset_top = 0.0
-offset_right = 52.0
-offset_bottom = 155.0
-expand_mode = 1
-stretch_mode = 0
-script = ExtResource("6")
-ingredient_id = &"wormwood"
-
-[node name="BeamBundle3" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(500, 60)
-
-[node name="Bundle" type="TextureRect" parent="PanelRight/Anchors/BeamBundle3"]
-offset_left = -53.0
-offset_top = 0.0
-offset_right = 52.0
-offset_bottom = 157.0
-expand_mode = 1
-stretch_mode = 0
-script = ExtResource("6")
-ingredient_id = &"mint"
-
-[node name="BeamBundle4" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(570, 60)
-
-[node name="Bundle" type="TextureRect" parent="PanelRight/Anchors/BeamBundle4"]
-offset_left = -69.0
-offset_top = 0.0
-offset_right = 66.0
-offset_bottom = 202.0
-expand_mode = 1
-stretch_mode = 0
-script = ExtResource("6")
-ingredient_id = &"dream_grass"
-
-[node name="BeamBundle5" type="Marker2D" parent="PanelRight/Anchors"]
-position = Vector2(640, 60)
-
-[node name="Bundle" type="TextureRect" parent="PanelRight/Anchors/BeamBundle5"]
-offset_left = -69.0
-offset_top = 0.0
-offset_right = 66.0
-offset_bottom = 202.0
-expand_mode = 1
-stretch_mode = 0
-script = ExtResource("6")
-ingredient_id = &"kupala_dew"
 
 [node name="Zones" type="Node2D" parent="PanelRight"]
 
@@ -728,6 +706,57 @@ offset_left = 415.0
 offset_top = 430.0
 offset_right = 545.0
 offset_bottom = 465.0
+text = "Закрити"
+
+[node name="InventoryPanel" type="CanvasLayer" parent="."]
+script = ExtResource("23")
+
+[node name="Panel" type="ColorRect" parent="InventoryPanel"]
+offset_right = 960.0
+offset_bottom = 540.0
+color = Color(0.05, 0.05, 0.05, 0.85)
+
+[node name="Title" type="Label" parent="InventoryPanel/Panel"]
+offset_left = 280.0
+offset_top = 30.0
+offset_right = 680.0
+offset_bottom = 60.0
+horizontal_alignment = 1
+text = "Запаси"
+
+[node name="IngredientTitle" type="Label" parent="InventoryPanel/Panel"]
+offset_left = 100.0
+offset_top = 80.0
+offset_right = 450.0
+offset_bottom = 105.0
+horizontal_alignment = 1
+text = "Трави"
+
+[node name="IngredientList" type="VBoxContainer" parent="InventoryPanel/Panel"]
+offset_left = 100.0
+offset_top = 115.0
+offset_right = 450.0
+offset_bottom = 460.0
+
+[node name="PotionTitle" type="Label" parent="InventoryPanel/Panel"]
+offset_left = 510.0
+offset_top = 80.0
+offset_right = 860.0
+offset_bottom = 105.0
+horizontal_alignment = 1
+text = "Зілля"
+
+[node name="PotionList" type="VBoxContainer" parent="InventoryPanel/Panel"]
+offset_left = 510.0
+offset_top = 115.0
+offset_right = 860.0
+offset_bottom = 460.0
+
+[node name="CloseButton" type="Button" parent="InventoryPanel/Panel"]
+offset_left = 415.0
+offset_top = 470.0
+offset_right = 545.0
+offset_bottom = 505.0
 text = "Закрити"
 
 [node name="PotionDetailPopup" type="CanvasLayer" parent="."]

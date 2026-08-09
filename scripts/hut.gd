@@ -22,7 +22,7 @@ const ZONE_SCENES := {
 @onready var threshold_dialogue: ThresholdDialogue = $ThresholdDialogue
 @onready var reception_ui: ReceptionUI = $ReceptionUI
 @onready var brewing_ui: BrewingUI = $BrewingUI
-@onready var potion_shelf: PotionShelf = $PanelLeft/PotionShelf
+@onready var inventory_panel: InventoryPanel = $InventoryPanel
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
@@ -30,6 +30,8 @@ const ZONE_SCENES := {
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
+	$PanelLeft/Zones/DryingBeam,
+	$PanelLeft/Zones/PotionShelf,
 	$PanelRight/Zones/Shelves,
 	$PanelRight/Zones/Chest,
 	$PanelRight/Zones/GardenWindow,
@@ -51,16 +53,16 @@ func _ready() -> void:
 	waiting_visitor_display.clicked.connect(_on_waiting_indicator_pressed)
 	brewing_ui.closed.connect(_on_brewing_closed)
 	carving_ui.closed.connect(_on_carving_closed)
-	potion_shelf.potion_clicked.connect(potion_detail_popup.show_potion)
+	inventory_panel.closed.connect(_on_inventory_panel_closed)
+	inventory_panel.potion_selected.connect(potion_detail_popup.show_potion)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
 
-	# DEBUG: seed the inventory so the beam bundles have something to react to
-	# until the garden/gathering loop actually grants ingredients. Remove once
-	# that exists. dream_grass/kupala_dew have no bundle art yet and aren't
-	# seeded here — nothing to show for them regardless of inventory state.
+	# DEBUG: seed the inventory so there's something to see in InventoryPanel
+	# and to brew/give until the garden/gathering loop actually grants
+	# ingredients. Remove once that exists.
 	if not PlayerInventory.has(&"garlic"):
 		PlayerInventory.add(&"garlic", 3)
 	if not PlayerInventory.has(&"wormwood"):
@@ -77,7 +79,7 @@ func _ready() -> void:
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or inventory_panel.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -116,6 +118,11 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 		nav_right.visible = false
 		carving_ui.open()
 		return
+	if zone.zone_id == &"drying_beam" or zone.zone_id == &"potion_shelf":
+		nav_left.visible = false
+		nav_right.visible = false
+		inventory_panel.open()
+		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
 		return
@@ -127,6 +134,10 @@ func _on_brewing_closed() -> void:
 	nav_right.visible = true
 
 func _on_carving_closed() -> void:
+	nav_left.visible = true
+	nav_right.visible = true
+
+func _on_inventory_panel_closed() -> void:
 	nav_left.visible = true
 	nav_right.visible = true
 

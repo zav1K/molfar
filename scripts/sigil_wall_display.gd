@@ -2,9 +2,10 @@ class_name SigilWallDisplay
 extends Control
 ## Carved wards and curse-marks hung as hut decoration — a visual record
 ## of the player's white/black path (see CONCEPT.md), mirroring
-## PlayerInventory the same way potion_shelf_slot.gd does for potions.
-## No per-sigil carved-icon art yet, so wards show as a warm/gold dot and
-## curses as a dark one until real art replaces the placeholder.
+## PlayerInventory the same reactive-to-inventory pattern used
+## throughout this project (e.g. inventory_panel.gd). No per-sigil
+## carved-icon art yet, so wards show as a warm/gold dot and curses as
+## a dark one until real art replaces the placeholder.
 
 const WARD_COLOR := Color(0.82, 0.68, 0.35)
 const CURSE_COLOR := Color(0.32, 0.08, 0.12)

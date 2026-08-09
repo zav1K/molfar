@@ -2,8 +2,8 @@ class_name IngredientDragIcon
 extends TextureRect
 ## Small draggable icon on a brewing ingredient row. Dragging it onto the
 ## cauldron adds one unit, same effect as pressing the row's + button —
-## only shown for ingredients that have bundle art (see beam_bundle.gd
-## for the same "no art yet, stay out of the way" precedent).
+## only shown for ingredients that have bundle art ("no art yet, stay
+## out of the way" instead of showing an empty placeholder).
 
 var ingredient_id: StringName
 
