@@ -5,13 +5,14 @@ extends Control
 ## player goes off to brew or carve what they need. Click them to
 ## reopen ReceptionUI and finish the interaction.
 ##
-## Fills this control's width and anchors the image to the top, so the
-## face always stays visible and only the bottom (legs/feet, or empty
-## canvas padding) gets clipped against the table line. Godot's built-in
-## STRETCH_KEEP_ASPECT_COVERED crops centered on both edges instead,
-## which was cutting heads off — this computes the child Icon's size
-## from the actual texture's aspect ratio and clips it against this
-## control's clip_contents instead.
+## Fills this control's width with the actual painted figure — not the
+## raw canvas, which on these portraits has huge transparent margins
+## (~25% on each side, generated-image padding) that made the figure
+## render small and floating with a gap above the table line. Image.
+## get_used_rect() finds the real non-transparent content bounds; the
+## Icon child is scaled and shifted so that content's top-left lands at
+## this control's top-left, then clip_contents cuts off whatever
+## overflows the bottom (legs) against the table line.
 
 signal clicked
 
@@ -28,9 +29,10 @@ func show_visitor(visitor: Visitor) -> void:
 	if tex == null:
 		return
 	icon.texture = tex
-	var aspect := float(tex.get_width()) / float(tex.get_height())
-	icon.position = Vector2.ZERO
-	icon.size = Vector2(size.x, size.x / aspect)
+	var used := tex.get_image().get_used_rect()
+	var content_scale := size.x / float(used.size.x)
+	icon.size = Vector2(tex.get_width(), tex.get_height()) * content_scale
+	icon.position = -Vector2(used.position) * content_scale
 
 func hide_visitor() -> void:
 	visible = false
