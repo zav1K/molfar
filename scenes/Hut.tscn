@@ -1,4 +1,4 @@
-[gd_scene load_steps=21 format=3]
+[gd_scene load_steps=22 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -15,6 +15,7 @@
 [ext_resource type="Script" path="res://scripts/brewing_ui.gd" id="13"]
 [ext_resource type="Script" path="res://scripts/potion_shelf_slot.gd" id="14"]
 [ext_resource type="Script" path="res://scripts/potion_detail_popup.gd" id="15"]
+[ext_resource type="Script" path="res://scripts/stir_cauldron.gd" id="16"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(150, 220)
@@ -500,6 +501,20 @@ offset_top = 430.0
 offset_right = 620.0
 offset_bottom = 470.0
 text = "Назад"
+
+[node name="StirCauldron" type="Control" parent="BrewingUI/Panel"]
+offset_left = 250.0
+offset_top = 90.0
+offset_right = 710.0
+offset_bottom = 430.0
+script = ExtResource("16")
+
+[node name="ProgressLabel" type="Label" parent="BrewingUI/Panel/StirCauldron"]
+mouse_filter = 2
+offset_right = 460.0
+offset_bottom = 25.0
+horizontal_alignment = 1
+text = "Оберти: 0.0"
 
 [node name="PotionDetailPopup" type="CanvasLayer" parent="."]
 script = ExtResource("15")

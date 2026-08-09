@@ -8,4 +8,4 @@ ingredients = {
 &"wormwood": 2,
 &"garlic": 1
 }
-result_potion_id = &"cleansing_remedy"
+light_result_id = &"cleansing_remedy"

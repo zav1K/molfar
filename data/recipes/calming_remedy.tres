@@ -8,4 +8,4 @@ ingredients = {
 &"mint": 1,
 &"dream_grass": 1
 }
-result_potion_id = &"calming_remedy"
+light_result_id = &"calming_remedy"
