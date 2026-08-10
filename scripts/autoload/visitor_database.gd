@@ -2,10 +2,9 @@ extends Node
 ## Autoload. Loads every Visitor resource from data/visitors/ and hands
 ## out random picks for the door to knock with — each one at most once
 ## per reset_seen() call (see that function) so the same face doesn't
-## knock twice in a row. No day/night cycle exists yet to call
-## reset_seen() automatically; once it does, that's the natural place
-## to call it (allowing repeat visits again, per CONCEPT.md's "постійні
-## клієнти" — just not within the same day).
+## knock twice in a row. hut.gd calls reset_seen() on every day/night
+## phase flip (see GameCalendar), allowing repeat visits again, per
+## CONCEPT.md's "постійні клієнти" — just not within the same phase.
 
 const VISITORS_DIR := "res://data/visitors/"
 
@@ -33,18 +32,19 @@ func _load_all() -> void:
 func get_all() -> Array[Visitor]:
 	return _visitors
 
-## Picks a visitor that hasn't knocked yet since the last reset_seen()
-## (or ever, if it hasn't been called). Returns null once everyone's
-## been seen — the door just stays quiet rather than repeating anyone.
-func get_random() -> Visitor:
-	var available := _visitors.filter(func(v: Visitor) -> bool: return not _seen.has(v))
+## Picks a visitor from the day or night rotation (per night_visitor)
+## that hasn't knocked yet since the last reset_seen(). Returns null
+## once everyone in that rotation's been seen — the door just stays
+## quiet rather than repeating anyone within the same phase.
+func get_random(night: bool) -> Visitor:
+	var available := _visitors.filter(func(v: Visitor) -> bool: return v.night_visitor == night and not _seen.has(v))
 	if available.is_empty():
 		return null
 	var visitor: Visitor = available[randi() % available.size()]
 	_seen.append(visitor)
 	return visitor
 
-## Clears the seen-list so everyone can knock again — call this once a
-## day/night cycle exists, at the start of each new day.
+## Clears the seen-list so everyone can knock again — called by hut.gd
+## on every day/night phase flip.
 func reset_seen() -> void:
 	_seen.clear()

@@ -9,6 +9,9 @@ const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
 const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
+const DAY_VISITOR_CAP := 10 ## how many day clients knock before night falls.
+const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range.
+const NIGHT_VISITOR_MAX := 5
 
 ## Zones that are portals to another scene, keyed by zone_id.
 const ZONE_SCENES := {
@@ -29,6 +32,7 @@ const ZONE_SCENES := {
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
 @onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
+@onready var calendar_label: Label = $UI/CalendarLabel
 
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
@@ -44,6 +48,9 @@ const ZONE_SCENES := {
 var current_panel: int = 1 # start centered on the desk
 var _waiting_visitor: Visitor
 var _wait_token: int = 0
+var _day_visitor_count: int = 0
+var _night_visitor_count: int = 0
+var _night_quota: int = NIGHT_VISITOR_MIN
 
 func _ready() -> void:
 	for zone in zones:
@@ -62,8 +69,11 @@ func _ready() -> void:
 	sigil_inventory_panel.closed.connect(_on_inventory_panel_closed)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
+	GameCalendar.day_changed.connect(_update_calendar_label)
+	GameCalendar.phase_changed.connect(_update_calendar_label)
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
+	_update_calendar_label()
 
 	# DEBUG: seed the inventory so there's something to see in InventoryPanel
 	# and to brew/give until the garden/gathering loop actually grants
@@ -218,11 +228,35 @@ func _run_patience_timer(token: int) -> void:
 	_schedule_next_knock()
 
 func _schedule_next_knock() -> void:
+	_advance_visitor_slot()
 	await get_tree().create_timer(2.0).timeout
 	_knock_with_random_visitor()
 
+## Called once per resolved visitor (refused, served, or given up on) —
+## the single chokepoint before the next knock. Counts the slot against
+## the current phase's cap and flips day<->night once that cap is hit.
+func _advance_visitor_slot() -> void:
+	if GameCalendar.phase == GameCalendar.Phase.DAY:
+		_day_visitor_count += 1
+		if _day_visitor_count >= DAY_VISITOR_CAP:
+			_night_quota = randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
+			_night_visitor_count = 0
+			GameCalendar.set_phase(GameCalendar.Phase.NIGHT)
+	else:
+		_night_visitor_count += 1
+		if _night_visitor_count >= _night_quota:
+			GameCalendar.advance_day()
+			VisitorDatabase.reset_seen()
+			_day_visitor_count = 0
+			GameCalendar.set_phase(GameCalendar.Phase.DAY)
+
 func _knock_with_random_visitor() -> void:
-	var visitor := VisitorDatabase.get_random()
+	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
+	var visitor := VisitorDatabase.get_random(is_night)
 	if visitor == null:
 		return
 	door.knock(visitor, WardRack.check_visitor(visitor))
+
+func _update_calendar_label(_arg = null) -> void:
+	var phase_text := "ніч" if GameCalendar.phase == GameCalendar.Phase.NIGHT else "день"
+	calendar_label.text = "День %d — %s" % [GameCalendar.current_day, phase_text]

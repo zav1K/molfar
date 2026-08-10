@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Упир"
+problem_text = "\"Я не завжди був таким, мольфаре. Кажуть, ти можеш зняти цю... спрагу. Спробуй, поки я ще прошу по-доброму.\""
+true_threat = 2
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "\"...легше. Вперше за довгий час — легше.\""
+unhelped_text = "\"Тоді хай буде, як має бути\" — і ніч ковтає його дослівно."
+night_visitor = true

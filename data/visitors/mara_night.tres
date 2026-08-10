@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Мара"
+problem_text = "\"Не бійся мене, мольфаре. Я лиш хочу зілля, звареного проти сонця — таке ж, як твоя друга душа.\""
+true_threat = 1
+desired_result_id = &"curse_brew"
+satisfied_text = "\"Бачиш? Ми з тобою не такі й різні.\""
+unhelped_text = "\"Ще навідаюсь. Ти й сам не знаєш, куди тебе тягне.\""
+night_visitor = true

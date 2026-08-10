@@ -9,3 +9,4 @@ ingredients = {
 &"garlic": 1
 }
 light_result_id = &"cleansing_remedy"
+dark_result_id = &"curse_brew"

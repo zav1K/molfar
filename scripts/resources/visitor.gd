@@ -11,6 +11,11 @@ extends Resource
 ## have real consequences tied to this once that mechanic exists.
 @export var true_threat: Threat.Type = Threat.Type.NONE
 
+## Selects which rotation this visitor is drawn from: day clients vs. the
+## night cycle's нечисть/nocturnal callers. See GameCalendar/hut.gd's
+## day-night knock logic and VisitorDatabase.get_random().
+@export var night_visitor: bool = false
+
 ## What would actually help them — a Potion or Sigil id. No "reading the
 ## client" mechanic yet (see CONCEPT.md's diagnosis-via-details idea) —
 ## for now this is just what ReceptionUI checks a given item against.

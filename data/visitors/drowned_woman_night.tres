@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Утоплениця"
+problem_text = "\"Тут... тепло. Пусти мене до вогню, мольфаре, я так змерзла у воді...\""
+true_threat = 2
+satisfied_text = "\"...дякую, що не прогнав.\""
+unhelped_text = "Вона мовчки повертається до ночі — і до води."
+night_visitor = true
