@@ -1,13 +1,16 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_seeking_cure_female.png" id="2"]
 
 [resource]
 script = ExtResource("1")
-display_name = "Упир"
-problem_text = "\"Я не завжди був таким, мольфаре. Кажуть, ти можеш зняти цю... спрагу. Спробуй, поки я ще прошу по-доброму.\""
+display_name = "Упириця, що кається"
+problem_text = "\"Я не завжди такою була, мольфаре. Кажуть, ти можеш зняти цю... спрагу. Спробуй, поки я ще прошу по-доброму.\""
 true_threat = 2
 desired_result_id = &"cleansing_remedy"
 satisfied_text = "\"...легше. Вперше за довгий час — легше.\""
-unhelped_text = "\"Тоді хай буде, як має бути\" — і ніч ковтає його дослівно."
+unhelped_text = "\"Тоді хай буде, як має бути\" — і ніч ковтає її дослівно."
 night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.275391, 0.070313, 0.462891, 0.858073)
