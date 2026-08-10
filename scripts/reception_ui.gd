@@ -80,6 +80,8 @@ func _on_give_pressed(item_id: StringName) -> void:
 		result_label.text = "Це не те, що мені треба..."
 		return
 	PlayerInventory.remove(item_id)
+	if SigilDatabase.get_sigil(item_id) != null:
+		CarvedSigilRegistry.take_instance(item_id)
 	_resolve(true)
 
 func _on_send_away_pressed() -> void:

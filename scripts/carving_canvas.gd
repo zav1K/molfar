@@ -8,7 +8,10 @@ extends Control
 ## carving_ui.gd, same spirit as stir_cauldron.gd's rotation/evenness
 ## split for brewing).
 
-signal finished(avg_error: float, coverage: float)
+## normalized_stroke: the player's own traced path, 0..1 unit square —
+## same space as Sigil.path_points, kept for whatever ends up carved
+## (see CarvedSigilRegistry) so it displays as what THIS attempt drew.
+signal finished(avg_error: float, coverage: float, normalized_stroke: PackedVector2Array)
 
 const RESAMPLE_COUNT := 40
 const MIN_COVERAGE_TO_COUNT := 0.15 ## below this, a release is a misclick, not an attempt.
@@ -65,7 +68,11 @@ func _on_release() -> void:
 	var total_error := 0.0
 	for i in RESAMPLE_COUNT:
 		total_error += resampled_target[i].distance_to(resampled_drawn[i])
-	finished.emit(total_error / RESAMPLE_COUNT, coverage)
+	var normalized_stroke := PackedVector2Array()
+	normalized_stroke.resize(_drawn_points.size())
+	for i in _drawn_points.size():
+		normalized_stroke[i] = _drawn_points[i] / size
+	finished.emit(total_error / RESAMPLE_COUNT, coverage, normalized_stroke)
 
 func _draw() -> void:
 	if _target_path.size() >= 2:

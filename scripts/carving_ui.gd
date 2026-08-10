@@ -66,12 +66,13 @@ func _start_carving(sigil: Sigil) -> void:
 	_show_carving_phase()
 	carving_canvas.start(sigil)
 
-func _on_carving_finished(avg_error: float, _coverage: float) -> void:
+func _on_carving_finished(avg_error: float, _coverage: float, stroke: PackedVector2Array) -> void:
 	var quality := _resolve_quality(avg_error)
 	if quality == Quality.FAILED:
 		status_label.text = "Рука зірвалась — знак не вийшов, спробуй ще."
 	else:
 		PlayerInventory.add(_current_sigil.id)
+		CarvedSigilRegistry.add_instance(_current_sigil.id, stroke)
 		status_label.text = "Вирізьблено (%s): %s" % [QUALITY_LABEL[quality], _current_sigil.display_name]
 	_show_list_phase()
 

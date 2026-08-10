@@ -19,6 +19,11 @@ enum Kind { WARD, CURSE }
 ## (no pen lifts — matches how the carving gesture is captured).
 @export var path_points: PackedVector2Array
 
-## Carved-result art, once available. Null falls back to a placeholder
-## the same way Ingredient/Potion art does elsewhere.
-@export var icon: Texture2D
+## Blank wood-block art this symbol gets carved into, shared across
+## every sigil of the same kind (one texture per WARD/CURSE, not one
+## per symbol). Null falls back to a flat color placeholder — see
+## SigilIcon. The carved *line* itself is never templated art: it's
+## drawn from the specific player's own traced stroke for that
+## specific carved object (see CarvedSigilRegistry), not this symbol's
+## canonical path_points, so no two carved instances look alike.
+@export var block_texture: Texture2D
