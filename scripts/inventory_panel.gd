@@ -1,16 +1,16 @@
 class_name InventoryPanel
 extends CanvasLayer
-## Stock-list overlay for glancing at held herbs or potions — instanced
-## twice in Hut.tscn (one per `kind`), each opened by its own left-panel
-## zone (drying beam for herbs, potion shelf for potions). Both zones
-## are purely decorative triggers, not physical per-item displays: no
+## Stock-list overlay for glancing at held herbs, potions, or carved
+## sigils — instanced three times in Hut.tscn (one per `kind`), each
+## opened by its own decorative trigger zone (drying beam for herbs,
+## potion shelf for potions, a spot on the desk for sigils). All three
+## zones are purely decorative, not physical per-item displays: no
 ## drag-and-drop, no per-slot anchors, no slot-count/equipment-
-## progression bookkeeping for these two spots. The chest on the right
-## panel is meant to become the actual full-stockpile screen later —
-## these are just the quick-glance versions for two atmospheric
-## hotspots.
+## progression bookkeeping. The chest on the right panel is meant to
+## become the actual full-stockpile screen later — these are just the
+## quick-glance versions for their own atmospheric hotspots.
 
-enum Kind { INGREDIENTS, POTIONS }
+enum Kind { INGREDIENTS, POTIONS, SIGILS }
 
 @export var kind: Kind = Kind.INGREDIENTS
 
@@ -24,7 +24,13 @@ signal potion_selected(potion: Potion)
 func _ready() -> void:
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
-	title_label.text = "Трави" if kind == Kind.INGREDIENTS else "Зілля"
+	match kind:
+		Kind.INGREDIENTS:
+			title_label.text = "Трави"
+		Kind.POTIONS:
+			title_label.text = "Зілля"
+		Kind.SIGILS:
+			title_label.text = "Обереги"
 
 func open() -> void:
 	_rebuild()
@@ -33,30 +39,36 @@ func open() -> void:
 func _rebuild() -> void:
 	for child in list.get_children():
 		child.queue_free()
-	if kind == Kind.INGREDIENTS:
-		for ingredient in IngredientDatabase.get_all():
-			var count := PlayerInventory.get_count(ingredient.id)
-			if count > 0:
-				list.add_child(_build_ingredient_row(ingredient, count))
-	else:
-		for potion in PotionDatabase.get_all():
-			var count := PlayerInventory.get_count(potion.id)
-			if count > 0:
-				list.add_child(_build_potion_row(potion, count))
+	match kind:
+		Kind.INGREDIENTS:
+			for ingredient in IngredientDatabase.get_all():
+				var count := PlayerInventory.get_count(ingredient.id)
+				if count > 0:
+					list.add_child(_build_icon_row(ingredient.bundle_icon, ingredient.display_name, count))
+		Kind.POTIONS:
+			for potion in PotionDatabase.get_all():
+				var count := PlayerInventory.get_count(potion.id)
+				if count > 0:
+					list.add_child(_build_potion_row(potion, count))
+		Kind.SIGILS:
+			for sigil in SigilDatabase.get_all():
+				var count := PlayerInventory.get_count(sigil.id)
+				if count > 0:
+					list.add_child(_build_icon_row(sigil.icon, sigil.display_name, count))
 
-func _build_ingredient_row(ingredient: Ingredient, count: int) -> HBoxContainer:
+func _build_icon_row(icon_texture: Texture2D, label_text: String, count: int) -> HBoxContainer:
 	var row := HBoxContainer.new()
 
-	if ingredient.bundle_icon != null:
+	if icon_texture != null:
 		var icon := TextureRect.new()
-		icon.texture = ingredient.bundle_icon
+		icon.texture = icon_texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = Vector2(28, 28)
 		row.add_child(icon)
 
 	var label := Label.new()
-	label.text = "%s ×%d" % [ingredient.display_name, count]
+	label.text = "%s ×%d" % [label_text, count]
 	row.add_child(label)
 
 	return row

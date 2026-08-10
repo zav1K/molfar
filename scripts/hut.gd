@@ -24,6 +24,7 @@ const ZONE_SCENES := {
 @onready var brewing_ui: BrewingUI = $BrewingUI
 @onready var ingredient_inventory_panel: InventoryPanel = $IngredientInventoryPanel
 @onready var potion_inventory_panel: InventoryPanel = $PotionInventoryPanel
+@onready var sigil_inventory_panel: InventoryPanel = $SigilInventoryPanel
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
@@ -37,6 +38,7 @@ const ZONE_SCENES := {
 	$PanelRight/Zones/Chest,
 	$PanelRight/Zones/GardenWindow,
 	$PanelCenter/Zones/Desk,
+	$PanelCenter/Zones/SigilShelf,
 ]
 
 var current_panel: int = 1 # start centered on the desk
@@ -57,6 +59,7 @@ func _ready() -> void:
 	ingredient_inventory_panel.closed.connect(_on_inventory_panel_closed)
 	potion_inventory_panel.closed.connect(_on_inventory_panel_closed)
 	potion_inventory_panel.potion_selected.connect(potion_detail_popup.show_potion)
+	sigil_inventory_panel.closed.connect(_on_inventory_panel_closed)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	camera.position = _panel_center(current_panel)
@@ -81,7 +84,7 @@ func _ready() -> void:
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible or sigil_inventory_panel.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -129,6 +132,11 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 		nav_left.visible = false
 		nav_right.visible = false
 		potion_inventory_panel.open()
+		return
+	if zone.zone_id == &"sigil_shelf":
+		nav_left.visible = false
+		nav_right.visible = false
+		sigil_inventory_panel.open()
 		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])
