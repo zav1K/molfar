@@ -9,6 +9,7 @@ extends Control
 
 const WARD_COLOR := Color(0.82, 0.68, 0.35)
 const CURSE_COLOR := Color(0.32, 0.08, 0.12)
+const ICON_SIZE := 24.0 ## small — this row has to fit the tight gap above the door.
 
 @onready var row: HBoxContainer = $Row
 
@@ -39,7 +40,7 @@ func _build_icon(sigil: Sigil, count: int) -> Control:
 		icon.texture = sigil.icon
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.custom_minimum_size = Vector2(34, 34)
+		icon.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
 		icon.tooltip_text = tooltip
 		icon.mouse_filter = Control.MOUSE_FILTER_STOP
 		return icon
@@ -47,9 +48,9 @@ func _build_icon(sigil: Sigil, count: int) -> Control:
 	var panel := Panel.new()
 	var style := StyleBoxFlat.new()
 	style.bg_color = WARD_COLOR if sigil.kind == Sigil.Kind.WARD else CURSE_COLOR
-	style.set_corner_radius_all(17)
+	style.set_corner_radius_all(int(ICON_SIZE / 2.0))
 	panel.add_theme_stylebox_override("panel", style)
-	panel.custom_minimum_size = Vector2(34, 34)
+	panel.custom_minimum_size = Vector2(ICON_SIZE, ICON_SIZE)
 	panel.tooltip_text = tooltip
 	panel.mouse_filter = Control.MOUSE_FILTER_STOP
 	return panel
