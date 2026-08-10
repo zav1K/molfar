@@ -9,14 +9,17 @@ extends Node
 ## preliminary value — see hut.gd for where day_of_year turns into a knock
 ## count.
 ##
-## NOTE: festivals below still carry their real-calendar day_of_year
-## (Ihnatiya=Jan, Ivana Kupala=Jul, etc.) inherited from before the
-## condensed year existed. Both this list and each Ingredient's
-## season_start_day/season_end_day (data/ingredients/*.tres) are unused by
-## any live system yet (get_active_festival() and
-## IngredientDatabase.get_available_on_day() have no callers) — they'll
-## need remapping onto the DAYS_PER_SEASON scale before either feature
-## actually gets wired up.
+## Festival day_of_year values below are remapped onto this condensed
+## DAYS_PER_SEASON scale (not real Gregorian/Julian dates) — placed in
+## whichever season they folklorically belong to, at a day within it
+## chosen to preserve their real relative order and, where it matters,
+## their own meaning (e.g. Стрітення sits at the very end of winter,
+## since it's literally "the meeting of winter and spring").
+##
+## Each Ingredient's season_start_day/season_end_day
+## (data/ingredients/*.tres) are still on the old real-calendar scale —
+## that feature (IngredientDatabase.get_available_on_day()) has no
+## caller yet, so it's left as a flagged follow-up rather than guessed at.
 
 signal day_changed(day_of_year: int)
 signal phase_changed(phase: Phase)
@@ -55,15 +58,20 @@ func _ready() -> void:
 
 func _register_festivals() -> void:
 	festivals = [
-		Festival.new(&"ihnatiya", "Ігнатія", 2),
-		Festival.new(&"sviatvechir", "Святвечір / Різдво", 6),
-		Festival.new(&"malanka", "Маланка", 13),
-		Festival.new(&"vasylya", "Василя", 14),
-		Festival.new(&"vodokhreshcha", "Водохреща", 19),
-		Festival.new(&"stritennya", "Стрітення", 46),
-		Festival.new(&"yavdokhy", "Явдохи", 73),
-		Festival.new(&"ivana_kupala", "Івана Купала", 188),
-		Festival.new(&"andriya", "Андрія", 347),
+		# SPRING (days 1-21): Явдохи traditionally marks spring's start.
+		Festival.new(&"yavdokhy", "Явдохи", 2),
+		# SUMMER (days 22-42): Івана Купала sits at the solstice, mid-season.
+		Festival.new(&"ivana_kupala", "Івана Купала", 32),
+		# AUTUMN (days 43-63): Андрія, late in the season, on autumn's threshold to winter.
+		Festival.new(&"andriya", "Андрія", 61),
+		# WINTER (days 64-84): the Різдво/Новий рік cluster near the start,
+		# Стрітення right at the end — "the meeting of winter and spring".
+		Festival.new(&"ihnatiya", "Ігнатія", 64),
+		Festival.new(&"sviatvechir", "Святвечір / Різдво", 66),
+		Festival.new(&"malanka", "Маланка", 70),
+		Festival.new(&"vasylya", "Василя", 71),
+		Festival.new(&"vodokhreshcha", "Водохреща", 74),
+		Festival.new(&"stritennya", "Стрітення", 83),
 	]
 
 func advance_day() -> void:
@@ -87,8 +95,15 @@ func get_season() -> Season:
 func get_day_of_season() -> int:
 	return ((current_day - 1) % DAYS_PER_SEASON) + 1
 
-func get_active_festival() -> Festival:
+## First day_of_year of the given season (1-based).
+func get_season_start_day(season: Season) -> int:
+	return int(season) * DAYS_PER_SEASON + 1
+
+func get_festival_on_day(day_of_year: int) -> Festival:
 	for festival in festivals:
-		if festival.day_of_year == current_day:
+		if festival.day_of_year == day_of_year:
 			return festival
 	return null
+
+func get_active_festival() -> Festival:
+	return get_festival_on_day(current_day)
