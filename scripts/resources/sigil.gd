@@ -19,11 +19,11 @@ enum Kind { WARD, CURSE }
 ## (no pen lifts — matches how the carving gesture is captured).
 @export var path_points: PackedVector2Array
 
-## Blank wood-block art this symbol gets carved into, shared across
-## every sigil of the same kind (one texture per WARD/CURSE, not one
-## per symbol). Null falls back to a flat color placeholder — see
-## SigilIcon. The carved *line* itself is never templated art: it's
-## drawn from the specific player's own traced stroke for that
-## specific carved object (see CarvedSigilRegistry), not this symbol's
-## canonical path_points, so no two carved instances look alike.
-@export var block_texture: Texture2D
+## Note: the blank wood-block a carved instance sits on isn't chosen
+## per symbol — CarvedSigilRegistry picks randomly from a shared pool
+## of block art (assets/hut/sigil_blocks/) each time something is
+## carved, and remembers the pick on that CarvedSigilInstance. The
+## carved *line* itself is never templated art either: it's the
+## specific player's own traced stroke for that specific object, not
+## this symbol's canonical path_points — so no two carved instances of
+## the same sigil look alike, in block or in line.

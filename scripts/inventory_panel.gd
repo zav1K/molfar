@@ -81,7 +81,7 @@ func _build_sigil_row(sigil: Sigil, instance: CarvedSigilInstance) -> HBoxContai
 
 	var icon := SigilIcon.new()
 	icon.custom_minimum_size = Vector2(36, 36)
-	icon.setup(sigil, instance.stroke_points)
+	icon.setup(sigil, instance)
 	row.add_child(icon)
 
 	var label := Label.new()
