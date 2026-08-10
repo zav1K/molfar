@@ -71,6 +71,7 @@ func _ready() -> void:
 	nav_right.pressed.connect(_go_right)
 	GameCalendar.day_changed.connect(_update_calendar_label)
 	GameCalendar.phase_changed.connect(_update_calendar_label)
+	GameCalendar.season_changed.connect(_update_calendar_label)
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
 	_update_calendar_label()
@@ -259,4 +260,5 @@ func _knock_with_random_visitor() -> void:
 
 func _update_calendar_label(_arg = null) -> void:
 	var phase_text := "ніч" if GameCalendar.phase == GameCalendar.Phase.NIGHT else "день"
-	calendar_label.text = "День %d — %s" % [GameCalendar.current_day, phase_text]
+	var season_name: String = GameCalendar.SEASON_NAMES[GameCalendar.get_season()]
+	calendar_label.text = "%s, день %d/%d — %s" % [season_name, GameCalendar.get_day_of_season(), GameCalendar.DAYS_PER_SEASON, phase_text]
