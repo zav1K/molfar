@@ -16,10 +16,11 @@ extends Node
 ## their own meaning (e.g. Стрітення sits at the very end of winter,
 ## since it's literally "the meeting of winter and spring").
 ##
-## Each Ingredient's season_start_day/season_end_day
-## (data/ingredients/*.tres) are still on the old real-calendar scale —
-## that feature (IngredientDatabase.get_available_on_day()) has no
-## caller yet, so it's left as a flagged follow-up rather than guessed at.
+## Ingredient.season_start_day/season_end_day are on this same condensed
+## scale for GARDEN-source ingredients (see GardenState, which is what
+## actually reads them for planting) — WILD-source ones (dream_grass,
+## kupala_dew) aren't planted through the garden yet, so theirs are still
+## unrescaled real-calendar values until a foraging mechanic reads them.
 
 signal day_changed(day_of_year: int)
 signal phase_changed(phase: Phase)
@@ -31,6 +32,11 @@ enum Season { SPRING, SUMMER, AUTUMN, WINTER }
 const DAYS_PER_SEASON := 21
 const SEASON_COUNT := 4 # Season enum has exactly 4 values
 const DAYS_PER_YEAR := DAYS_PER_SEASON * SEASON_COUNT
+
+## Real lunar phases don't split evenly into 3-week seasons, so the moon
+## cycle runs on its own independent clock rather than resetting with the
+## season: 1 new-moon day, 6 waxing, 1 full-moon day, 6 waning.
+const MOON_CYCLE_DAYS := 14
 
 const SEASON_NAMES := {
 	Season.SPRING: "Весна",
@@ -107,3 +113,12 @@ func get_festival_on_day(day_of_year: int) -> Festival:
 
 func get_active_festival() -> Festival:
 	return get_festival_on_day(current_day)
+
+## Молодик → зростальний (6 days) → повня → спадний (6 days) → repeat.
+func get_moon_phase() -> MoonPhase.Phase:
+	var d := (current_day - 1) % MOON_CYCLE_DAYS
+	if d == 0:
+		return MoonPhase.Phase.NEW
+	if d == 7:
+		return MoonPhase.Phase.FULL
+	return MoonPhase.Phase.WAXING if d < 7 else MoonPhase.Phase.WANING
