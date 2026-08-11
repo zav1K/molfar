@@ -21,6 +21,14 @@ extends Resource
 ## for now this is just what ReceptionUI checks a given item against.
 @export var desired_result_id: StringName = &""
 
+## Reversed direction: a Keepsake (or any item) id this visitor is trying
+## to hand OFF to the player instead of asking for something — e.g.
+## found_doll's Солом'яна лялька. Optional either way, never a fail
+## state: ReceptionUI shows a Взяти/Відправити choice, satisfied_text
+## plays on taking it, unhelped_text on declining. Empty for every
+## ordinary give-an-item visitor.
+@export var offers_item_id: StringName = &""
+
 @export_multiline var satisfied_text: String = "Дякую, мольфаре. Мені вже легше."
 @export_multiline var unhelped_text: String = "...це не те, що мені було треба."
 

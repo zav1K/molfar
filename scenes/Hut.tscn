@@ -729,6 +729,14 @@ offset_top = 165.0
 offset_right = 630.0
 offset_bottom = 335.0
 
+[node name="TakeButton" type="Button" parent="ReceptionUI/Panel"]
+visible = false
+offset_left = 280.0
+offset_top = 230.0
+offset_right = 680.0
+offset_bottom = 265.0
+text = "Взяти"
+
 [node name="SendAwayButton" type="Button" parent="ReceptionUI/Panel"]
 offset_left = 230.0
 offset_top = 345.0

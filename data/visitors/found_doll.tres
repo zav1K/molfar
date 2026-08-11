@@ -9,3 +9,4 @@ problem_text = "\"Знайшов оце на подвір'ї... лялечку �
 true_threat = 0
 satisfied_text = "Дякую, що забрав це від мене."
 unhelped_text = "То я... і далі маю це тримати?"
+offers_item_id = &"straw_doll"
