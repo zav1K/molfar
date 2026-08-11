@@ -64,8 +64,11 @@ func _ready() -> void:
 
 func _register_festivals() -> void:
 	festivals = [
-		# SPRING (days 1-21): Явдохи traditionally marks spring's start.
+		# SPRING (days 1-21): Явдохи traditionally marks spring's start,
+		# Великий четвер (movable in reality, fixed here like everything
+		# else on this condensed calendar) follows a bit later in the season.
 		Festival.new(&"yavdokhy", "Явдохи", 2),
+		Festival.new(&"velykyi_chetver", "Великий четвер", 10),
 		# SUMMER (days 22-42): Івана Купала sits at the solstice, mid-season.
 		Festival.new(&"ivana_kupala", "Івана Купала", 32),
 		# AUTUMN (days 43-63): Андрія, late in the season, on autumn's threshold to winter.

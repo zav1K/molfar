@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/widow_accused.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,3 +13,5 @@ unhelped_text = "Розумію... нікому я не потрібна, нав
 payment_type = 3
 payment_flag_id = &"village_rumors_heard"
 payment_flavor_text = "Небагато — хіба чутки про те, що діється в селі"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.242188, 0.082031, 0.546875, 0.838542)

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/blacksmith_curse.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -13,3 +14,5 @@ unhelped_text = "Так і знав, що все це забобони пуст�
 payment_type = 1
 payment_item_id = &"mat_metal"
 payment_flavor_text = "Кований метал і деталі для обладнання"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.246094, 0.053385, 0.476563, 0.872396)
