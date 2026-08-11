@@ -18,6 +18,15 @@ const ZONE_SCENES := {
 	&"garden_window": "res://scenes/Garden.tscn",
 }
 
+## DEBUG: the 16 herbs added for the new recipe batch — none have any
+## acquisition path yet (no gathering mechanic), so seed 10 of each for
+## testing. See the seeding block in _ready().
+const NEW_TEST_HERBS: Array[StringName] = [
+	&"calendula", &"chamomile", &"deadnettle", &"dill", &"elderberry",
+	&"hawthorn", &"hops", &"immortelle", &"lovage", &"marigold",
+	&"nettle", &"oregano", &"parsley", &"rosehip", &"st_johns_wort", &"thyme",
+]
+
 @onready var camera: Camera2D = $Camera2D
 @onready var nav_left: Button = $UI/NavLeft
 @onready var nav_right: Button = $UI/NavRight
@@ -93,6 +102,13 @@ func _ready() -> void:
 		PlayerInventory.add(&"mint", 2)
 	if not PlayerInventory.has(&"dream_grass"):
 		PlayerInventory.add(&"dream_grass", 3)
+
+	# DEBUG: seed 10 of each newly-added herb so the new recipes are
+	# testable without a gathering mechanic yet either. Remove alongside
+	# the block above once that exists.
+	for herb_id in NEW_TEST_HERBS:
+		if not PlayerInventory.has(herb_id):
+			PlayerInventory.add(herb_id, 10)
 
 	# DEBUG: hang a garlic ward so the door hint hook is testable too.
 	if WardRack.get_slot(0) == &"":
