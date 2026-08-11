@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/found_doll.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -10,3 +11,5 @@ true_threat = 0
 satisfied_text = "Дякую, що забрав це від мене."
 unhelped_text = "То я... і далі маю це тримати?"
 offers_item_id = &"straw_doll"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.082031, 0.068994, 0.830078, 0.822917)

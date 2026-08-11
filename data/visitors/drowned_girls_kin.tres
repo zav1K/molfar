@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/widow_accused.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/drowned_girls_kin.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -15,4 +15,4 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Родинна реліквія, трохи харчів про запас"
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.242188, 0.082031, 0.546875, 0.838542)
+waiting_portrait_content_rect = Rect2(0.310547, 0.104167, 0.470703, 0.804688)
