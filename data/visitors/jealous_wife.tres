@@ -9,3 +9,6 @@ problem_text = "\"Приворожила його якась... я знаю, в�
 true_threat = 0
 satisfied_text = "Дякую, мольфаре. Тепер я знаю правду."
 unhelped_text = "Ти мені не допоміг. Доведеться самій щось робити."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Консерви, тканини"

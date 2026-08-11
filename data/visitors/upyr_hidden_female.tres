@@ -13,3 +13,7 @@ unhelped_text = "\"Тоді я й далі буду тінню. Аби тіль�
 night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.287109, 0.063802, 0.458984, 0.855469)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Виглядає як звичайний дарунок..."
+payment_is_deceptive = true

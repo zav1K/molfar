@@ -13,3 +13,5 @@ unhelped_text = "\"Шкода. Двері ж такі тонкі, мольфар
 night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.226563, 0.057292, 0.541016, 0.872396)
+refusal_loot_chance = 0.35
+refusal_loot_item_id = &"looted_goods"

@@ -9,3 +9,6 @@ problem_text = "\"Кажуть, це я наврочила Гальчину ко
 true_threat = 0
 satisfied_text = "Дякую, що вислухав. Хоч трохи легше на душі."
 unhelped_text = "Розумію... нікому я не потрібна, навіть тут."
+payment_type = 3
+payment_flag_id = &"village_rumors_heard"
+payment_flavor_text = "Небагато — хіба чутки про те, що діється в селі"

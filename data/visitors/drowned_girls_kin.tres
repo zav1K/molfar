@@ -10,3 +10,6 @@ true_threat = 0
 desired_result_id = &"cleansing_remedy"
 satisfied_text = "Дякую, мольфаре. Хай упокоїться її душа."
 unhelped_text = "Боюсь, вона й далі кличе живих до води..."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Родинна реліквія, трохи харчів про запас"

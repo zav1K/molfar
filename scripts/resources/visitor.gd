@@ -32,6 +32,40 @@ extends Resource
 @export_multiline var satisfied_text: String = "Дякую, мольфаре. Мені вже легше."
 @export_multiline var unhelped_text: String = "...це не те, що мені було треба."
 
+## Voluntary thanks/barter, not a price — per CONCEPT.md, молфар doesn't
+## charge money directly (that pulls toward the black path). Granted
+## automatically by ReceptionUI once the visitor is actually satisfied
+## (item given/taken, never on refusal or being sent away unhelped).
+enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
+@export var payment_type: PaymentType = PaymentType.NOTHING
+
+## Item id granted for MATERIAL/MONEY payment — an Ingredient, Keepsake,
+## an equipment-progression material (mat_metal/mat_wood/mat_goods), or
+## &"groshi" for money. Unused for NOTHING/INFORMATION.
+@export var payment_item_id: StringName = &""
+@export var payment_amount: int = 1
+
+## Flavor line describing what changes hands, appended to satisfied_text
+## in ReceptionUI. E.g. "домашній хліб, вишитий рушник".
+@export var payment_flavor_text: String = ""
+
+## StoryFlags key set when payment_type == INFORMATION — a hook for a
+## future story thread, not read by anything yet.
+@export var payment_flag_id: StringName = &""
+
+## The barter looks ordinary, but something else quietly goes missing
+## from the player's own holdings at the same time — e.g. upyr_hidden's
+## thanks. Only meaningful alongside payment_type MATERIAL/MONEY.
+@export var payment_is_deceptive: bool = false
+
+## Chance (0..1) of leaving behind loot when refused/sent away instead of
+## helped — dirtier "payment" for driving off something dangerous rather
+## than helping it (upyr_brutal_*, who have no desired_result_id and so
+## can never actually be satisfied — refusal is their only real outcome).
+## Never checked on an ordinary unhelped resolution otherwise (0 by default).
+@export_range(0.0, 1.0) var refusal_loot_chance: float = 0.0
+@export var refusal_loot_item_id: StringName = &""
+
 ## Shown in ThresholdDialogue while deciding whether to invite them in.
 @export var portrait_door: Texture2D
 

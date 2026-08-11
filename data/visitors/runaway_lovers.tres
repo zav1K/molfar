@@ -13,3 +13,4 @@ satisfied_text = "Дякуємо, мольфаре. Тепер дорога бу
 unhelped_text = "Що ж... підемо й так. Іншого виходу нема."
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.136719, 0.068990, 0.751953, 0.852865)
+payment_flavor_text = "Обіцянка й саморобний знак кохання — нічого, що покладеш у скриню"

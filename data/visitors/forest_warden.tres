@@ -9,3 +9,7 @@ problem_text = "\"Бачив у лісі... не звір то був, і не �
 true_threat = 3
 satisfied_text = "Може, ти й правий... Піду, подумаю над твоїми словами."
 unhelped_text = "Не знаю, чи хтось взагалі може це зрозуміти."
+payment_type = 1
+payment_item_id = &"dream_grass"
+payment_amount = 2
+payment_flavor_text = "Дикі гриби, мед, рідкісні лісові трави"

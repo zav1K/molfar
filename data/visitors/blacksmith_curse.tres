@@ -10,3 +10,6 @@ true_threat = 0
 desired_result_id = &"cleansing_remedy"
 satisfied_text = "Хм. Може, і справді полегшало. Дякую."
 unhelped_text = "Так і знав, що все це забобони пусті."
+payment_type = 1
+payment_item_id = &"mat_metal"
+payment_flavor_text = "Кований метал і деталі для обладнання"

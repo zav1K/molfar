@@ -23,3 +23,6 @@ func get_count(ingredient_id: StringName) -> int:
 
 func has(ingredient_id: StringName) -> bool:
 	return get_count(ingredient_id) > 0
+
+func get_held_ids() -> Array:
+	return _counts.keys()

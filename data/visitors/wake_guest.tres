@@ -13,3 +13,6 @@ satisfied_text = "Наче камінь із душі зняли. Дякую, м
 unhelped_text = "Не відпускає й досі..."
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.25, 0.083333, 0.521484, 0.820313)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Скромні речі — і, здається, родинна реліквія на додачу"

@@ -12,3 +12,7 @@ satisfied_text = "Громада не забуде цього, мольфаре.
 unhelped_text = "Що ж... якщо не можеш — не можеш. Врожай у Божих руках."
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.201172, 0.049479, 0.595703, 0.877604)
+payment_type = 2
+payment_item_id = &"groshi"
+payment_amount = 2
+payment_flavor_text = "Гроші, а то й цінна худоба"

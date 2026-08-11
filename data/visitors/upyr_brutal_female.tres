@@ -13,3 +13,5 @@ unhelped_text = "\"Ну що ж. Не кажи, що я не просила по
 night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.267578, 0.023438, 0.496094, 0.90625)
+refusal_loot_chance = 0.35
+refusal_loot_item_id = &"looted_goods"

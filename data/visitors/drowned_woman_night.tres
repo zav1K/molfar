@@ -13,3 +13,6 @@ unhelped_text = "Вона мовчки повертається до ночі �
 night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.28125, 0.055990, 0.4629, 0.898438)
+payment_type = 1
+payment_item_id = &"predecessor_relic"
+payment_flavor_text = "Повертає щось загублене у воді — річ, що належала попередньому мольфару"

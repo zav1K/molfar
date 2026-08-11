@@ -13,3 +13,6 @@ satisfied_text = "Дякую, мольфаре. Кашель ущух ще то�
 unhelped_text = "Це не помогло... дитині й не легше."
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.057416, 0, 0.861244, 0.992367)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Домашній хліб, вишитий рушник"

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/keepsake.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"groshi"
+display_name = "Гроші"
+description = "Дзвінка монета — рідкість у мольфаровій хаті. Хтось платить нею залюбки, у когось її випросили."
+placeholder_color = Color(0.85, 0.75, 0.25, 1)

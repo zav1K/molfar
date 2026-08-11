@@ -14,3 +14,4 @@ unhelped_text = "\"Ще навідаюсь. Ти й сам не знаєш, ку
 night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.287109, 0.065104, 0.460938, 0.859375)
+payment_flavor_text = "Це не оборудка. Просто подяка, яку не покладеш у скриню."

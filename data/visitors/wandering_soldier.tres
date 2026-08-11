@@ -10,3 +10,6 @@ true_threat = 1
 desired_result_id = &"cleansing_remedy"
 satisfied_text = "Наче... легше стало. Вперше за довгий час."
 unhelped_text = "Не відпускає. Іде за мною, хоч куди піду."
+payment_type = 3
+payment_flag_id = &"soldier_stories_heard"
+payment_flavor_text = "Заморська дрібничка, історії з доріг"

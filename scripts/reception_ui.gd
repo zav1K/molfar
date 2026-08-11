@@ -12,9 +12,18 @@ extends CanvasLayer
 ## something to the player (e.g. found_doll's straw doll), a small
 ## take-it-or-not side quest — neither choice is a fail state, they just
 ## play different flavor text.
+##
+## Once satisfied, whatever the visitor was already offering (payment_type)
+## is granted automatically — voluntary thanks, not a price (see
+## CONCEPT.md). DemandMoneyButton is the one deliberate override: pressuring
+## someone into money instead of what they actually offered nudges
+## PathBalance toward the black path, whether or not they had anything to
+## give in the first place.
 
 signal closed
 signal wait_requested(visitor: Visitor)
+
+const DEMAND_MONEY_ITEM_ID := &"groshi"
 
 @onready var portrait: TextureRect = $Panel/Portrait
 @onready var name_label: Label = $Panel/NameLabel
@@ -24,21 +33,27 @@ signal wait_requested(visitor: Visitor)
 @onready var send_away_button: Button = $Panel/SendAwayButton
 @onready var wait_button: Button = $Panel/WaitButton
 @onready var result_label: Label = $Panel/ResultLabel
+@onready var demand_money_button: Button = $Panel/DemandMoneyButton
 @onready var finish_button: Button = $Panel/FinishButton
 
 var _visitor: Visitor
 var _resolved: bool = false
+var _satisfied: bool = false
+var _payment_settled: bool = false ## true once the natural (or demanded) payment has been granted
 
 func _ready() -> void:
 	visible = false
 	take_button.pressed.connect(_on_take_pressed)
 	send_away_button.pressed.connect(_on_send_away_pressed)
 	wait_button.pressed.connect(_on_wait_pressed)
+	demand_money_button.pressed.connect(_on_demand_money_pressed)
 	finish_button.pressed.connect(_on_finish_pressed)
 
 func show_visitor(visitor: Visitor) -> void:
 	_visitor = visitor
 	_resolved = false
+	_satisfied = false
+	_payment_settled = false
 	var waiting_portrait := visitor.get_waiting_portrait()
 	portrait.texture = waiting_portrait
 	portrait.visible = waiting_portrait != null
@@ -55,6 +70,7 @@ func _rebuild_item_list() -> void:
 	wait_button.visible = not _resolved
 	finish_button.visible = _resolved
 	take_button.visible = not _resolved and _visitor.offers_item_id != &""
+	demand_money_button.visible = _resolved and _satisfied and not _payment_settled and _visitor.payment_type != Visitor.PaymentType.MONEY
 	if _resolved:
 		return
 	if _visitor.offers_item_id != &"":
@@ -125,9 +141,50 @@ func _on_wait_pressed() -> void:
 
 func _resolve(satisfied: bool) -> void:
 	_resolved = true
+	_satisfied = satisfied
 	result_label.text = _visitor.satisfied_text if satisfied else _visitor.unhelped_text
+	if satisfied and _visitor.payment_flavor_text != "":
+		result_label.text += "\n(%s)" % _visitor.payment_flavor_text
+	if not satisfied and _visitor.refusal_loot_chance > 0.0 and randf() < _visitor.refusal_loot_chance:
+		PlayerInventory.add(_visitor.refusal_loot_item_id, 1)
+		result_label.text += "\n(Відходячи, лишає по собі щось із награбованого.)"
+	_rebuild_item_list()
+
+## Whatever they were already offering — deferred until Finish so
+## DemandMoneyButton has a window to override it first.
+func _grant_natural_payment() -> void:
+	match _visitor.payment_type:
+		Visitor.PaymentType.MATERIAL, Visitor.PaymentType.MONEY:
+			if _visitor.payment_item_id != &"":
+				PlayerInventory.add(_visitor.payment_item_id, _visitor.payment_amount)
+			if _visitor.payment_is_deceptive:
+				_steal_random_item()
+		Visitor.PaymentType.INFORMATION:
+			StoryFlags.set_flag(_visitor.payment_flag_id)
+		Visitor.PaymentType.NOTHING:
+			pass
+
+## Looks like ordinary barter, but something else quietly disappears too
+## — never what was just handed over, and only from what the player
+## already had before this visit.
+func _steal_random_item() -> void:
+	var held := PlayerInventory.get_held_ids()
+	held.erase(_visitor.payment_item_id)
+	if held.is_empty():
+		return
+	var stolen_id: StringName = held[randi() % held.size()]
+	PlayerInventory.remove(stolen_id, 1)
+
+func _on_demand_money_pressed() -> void:
+	PlayerInventory.add(DEMAND_MONEY_ITEM_ID, 1)
+	PathBalance.shift(PathBalance.DEMAND_MONEY_SHIFT)
+	_payment_settled = true
+	result_label.text += "\n(Ти наполіг на платі грошима замість того, що пропонували.)"
 	_rebuild_item_list()
 
 func _on_finish_pressed() -> void:
+	if _satisfied and not _payment_settled:
+		_grant_natural_payment()
+		_payment_settled = true
 	visible = false
 	closed.emit()

@@ -10,3 +10,7 @@ true_threat = 0
 desired_result_id = &"zigzag_ward"
 satisfied_text = "Дякую, мольфаре. Тепер спатиму спокійніше, знаючи, що дитя під захистом."
 unhelped_text = "Це... не той оберіг. Мені страшно за дитину."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_amount = 1
+payment_flavor_text = "Полотно — більшого немає"
