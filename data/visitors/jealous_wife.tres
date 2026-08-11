@@ -7,6 +7,7 @@ script = ExtResource("1")
 display_name = "Ревнива дружина"
 problem_text = "\"Приворожила його якась... я знаю, відчуваю. Зніми з нього ті чари, або... поверни мені, що моє...\""
 true_threat = 0
+desired_result_id = &"love_potion"
 satisfied_text = "Дякую, мольфаре. Тепер я знаю правду."
 unhelped_text = "Ти мені не допоміг. Доведеться самій щось робити."
 payment_type = 1

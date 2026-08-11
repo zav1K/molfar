@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"child_sleep_remedy"
+display_name = "Дитячий сонний відвар"
+description = "Купіль із глухої кропиви й ромашки — для міцного дитячого сну, м'якший за дорослий відвар для сну."

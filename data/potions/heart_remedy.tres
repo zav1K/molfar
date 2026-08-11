@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"heart_remedy"
+display_name = "Серцевий відвар"
+description = "Калина й глід — від серцевих і кров'яних недуг, найщиріший символ у зіллі мольфара."

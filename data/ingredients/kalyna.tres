@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"kalyna"
+display_name = "Калина"
+description = "Червоні грона калини при хаті — найглибший український символ, і в зіллі для серця, і в пісні."
+source = 0
+rarity = 2
+season_start_day = 43
+season_end_day = 63
+festival_id = &""
+placeholder_color = Color(0.75, 0.1, 0.15, 1)
