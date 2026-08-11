@@ -17,6 +17,16 @@ extends Control
 
 const WIDTH_FILL := 0.88 ## leaves a small side margin instead of the figure touching the door frame.
 
+## Guarantees the scaled content is always at least this much taller than
+## the display, so clip_contents always visibly cuts the legs off at the
+## table line. Width-only scaling (the old approach) assumed every
+## portrait was a narrow standing figure; wider ones (arms crossed,
+## holding a staff out to the side, two people side by side) scaled down
+## enough on width alone to fit entirely inside the box with room to
+## spare — nothing overflowed, so nothing got clipped, and the figure
+## just floated above the table instead of standing behind it.
+const MIN_HEIGHT_OVERFLOW := 1.10
+
 signal clicked
 
 @onready var icon: TextureRect = $Icon
@@ -34,9 +44,11 @@ func show_visitor(visitor: Visitor) -> void:
 	icon.texture = tex
 	var rect := visitor.waiting_portrait_content_rect
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
-	var content_scale := (size.x * WIDTH_FILL) / (rect.size.x * tex_size.x)
+	var width_scale := (size.x * WIDTH_FILL) / (rect.size.x * tex_size.x)
+	var min_height_scale := (size.y * MIN_HEIGHT_OVERFLOW) / (rect.size.y * tex_size.y)
+	var content_scale := max(width_scale, min_height_scale)
 	icon.size = tex_size * content_scale
-	var side_margin := size.x * (1.0 - WIDTH_FILL) / 2.0
+	var side_margin := (size.x - rect.size.x * tex_size.x * content_scale) / 2.0
 	icon.position = Vector2(side_margin, 0.0) - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
 
 func hide_visitor() -> void:

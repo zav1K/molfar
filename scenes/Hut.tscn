@@ -1,4 +1,4 @@
-[gd_scene load_steps=33 format=3]
+[gd_scene load_steps=34 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -21,6 +21,7 @@
 [ext_resource type="Script" path="res://scripts/waiting_visitor_display.gd" id="22"]
 [ext_resource type="Script" path="res://scripts/inventory_panel.gd" id="23"]
 [ext_resource type="Script" path="res://scripts/calendar_panel.gd" id="24"]
+[ext_resource type="Texture2D" path="res://assets/hut/opened_door.png" id="25"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(178, 132)
@@ -528,6 +529,16 @@ script = ExtResource("7")
 offset_right = 960.0
 offset_bottom = 540.0
 color = Color(0.05, 0.05, 0.05, 0.8)
+
+[node name="DoorBackdrop" type="TextureRect" parent="ThresholdDialogue/Panel"]
+mouse_filter = 2
+offset_left = 300.0
+offset_top = 0.0
+offset_right = 660.0
+offset_bottom = 540.0
+texture = ExtResource("25")
+expand_mode = 1
+stretch_mode = 0
 
 [node name="Portrait" type="TextureRect" parent="ThresholdDialogue/Panel"]
 mouse_filter = 2
