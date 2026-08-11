@@ -29,6 +29,7 @@ const ZONE_SCENES := {
 @onready var potion_inventory_panel: InventoryPanel = $PotionInventoryPanel
 @onready var sigil_inventory_panel: InventoryPanel = $SigilInventoryPanel
 @onready var calendar_panel: CalendarPanel = $CalendarPanel
+@onready var chest_panel: InventoryPanel = $ChestPanel
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
@@ -70,6 +71,8 @@ func _ready() -> void:
 	potion_inventory_panel.potion_selected.connect(potion_detail_popup.show_potion)
 	sigil_inventory_panel.closed.connect(_on_inventory_panel_closed)
 	calendar_panel.closed.connect(_on_inventory_panel_closed)
+	chest_panel.closed.connect(_on_inventory_panel_closed)
+	chest_panel.potion_selected.connect(potion_detail_popup.show_potion)
 	nav_left.pressed.connect(_go_left)
 	nav_right.pressed.connect(_go_right)
 	GameCalendar.day_changed.connect(_update_calendar_label)
@@ -98,7 +101,7 @@ func _ready() -> void:
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible or sigil_inventory_panel.visible or calendar_panel.visible:
+	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible or sigil_inventory_panel.visible or calendar_panel.visible or chest_panel.visible:
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
@@ -156,6 +159,11 @@ func _on_zone_activated(zone: InteractionZone) -> void:
 		nav_left.visible = false
 		nav_right.visible = false
 		calendar_panel.open()
+		return
+	if zone.zone_id == &"chest":
+		nav_left.visible = false
+		nav_right.visible = false
+		chest_panel.open()
 		return
 	if ZONE_SCENES.has(zone.zone_id):
 		get_tree().change_scene_to_file(ZONE_SCENES[zone.zone_id])

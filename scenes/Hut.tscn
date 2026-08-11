@@ -775,11 +775,16 @@ offset_bottom = 60.0
 horizontal_alignment = 1
 text = "Трави"
 
-[node name="List" type="VBoxContainer" parent="IngredientInventoryPanel/Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="IngredientInventoryPanel/Panel"]
 offset_left = 330.0
 offset_top = 80.0
 offset_right = 630.0
 offset_bottom = 460.0
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="IngredientInventoryPanel/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CloseButton" type="Button" parent="IngredientInventoryPanel/Panel"]
 offset_left = 415.0
@@ -805,11 +810,16 @@ offset_bottom = 60.0
 horizontal_alignment = 1
 text = "Зілля"
 
-[node name="List" type="VBoxContainer" parent="PotionInventoryPanel/Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="PotionInventoryPanel/Panel"]
 offset_left = 330.0
 offset_top = 80.0
 offset_right = 630.0
 offset_bottom = 460.0
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="PotionInventoryPanel/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CloseButton" type="Button" parent="PotionInventoryPanel/Panel"]
 offset_left = 415.0
@@ -835,13 +845,53 @@ offset_bottom = 60.0
 horizontal_alignment = 1
 text = "Обереги"
 
-[node name="List" type="VBoxContainer" parent="SigilInventoryPanel/Panel"]
+[node name="ScrollContainer" type="ScrollContainer" parent="SigilInventoryPanel/Panel"]
 offset_left = 330.0
 offset_top = 80.0
 offset_right = 630.0
 offset_bottom = 460.0
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="SigilInventoryPanel/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="CloseButton" type="Button" parent="SigilInventoryPanel/Panel"]
+offset_left = 415.0
+offset_top = 470.0
+offset_right = 545.0
+offset_bottom = 505.0
+text = "Закрити"
+
+[node name="ChestPanel" type="CanvasLayer" parent="."]
+script = ExtResource("23")
+kind = 3
+
+[node name="Panel" type="ColorRect" parent="ChestPanel"]
+offset_right = 960.0
+offset_bottom = 540.0
+color = Color(0.05, 0.05, 0.05, 0.85)
+
+[node name="Title" type="Label" parent="ChestPanel/Panel"]
+offset_left = 280.0
+offset_top = 30.0
+offset_right = 680.0
+offset_bottom = 60.0
+horizontal_alignment = 1
+text = "Скриня"
+
+[node name="ScrollContainer" type="ScrollContainer" parent="ChestPanel/Panel"]
+offset_left = 280.0
+offset_top = 80.0
+offset_right = 680.0
+offset_bottom = 460.0
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="ChestPanel/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CloseButton" type="Button" parent="ChestPanel/Panel"]
 offset_left = 415.0
 offset_top = 470.0
 offset_right = 545.0

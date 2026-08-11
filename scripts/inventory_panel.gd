@@ -1,16 +1,22 @@
 class_name InventoryPanel
 extends CanvasLayer
-## Stock-list overlay for glancing at held herbs, potions, or carved
-## sigils — instanced three times in Hut.tscn (one per `kind`), each
-## opened by its own decorative trigger zone (drying beam for herbs,
-## potion shelf for potions, a spot on the desk for sigils). All three
-## zones are purely decorative, not physical per-item displays: no
-## drag-and-drop, no per-slot anchors, no slot-count/equipment-
-## progression bookkeeping. The chest on the right panel is meant to
-## become the actual full-stockpile screen later — these are just the
-## quick-glance versions for their own atmospheric hotspots.
+## Stock-list overlay for glancing at held herbs, potions, carved sigils,
+## or (kind ALL only) everything at once. Instanced four times in
+## Hut.tscn: three single-category quick-glance panels opened by their
+## own decorative trigger zone (drying beam for herbs, potion shelf for
+## potions, a spot on the desk for sigils), plus the chest on the right
+## panel showing kind ALL — the actual full-stockpile screen, sectioned
+## by category with a header per section. No drag-and-drop, no per-slot
+## anchors, no slot-count/equipment-progression bookkeeping anywhere here.
 
-enum Kind { INGREDIENTS, POTIONS, SIGILS }
+enum Kind { INGREDIENTS, POTIONS, SIGILS, ALL }
+
+const SECTION_TITLES := {
+	Kind.INGREDIENTS: "Трави",
+	Kind.POTIONS: "Зілля",
+	Kind.SIGILS: "Обереги",
+}
+const KEEPSAKES_SECTION_TITLE := "Речі"
 
 @export var kind: Kind = Kind.INGREDIENTS
 
@@ -18,19 +24,13 @@ signal closed
 signal potion_selected(potion: Potion)
 
 @onready var title_label: Label = $Panel/Title
-@onready var list: VBoxContainer = $Panel/List
+@onready var list: VBoxContainer = $Panel/ScrollContainer/List
 @onready var close_button: Button = $Panel/CloseButton
 
 func _ready() -> void:
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
-	match kind:
-		Kind.INGREDIENTS:
-			title_label.text = "Трави"
-		Kind.POTIONS:
-			title_label.text = "Зілля"
-		Kind.SIGILS:
-			title_label.text = "Обереги"
+	title_label.text = "Скриня" if kind == Kind.ALL else SECTION_TITLES[kind]
 
 func open() -> void:
 	_rebuild()
@@ -39,27 +39,69 @@ func open() -> void:
 func _rebuild() -> void:
 	for child in list.get_children():
 		child.queue_free()
+	if kind == Kind.ALL:
+		_add_section(SECTION_TITLES[Kind.INGREDIENTS], _ingredient_rows())
+		_add_section(SECTION_TITLES[Kind.POTIONS], _potion_rows())
+		_add_section(SECTION_TITLES[Kind.SIGILS], _sigil_rows())
+		_add_section(KEEPSAKES_SECTION_TITLE, _keepsake_rows())
+		return
 	match kind:
 		Kind.INGREDIENTS:
-			for ingredient in IngredientDatabase.get_all():
-				var count := PlayerInventory.get_count(ingredient.id)
-				if count > 0:
-					list.add_child(_build_icon_row(ingredient.bundle_icon, ingredient.display_name, count))
+			for row in _ingredient_rows():
+				list.add_child(row)
 		Kind.POTIONS:
-			for potion in PotionDatabase.get_all():
-				var count := PlayerInventory.get_count(potion.id)
-				if count > 0:
-					list.add_child(_build_potion_row(potion, count))
+			for row in _potion_rows():
+				list.add_child(row)
 		Kind.SIGILS:
-			# One row per physical carved object, not grouped by type+count —
-			# each shows that specific instance's own traced stroke (see
-			# CarvedSigilRegistry), so two of "the same" sigil can look
-			# different, which is the whole point.
-			for sigil in SigilDatabase.get_all():
-				for instance in CarvedSigilRegistry.peek_instances(sigil.id):
-					list.add_child(_build_sigil_row(sigil, instance))
+			for row in _sigil_rows():
+				list.add_child(row)
 
-func _build_icon_row(icon_texture: Texture2D, label_text: String, count: int) -> HBoxContainer:
+func _add_section(title: String, rows: Array) -> void:
+	if rows.is_empty():
+		return
+	var header := Label.new()
+	header.text = title
+	header.add_theme_font_size_override("font_size", 16)
+	list.add_child(header)
+	for row in rows:
+		list.add_child(row)
+
+func _ingredient_rows() -> Array:
+	var rows: Array = []
+	for ingredient in IngredientDatabase.get_all():
+		var count := PlayerInventory.get_count(ingredient.id)
+		if count > 0:
+			rows.append(_build_icon_row(ingredient.bundle_icon, ingredient.placeholder_color, ingredient.display_name, count))
+	return rows
+
+func _potion_rows() -> Array:
+	var rows: Array = []
+	for potion in PotionDatabase.get_all():
+		var count := PlayerInventory.get_count(potion.id)
+		if count > 0:
+			rows.append(_build_potion_row(potion, count))
+	return rows
+
+func _sigil_rows() -> Array:
+	var rows: Array = []
+	# One row per physical carved object, not grouped by type+count —
+	# each shows that specific instance's own traced stroke (see
+	# CarvedSigilRegistry), so two of "the same" sigil can look
+	# different, which is the whole point.
+	for sigil in SigilDatabase.get_all():
+		for instance in CarvedSigilRegistry.peek_instances(sigil.id):
+			rows.append(_build_sigil_row(sigil, instance))
+	return rows
+
+func _keepsake_rows() -> Array:
+	var rows: Array = []
+	for keepsake in KeepsakeDatabase.get_all():
+		var count := PlayerInventory.get_count(keepsake.id)
+		if count > 0:
+			rows.append(_build_icon_row(keepsake.icon, keepsake.placeholder_color, keepsake.display_name, count))
+	return rows
+
+func _build_icon_row(icon_texture: Texture2D, placeholder_color: Color, label_text: String, count: int) -> HBoxContainer:
 	var row := HBoxContainer.new()
 
 	if icon_texture != null:
@@ -69,6 +111,11 @@ func _build_icon_row(icon_texture: Texture2D, label_text: String, count: int) ->
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = Vector2(28, 28)
 		row.add_child(icon)
+	else:
+		var swatch := ColorRect.new()
+		swatch.color = placeholder_color
+		swatch.custom_minimum_size = Vector2(20, 20)
+		row.add_child(swatch)
 
 	var label := Label.new()
 	label.text = "%s ×%d" % [label_text, count]

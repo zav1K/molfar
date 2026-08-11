@@ -37,6 +37,7 @@ SigilDatabase="*res://scripts/autoload/sigil_database.gd"
 VisitorDatabase="*res://scripts/autoload/visitor_database.gd"
 CarvedSigilRegistry="*res://scripts/autoload/carved_sigil_registry.gd"
 GardenState="*res://scripts/autoload/garden_state.gd"
+KeepsakeDatabase="*res://scripts/autoload/keepsake_database.gd"
 
 [rendering]
 
