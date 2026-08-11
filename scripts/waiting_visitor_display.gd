@@ -46,7 +46,7 @@ func show_visitor(visitor: Visitor) -> void:
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
 	var width_scale := (size.x * WIDTH_FILL) / (rect.size.x * tex_size.x)
 	var min_height_scale := (size.y * MIN_HEIGHT_OVERFLOW) / (rect.size.y * tex_size.y)
-	var content_scale := max(width_scale, min_height_scale)
+	var content_scale: float = max(width_scale, min_height_scale)
 	icon.size = tex_size * content_scale
 	var side_margin := (size.x - rect.size.x * tex_size.x * content_scale) / 2.0
 	icon.position = Vector2(side_margin, 0.0) - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
