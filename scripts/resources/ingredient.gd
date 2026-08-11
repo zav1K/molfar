@@ -30,9 +30,19 @@ enum Source { WILD, GARDEN }
 ## moon-sensitive ingredient — see GardenState.check_plantable().
 @export var favorable_moon_phase: MoonPhase.Phase = MoonPhase.Phase.ANY
 
-## Calendar days to fully ripen once planted in the garden, before any
-## watering bonus. Only meaningful for GARDEN-source ingredients.
+## Total calendar days to fully ripen once planted in the garden, before
+## any watering bonus — GardenState splits this roughly in half between
+## the sprout→growing and growing→mature legs. Only meaningful for
+## GARDEN-source ingredients.
 @export var base_growth_days: int = 3
+
+## Species-specific growth-stage art (GardenPlot). The initial sprout
+## right after planting is a shared sprite for every ingredient, not
+## per-species, so it isn't here — see GardenPlot.SHARED_SPROUT_TEXTURE.
+## Both null until an artist provides them; the plot falls back to a
+## color box in that case.
+@export var growth_sprite: Texture2D
+@export var mature_sprite: Texture2D
 
 ## Stand-in visuals until final hand-painted art exists.
 @export var placeholder_color: Color = Color.WEB_GREEN

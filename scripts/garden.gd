@@ -3,7 +3,6 @@ extends Node2D
 
 @onready var plots: Array[GardenPlot] = [
 	$Plots/Plot1, $Plots/Plot2, $Plots/Plot3,
-	$Plots/Plot4, $Plots/Plot5, $Plots/Plot6,
 ]
 @onready var exit_zone: InteractionZone = $ExitZone
 @onready var planting_ui: PlantingUI = $PlantingUI

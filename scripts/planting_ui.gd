@@ -1,10 +1,12 @@
 class_name PlantingUI
 extends CanvasLayer
 ## The 4-step tactile planting minigame: dig, choose a seed, cover, water.
-## Each step is a deliberate click in order — nothing is consumed from
-## PlayerInventory until the final watering step actually commits the
-## planting, so backing out via CloseButton at any point costs nothing
-## (same free-experimentation rule as brewing/carving).
+## Digging is free and immediately persisted to GardenState (empty->dug)
+## the moment that step is clicked — closing the UI right after leaves
+## the hole there for next time, same as real digging would. Choosing a
+## seed is still UI-local; the actual seed cost and dug->sprout
+## transition only commit on the Cover click, and Water is just
+## GardenState's normal watering call made once, right after planting.
 
 signal closed
 
@@ -39,10 +41,17 @@ func _ready() -> void:
 
 func open(plot_index: int) -> void:
 	_plot_index = plot_index
-	_step = Step.DIG
 	_selected_ingredient = null
 	_penalty = false
 	warning_label.text = ""
+	# Resume where a previous visit left off — dug is itself a persisted
+	# GardenState stage, so a plot already dug skips straight to seed
+	# choice instead of re-digging.
+	if GardenState.get_plot(plot_index).stage == GardenState.Stage.DUG:
+		_step = Step.SEED
+		_build_seed_list()
+	else:
+		_step = Step.DIG
 	_refresh()
 	visible = true
 
@@ -54,6 +63,7 @@ func _refresh() -> void:
 	water_button.visible = _step == Step.WATER
 
 func _on_dig_pressed() -> void:
+	GardenState.dig(_plot_index)
 	_build_seed_list()
 	_step = Step.SEED
 	_refresh()
@@ -88,12 +98,13 @@ func _on_seed_selected(ingredient: Ingredient) -> void:
 	_refresh()
 
 func _on_cover_pressed() -> void:
+	PlayerInventory.remove(_selected_ingredient.id, 1)
+	GardenState.plant(_plot_index, _selected_ingredient, _penalty)
 	_step = Step.WATER
 	_refresh()
 
 func _on_water_pressed() -> void:
-	PlayerInventory.remove(_selected_ingredient.id, 1)
-	GardenState.plant(_plot_index, _selected_ingredient, _penalty)
+	GardenState.water(_plot_index)
 	visible = false
 	closed.emit()
 

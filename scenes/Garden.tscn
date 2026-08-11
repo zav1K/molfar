@@ -20,10 +20,21 @@ offset_right = 960.0
 offset_bottom = 540.0
 color = Color(0.22, 0.24, 0.14, 1)
 
+[node name="Anchors" type="Node2D" parent="."]
+
+[node name="Plot1Anchor" type="Marker2D" parent="Anchors"]
+position = Vector2(160, 320)
+
+[node name="Plot2Anchor" type="Marker2D" parent="Anchors"]
+position = Vector2(480, 320)
+
+[node name="Plot3Anchor" type="Marker2D" parent="Anchors"]
+position = Vector2(800, 320)
+
 [node name="Plots" type="Node2D" parent="."]
 
 [node name="Plot1" type="Area2D" parent="Plots"]
-position = Vector2(220, 200)
+position = Vector2(160, 320)
 script = ExtResource("2")
 zone_id = &"plot_1"
 zone_label = "Грядка 1"
@@ -32,25 +43,77 @@ plot_index = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot1"]
 shape = SubResource("Shape_plot")
 
-[node name="Visual" type="ColorRect" parent="Plots/Plot1"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot1"]
+visible = false
 mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot1"]
 mouse_filter = 2
 offset_left = -80.0
-offset_top = 60.0
+offset_top = 55.0
 offset_right = 80.0
-offset_bottom = 85.0
+offset_bottom = 80.0
 horizontal_alignment = 1
-text = "Порожньо"
+theme_override_font_sizes/font_size = 12
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Plot1"]
+one_shot = true
 
 [node name="Plot2" type="Area2D" parent="Plots"]
-position = Vector2(480, 200)
+position = Vector2(480, 320)
 script = ExtResource("2")
 zone_id = &"plot_2"
 zone_label = "Грядка 2"
@@ -59,25 +122,77 @@ plot_index = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot2"]
 shape = SubResource("Shape_plot")
 
-[node name="Visual" type="ColorRect" parent="Plots/Plot2"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot2"]
+visible = false
 mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot2"]
 mouse_filter = 2
 offset_left = -80.0
-offset_top = 60.0
+offset_top = 55.0
 offset_right = 80.0
-offset_bottom = 85.0
+offset_bottom = 80.0
 horizontal_alignment = 1
-text = "Порожньо"
+theme_override_font_sizes/font_size = 12
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Plot2"]
+one_shot = true
 
 [node name="Plot3" type="Area2D" parent="Plots"]
-position = Vector2(740, 200)
+position = Vector2(800, 320)
 script = ExtResource("2")
 zone_id = &"plot_3"
 zone_label = "Грядка 3"
@@ -86,103 +201,74 @@ plot_index = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot3"]
 shape = SubResource("Shape_plot")
 
-[node name="Visual" type="ColorRect" parent="Plots/Plot3"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot3"]
+visible = false
 mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -70.0
+offset_top = -50.0
+offset_right = 70.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -60.0
+offset_top = -50.0
+offset_right = 60.0
+offset_bottom = 40.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -50.0
+offset_right = 75.0
+offset_bottom = 50.0
+expand_mode = 1
+stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot3"]
 mouse_filter = 2
 offset_left = -80.0
-offset_top = 60.0
+offset_top = 55.0
 offset_right = 80.0
-offset_bottom = 85.0
+offset_bottom = 80.0
 horizontal_alignment = 1
-text = "Порожньо"
+theme_override_font_sizes/font_size = 12
 
-[node name="Plot4" type="Area2D" parent="Plots"]
-position = Vector2(220, 380)
-script = ExtResource("2")
-zone_id = &"plot_4"
-zone_label = "Грядка 4"
-plot_index = 3
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot4"]
-shape = SubResource("Shape_plot")
-
-[node name="Visual" type="ColorRect" parent="Plots/Plot4"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
-
-[node name="Label" type="Label" parent="Plots/Plot4"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = 60.0
-offset_right = 80.0
-offset_bottom = 85.0
-horizontal_alignment = 1
-text = "Порожньо"
-
-[node name="Plot5" type="Area2D" parent="Plots"]
-position = Vector2(480, 380)
-script = ExtResource("2")
-zone_id = &"plot_5"
-zone_label = "Грядка 5"
-plot_index = 4
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot5"]
-shape = SubResource("Shape_plot")
-
-[node name="Visual" type="ColorRect" parent="Plots/Plot5"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
-
-[node name="Label" type="Label" parent="Plots/Plot5"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = 60.0
-offset_right = 80.0
-offset_bottom = 85.0
-horizontal_alignment = 1
-text = "Порожньо"
-
-[node name="Plot6" type="Area2D" parent="Plots"]
-position = Vector2(740, 380)
-script = ExtResource("2")
-zone_id = &"plot_6"
-zone_label = "Грядка 6"
-plot_index = 5
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot6"]
-shape = SubResource("Shape_plot")
-
-[node name="Visual" type="ColorRect" parent="Plots/Plot6"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = -55.0
-offset_right = 80.0
-offset_bottom = 55.0
-color = Color(0.4, 0.3, 0.2, 1)
-
-[node name="Label" type="Label" parent="Plots/Plot6"]
-mouse_filter = 2
-offset_left = -80.0
-offset_top = 60.0
-offset_right = 80.0
-offset_bottom = 85.0
-horizontal_alignment = 1
-text = "Порожньо"
+[node name="WetSoilTimer" type="Timer" parent="Plots/Plot3"]
+one_shot = true
 
 [node name="ExitZone" type="Area2D" parent="."]
 position = Vector2(80, 500)
