@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/runaway_lovers.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -10,3 +11,5 @@ true_threat = 0
 desired_result_id = &"spiral_ward"
 satisfied_text = "Дякуємо, мольфаре. Тепер дорога буде безпечна."
 unhelped_text = "Що ж... підемо й так. Іншого виходу нема."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.136719, 0.068990, 0.751953, 0.852865)
