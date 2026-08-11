@@ -22,6 +22,7 @@ var _target_path: PackedVector2Array # in local pixel space
 var _target_length: float = 0.0
 var _drawn_points: PackedVector2Array
 var _drawing: bool = false
+var _background_block: CarvedSigilRegistry.BlockVariant
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -34,6 +35,11 @@ func start(sigil: Sigil) -> void:
 	_target_length = _path_length(_target_path)
 	_drawn_points.clear()
 	_drawing = false
+	# Just a preview of what carving generally looks like — the block an
+	# actual success lands on is picked independently (see
+	# CarvedSigilRegistry.add_instance), so this can differ from the
+	# result. Better than showing no wood at all while tracing.
+	_background_block = CarvedSigilRegistry.get_random_block_variant()
 	queue_redraw()
 
 func _gui_input(event: InputEvent) -> void:
@@ -75,6 +81,12 @@ func _on_release() -> void:
 	finished.emit(total_error / RESAMPLE_COUNT, coverage, normalized_stroke)
 
 func _draw() -> void:
+	if _background_block != null:
+		var tex := _background_block.texture
+		var tex_size := tex.get_size()
+		var rect := _background_block.content_rect
+		var src := Rect2(rect.position * tex_size, rect.size * tex_size)
+		draw_texture_rect_region(tex, Rect2(Vector2.ZERO, size), src)
 	if _target_path.size() >= 2:
 		draw_polyline(_target_path, Color(0.85, 0.75, 0.55, 0.35), 3.0, true)
 		for p in _target_path:

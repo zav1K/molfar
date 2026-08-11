@@ -23,7 +23,10 @@ func _draw() -> void:
 	if _sigil == null or _instance == null:
 		return
 	if _instance.block_texture != null:
-		draw_texture_rect(_instance.block_texture, Rect2(Vector2.ZERO, size), false)
+		var tex_size := _instance.block_texture.get_size()
+		var rect := _instance.block_content_rect
+		var src := Rect2(rect.position * tex_size, rect.size * tex_size)
+		draw_texture_rect_region(_instance.block_texture, Rect2(Vector2.ZERO, size), src)
 	else:
 		var color := WARD_COLOR if _sigil.kind == Sigil.Kind.WARD else CURSE_COLOR
 		draw_rect(Rect2(Vector2.ZERO, size), color)
