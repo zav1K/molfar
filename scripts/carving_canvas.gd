@@ -17,6 +17,16 @@ const RESAMPLE_COUNT := 40
 const MIN_COVERAGE_TO_COUNT := 0.15 ## below this, a release is a misclick, not an attempt.
 const MIN_POINT_SPACING := 3.0 ## px; drops points closer than this to keep arrays small.
 
+## Sigil.path_points are authored against the full 0..1 unit square, but
+## the wood disc drawn behind them doesn't reach the square's corners —
+## it's round, not square, and its content_rect (see CarvedSigilRegistry)
+## is only a bounding box around that round shape, not a perfect fit.
+## Points near the raw edges (e.g. zigzag_ward's x=0.1/0.9) can land on
+## bark instead of the engravable surface. Inset the guide into a smaller
+## centered square before scaling to pixels so it stays safely on the
+## disc for any block variant.
+const GUIDE_MARGIN := 0.18
+
 var _target_sigil: Sigil
 var _target_path: PackedVector2Array # in local pixel space
 var _target_length: float = 0.0
@@ -31,7 +41,8 @@ func start(sigil: Sigil) -> void:
 	_target_sigil = sigil
 	_target_path.clear()
 	for p in sigil.path_points:
-		_target_path.append(Vector2(p.x * size.x, p.y * size.y))
+		var inset := GUIDE_MARGIN + p * (1.0 - 2.0 * GUIDE_MARGIN)
+		_target_path.append(Vector2(inset.x * size.x, inset.y * size.y))
 	_target_length = _path_length(_target_path)
 	_drawn_points.clear()
 	_drawing = false

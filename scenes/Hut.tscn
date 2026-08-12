@@ -95,9 +95,9 @@ shape = SubResource("Shape_cauldron")
 [node name="Sprite" type="TextureRect" parent="PanelLeft/Zones/Cauldron"]
 mouse_filter = 2
 offset_left = -89.0
-offset_top = -90.0
+offset_top = -73.0
 offset_right = 89.0
-offset_bottom = 88.0
+offset_bottom = 105.0
 texture = ExtResource("26")
 expand_mode = 1
 stretch_mode = 0
@@ -393,9 +393,9 @@ text = "Календар"
 
 [node name="WaitingVisitorDisplay" type="Control" parent="PanelCenter"]
 clip_contents = true
-offset_left = 435.0
+offset_left = 382.0
 offset_top = 89.0
-offset_right = 580.0
+offset_right = 554.0
 offset_bottom = 403.0
 script = ExtResource("22")
 
