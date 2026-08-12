@@ -11,18 +11,11 @@ extends Control
 ## count and rhythm evenness (read by brewing_ui.gd) decide brew
 ## quality. Each stir gesture is independent — release ends it and the
 ## next press starts a fresh one.
-##
-## RADII and CENTER_OFFSET are measured to match CauldronArt's painted
-## rim (see that node's texture) — the pot sits low in its box with a
-## tall handle above it, so the mouth isn't at the box's geometric
-## center, and its opening is a much flatter ellipse than a plain
-## abstract liquid circle would suggest.
 
 signal finished(direction: int, rotations: float, evenness: float)
 signal ingredient_dropped(ingredient_id: StringName)
 
-const RADII := Vector2(99.0, 25.0) ## ellipse half-extents in pixels (x, y), matching the painted rim.
-const CENTER_OFFSET := Vector2(218.0, 105.0) ## pot mouth center, in this control's local space.
+const RADII := Vector2(140.0, 78.0) ## ellipse half-extents in pixels (x, y).
 const DEAD_ZONE_FRACTION := 0.15 ## of RADII, around the center, that ignores clicks/drags.
 const TOKEN_MIN_FRACTION := 0.3
 const TOKEN_MAX_FRACTION := 0.85
@@ -50,7 +43,7 @@ var _speed_samples: PackedFloat32Array = []
 var _tokens: Dictionary = {} # StringName -> Array[FloatingToken]
 
 func _ready() -> void:
-	_center = CENTER_OFFSET
+	_center = size / 2.0
 	mouse_filter = Control.MOUSE_FILTER_STOP
 	reset_liquid()
 
