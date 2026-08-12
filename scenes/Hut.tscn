@@ -541,6 +541,7 @@ expand_mode = 1
 stretch_mode = 0
 
 [node name="PortraitBox" type="Control" parent="ThresholdDialogue/Panel"]
+clip_contents = true
 mouse_filter = 2
 offset_left = 448.0
 offset_top = 84.0

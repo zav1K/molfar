@@ -4,17 +4,20 @@ extends CanvasLayer
 ## problem and asks whether to invite them in. Both outcomes are
 ## placeholders for now — see Door/Visitor for why the choice matters later.
 ##
-## Portrait is fit (not cropped) inside PortraitBox using the visitor's
+## Portrait is scaled to fill PortraitBox's height (the doorway is tall
+## and narrow, so height is the meaningful constraint) using the visitor's
 ## own measured waiting_portrait_content_rect — same underlying data as
-## WaitingVisitorDisplay, but scaled to show the whole figure rather than
-## overflow-and-clip at a table line, since there's no table here. The
-## dialogue text sits in its own translucent panel added after (so drawn
-## on top of) the door art and portrait, the same way a real speech
-## panel would sit in front of a scene rather than squeezed below it.
+## WaitingVisitorDisplay. Width is allowed to modestly overflow into the
+## door frame on either side, which reads naturally for a figure standing
+## in a narrow doorway; portrait_box clips it so wide portraits (e.g. two
+## people side by side) don't spill past the frame entirely. The dialogue
+## text sits in its own translucent panel added after (so drawn on top of)
+## the door art and portrait, the same way a real speech panel would sit
+## in front of a scene rather than squeezed below it.
 
 signal resolved(invited: bool)
 
-const MAX_FIT_FRACTION := 0.96 ## small margin so the figure doesn't touch the box edges.
+const MAX_FIT_FRACTION := 0.98 ## small margin so the figure doesn't touch the box edges.
 
 @onready var portrait_box: Control = $Panel/PortraitBox
 @onready var portrait_icon: TextureRect = $Panel/PortraitBox/Icon
@@ -38,16 +41,19 @@ func show_visitor(visitor: Visitor) -> void:
 	problem_label.text = visitor.problem_text
 	visible = true
 
-## Scales the measured content rect to fit entirely inside portrait_box
-## (unlike WaitingVisitorDisplay, which deliberately overflows to get
-## clipped at a table line) — here we want the whole figure visible,
-## standing in the doorway.
+## Scales the measured content rect to fill portrait_box's height — the
+## doorway is tall and narrow, so a "fit entirely inside" scale is always
+## width-bound and leaves the figure tiny with empty space above/below.
+## Filling by height instead lets the figure stand full-height in the
+## doorway; any width overflow past the box just gets clipped by
+## portrait_box (clip_contents = true), which reads naturally as the
+## frame cropping a person standing in a narrow opening.
 func _fit_portrait(visitor: Visitor, tex: Texture2D) -> void:
 	var rect := visitor.waiting_portrait_content_rect
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
 	var content_size := Vector2(rect.size.x * tex_size.x, rect.size.y * tex_size.y)
 	var box_size := portrait_box.size * MAX_FIT_FRACTION
-	var content_scale := minf(box_size.x / content_size.x, box_size.y / content_size.y)
+	var content_scale: float = box_size.y / content_size.y
 	portrait_icon.size = tex_size * content_scale
 	var centering := (portrait_box.size - content_size * content_scale) / 2.0
 	portrait_icon.position = centering - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
