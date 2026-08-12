@@ -1,11 +1,13 @@
 class_name WaitingVisitorDisplay
 extends Control
-## The currently-waiting visitor, shown standing in the hut (not just an
-## abstract "client is waiting" button) while the player goes off to brew
-## or carve what they need. Lives under the UI CanvasLayer (screen space)
-## rather than a specific camera panel, so it stays on screen across all
-## three panels instead of vanishing whenever the player looks away from
-## the table. Click them to reopen ReceptionUI and finish the interaction.
+## The currently-waiting visitor, shown standing in the hut beside the
+## door (not just an abstract "client is waiting" button) while the
+## player goes off to brew or carve what they need. Lives under
+## PanelCenter (world space, at the table), not the UI CanvasLayer — only
+## visible while looking at that panel, same as the table/door itself;
+## WaitingIndicator (in UI, always on screen) is the persistent reminder
+## while the player is elsewhere. Click them to reopen ReceptionUI and
+## finish the interaction.
 ##
 ## Fills this control's width with the actual painted figure — not the
 ## raw canvas, which on these portraits has huge transparent margins

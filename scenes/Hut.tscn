@@ -390,6 +390,19 @@ offset_bottom = 75.0
 horizontal_alignment = 1
 text = "Календар"
 
+[node name="WaitingVisitorDisplay" type="Control" parent="PanelCenter"]
+clip_contents = true
+offset_left = 435.0
+offset_top = 89.0
+offset_right = 580.0
+offset_bottom = 403.0
+script = ExtResource("22")
+
+[node name="Icon" type="TextureRect" parent="PanelCenter/WaitingVisitorDisplay"]
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 0
+
 [node name="PanelRight" type="Node2D" parent="."]
 position = Vector2(1920, 0)
 
@@ -509,19 +522,6 @@ offset_right = 270.0
 offset_bottom = 30.0
 text = "Весна, день 1/21 — день"
 
-[node name="WaitingVisitorDisplay" type="Control" parent="UI"]
-clip_contents = true
-offset_left = 382.0
-offset_top = 89.0
-offset_right = 554.0
-offset_bottom = 403.0
-script = ExtResource("22")
-
-[node name="Icon" type="TextureRect" parent="UI/WaitingVisitorDisplay"]
-mouse_filter = 2
-expand_mode = 1
-stretch_mode = 0
-
 [node name="ThresholdDialogue" type="CanvasLayer" parent="."]
 script = ExtResource("7")
 
@@ -543,9 +543,9 @@ stretch_mode = 0
 [node name="PortraitBox" type="Control" parent="ThresholdDialogue/Panel"]
 clip_contents = true
 mouse_filter = 2
-offset_left = 448.0
+offset_left = 435.0
 offset_top = 84.0
-offset_right = 560.0
+offset_right = 580.0
 offset_bottom = 520.0
 
 [node name="Icon" type="TextureRect" parent="ThresholdDialogue/Panel/PortraitBox"]

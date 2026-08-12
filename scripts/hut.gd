@@ -42,7 +42,7 @@ const NEW_TEST_HERBS: Array[StringName] = [
 @onready var potion_detail_popup: PotionDetailPopup = $PotionDetailPopup
 @onready var carving_ui: CarvingUI = $CarvingUI
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
-@onready var waiting_visitor_display: WaitingVisitorDisplay = $UI/WaitingVisitorDisplay
+@onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 @onready var calendar_label: Label = $UI/CalendarLabel
 
 @onready var zones: Array[InteractionZone] = [
