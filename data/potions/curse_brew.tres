@@ -1,9 +1,11 @@
-[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Potion" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/decoction_dark_curse.png" id="2"]
 
 [resource]
 script = ExtResource("1")
 id = &"curse_brew"
 display_name = "Морочний відвар"
 description = "Зварено проти сонця — правильні трави, та не той напрямок. Не лікує й не очищує, а морочить голову і збиває зі шляху."
+icon = ExtResource("2")
