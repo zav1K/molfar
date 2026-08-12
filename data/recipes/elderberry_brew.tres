@@ -9,4 +9,4 @@ ingredients = {
 &"wormwood": 1
 }
 light_result_id = &"elderberry_remedy"
-dark_result_id = &"elderberry_daze"
+dark_result_id = &"curse_brew"

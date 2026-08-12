@@ -1,9 +1,0 @@
-[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
-
-[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
-
-[resource]
-script = ExtResource("1")
-id = &"elderberry_daze"
-display_name = "Бузинний дурман"
-description = "Бузину недарма обходять — кажуть, під кущем ночує нечисть. Зварена проти сонця, вона не лікує, а туманить голову і зводить зі шляху."
