@@ -95,9 +95,9 @@ shape = SubResource("Shape_cauldron")
 [node name="Sprite" type="TextureRect" parent="PanelLeft/Zones/Cauldron"]
 mouse_filter = 2
 offset_left = -89.0
-offset_top = -112.0
+offset_top = -90.0
 offset_right = 89.0
-offset_bottom = 66.0
+offset_bottom = 88.0
 texture = ExtResource("26")
 expand_mode = 1
 stretch_mode = 0

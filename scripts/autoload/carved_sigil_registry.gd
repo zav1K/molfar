@@ -27,6 +27,18 @@ const BLOCK_TEXTURES_DIR := "res://assets/hut/sigil_blocks/"
 const WHITE_THRESHOLD := 0.97 ## 0..1 (Color channel scale); anything lighter counts as background.
 const SCAN_STRIDE := 4 ## px; coarse sample, plenty for a bounding box.
 
+## Each block is a wood disc with a thin rope loop knotted through a hole
+## near its top — the rope leans off to one side, so a plain "bounding
+## box of every non-white pixel" pulls that corner out to include it.
+## Stretched to fill a square canvas, that squeezes/offsets the actual
+## disc badly enough that the guide template no longer sits on it and
+## the disc itself renders warped. Instead, measure the widest row and
+## tallest column (the disc's own cross-section) and only count rows/
+## columns whose extent is at least this fraction of that peak — the
+## rope's rows/columns fall well short and get excluded, so the
+## resulting rect tracks the disc's body, not the rope.
+const BODY_EXTENT_FRACTION := 0.4
+
 class BlockVariant:
 	var texture: Texture2D
 	var content_rect: Rect2 # normalized 0..1
@@ -57,24 +69,65 @@ func _load_block_textures() -> void:
 func _measure_content_rect(image: Image) -> Rect2:
 	var w := image.get_width()
 	var h := image.get_height()
-	var min_x := w
-	var min_y := h
-	var max_x := -1
-	var max_y := -1
+
+	# Per-row and per-column non-white extent, sampled on the same grid.
+	var row_min := PackedInt32Array()
+	var row_max := PackedInt32Array()
+	row_min.resize(h)
+	row_max.resize(h)
+	for i in h:
+		row_min[i] = w
+		row_max[i] = -1
+	var col_min := PackedInt32Array()
+	var col_max := PackedInt32Array()
+	col_min.resize(w)
+	col_max.resize(w)
+	for i in w:
+		col_min[i] = h
+		col_max[i] = -1
+
 	var y := 0
 	while y < h:
 		var x := 0
 		while x < w:
 			var c := image.get_pixel(x, y)
 			if c.a > 0.05 and not (c.r > WHITE_THRESHOLD and c.g > WHITE_THRESHOLD and c.b > WHITE_THRESHOLD):
-				min_x = mini(min_x, x)
-				min_y = mini(min_y, y)
-				max_x = maxi(max_x, x)
-				max_y = maxi(max_y, y)
+				row_min[y] = mini(row_min[y], x)
+				row_max[y] = maxi(row_max[y], x)
+				col_min[x] = mini(col_min[x], y)
+				col_max[x] = maxi(col_max[x], y)
 			x += SCAN_STRIDE
 		y += SCAN_STRIDE
-	if max_x < 0:
+
+	var peak_row_width := 0
+	for ry in h:
+		if row_max[ry] >= 0:
+			peak_row_width = maxi(peak_row_width, row_max[ry] - row_min[ry])
+	var peak_col_height := 0
+	for cx in w:
+		if col_max[cx] >= 0:
+			peak_col_height = maxi(peak_col_height, col_max[cx] - col_min[cx])
+	if peak_row_width == 0 or peak_col_height == 0:
 		return Rect2(0, 0, 1, 1) # nothing found (shouldn't happen) — fall back to uncropped.
+
+	var row_threshold := peak_row_width * BODY_EXTENT_FRACTION
+	var col_threshold := peak_col_height * BODY_EXTENT_FRACTION
+
+	var min_y := h
+	var max_y := -1
+	for ry2 in h:
+		if row_max[ry2] >= 0 and (row_max[ry2] - row_min[ry2]) >= row_threshold:
+			min_y = mini(min_y, ry2)
+			max_y = maxi(max_y, ry2)
+	var min_x := w
+	var max_x := -1
+	for cx2 in w:
+		if col_max[cx2] >= 0 and (col_max[cx2] - col_min[cx2]) >= col_threshold:
+			min_x = mini(min_x, cx2)
+			max_x = maxi(max_x, cx2)
+
+	if max_x < 0 or max_y < 0:
+		return Rect2(0, 0, 1, 1)
 	return Rect2(float(min_x) / w, float(min_y) / h, float(max_x - min_x) / w, float(max_y - min_y) / h)
 
 func add_instance(sigil_id: StringName, stroke_points: PackedVector2Array) -> void:
