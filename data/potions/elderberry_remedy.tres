@@ -1,0 +1,9 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"elderberry_remedy"
+display_name = "Бузиновий відвар"
+description = "Квіт і ягоди бузини — жене піт і збиває гарячку, м'якшить кашель і дере в горлі. Звичайна справа, коли зварено як належить — по сонцю."
