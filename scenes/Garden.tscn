@@ -4,10 +4,10 @@
 [ext_resource type="Script" path="res://scripts/garden_plot.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/planting_ui.gd" id="4"]
-[ext_resource type="Texture2D" path="res://assets/hut/garden.jpg" id="5"]
+[ext_resource type="Texture2D" path="res://assets/hut/garden.png" id="5"]
 
 [sub_resource type="RectangleShape2D" id="Shape_plot"]
-size = Vector2(220, 190)
+size = Vector2(190, 250)
 
 [sub_resource type="RectangleShape2D" id="Shape_exit"]
 size = Vector2(140, 60)
@@ -26,18 +26,18 @@ stretch_mode = 6
 [node name="Anchors" type="Node2D" parent="."]
 
 [node name="Plot1Anchor" type="Marker2D" parent="Anchors"]
-position = Vector2(200, 305)
+position = Vector2(217, 280)
 
 [node name="Plot2Anchor" type="Marker2D" parent="Anchors"]
-position = Vector2(485, 300)
+position = Vector2(477, 280)
 
 [node name="Plot3Anchor" type="Marker2D" parent="Anchors"]
-position = Vector2(770, 300)
+position = Vector2(718, 280)
 
 [node name="Plots" type="Node2D" parent="."]
 
 [node name="Plot1" type="Area2D" parent="Plots"]
-position = Vector2(200, 305)
+position = Vector2(217, 280)
 script = ExtResource("2")
 zone_id = &"plot_1"
 zone_label = "Грядка 1"
@@ -49,66 +49,66 @@ shape = SubResource("Shape_plot")
 [node name="DugHoleColor" type="ColorRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
 [node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 color = Color(0.5, 0.7, 0.35, 1)
 
 [node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="WetSoilColor" type="ColorRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 color = Color(0.15, 0.09, 0.04, 0.55)
 
 [node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot1"]
 mouse_filter = 2
 offset_left = -100.0
-offset_top = 95.0
+offset_top = 125.0
 offset_right = 100.0
-offset_bottom = 120.0
+offset_bottom = 150.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 
@@ -116,7 +116,7 @@ theme_override_font_sizes/font_size = 12
 one_shot = true
 
 [node name="Plot2" type="Area2D" parent="Plots"]
-position = Vector2(485, 300)
+position = Vector2(477, 280)
 script = ExtResource("2")
 zone_id = &"plot_2"
 zone_label = "Грядка 2"
@@ -128,66 +128,66 @@ shape = SubResource("Shape_plot")
 [node name="DugHoleColor" type="ColorRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
 [node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 color = Color(0.5, 0.7, 0.35, 1)
 
 [node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="WetSoilColor" type="ColorRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 color = Color(0.15, 0.09, 0.04, 0.55)
 
 [node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot2"]
 mouse_filter = 2
 offset_left = -100.0
-offset_top = 95.0
+offset_top = 125.0
 offset_right = 100.0
-offset_bottom = 120.0
+offset_bottom = 150.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 
@@ -195,7 +195,7 @@ theme_override_font_sizes/font_size = 12
 one_shot = true
 
 [node name="Plot3" type="Area2D" parent="Plots"]
-position = Vector2(770, 300)
+position = Vector2(718, 280)
 script = ExtResource("2")
 zone_id = &"plot_3"
 zone_label = "Грядка 3"
@@ -207,66 +207,66 @@ shape = SubResource("Shape_plot")
 [node name="DugHoleColor" type="ColorRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
 [node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = -85.0
-offset_right = 100.0
-offset_bottom = 85.0
+offset_left = -85.0
+offset_top = -115.0
+offset_right = 85.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 color = Color(0.5, 0.7, 0.35, 1)
 
 [node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -85.0
-offset_right = 90.0
-offset_bottom = 75.0
+offset_left = -80.0
+offset_top = -105.0
+offset_right = 80.0
+offset_bottom = 105.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="WetSoilColor" type="ColorRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 color = Color(0.15, 0.09, 0.04, 0.55)
 
 [node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -105.0
-offset_top = -85.0
-offset_right = 105.0
-offset_bottom = 85.0
+offset_left = -90.0
+offset_top = -115.0
+offset_right = 90.0
+offset_bottom = 115.0
 expand_mode = 1
 stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Plot3"]
 mouse_filter = 2
 offset_left = -100.0
-offset_top = 95.0
+offset_top = 125.0
 offset_right = 100.0
-offset_bottom = 120.0
+offset_bottom = 150.0
 horizontal_alignment = 1
 theme_override_font_sizes/font_size = 12
 
