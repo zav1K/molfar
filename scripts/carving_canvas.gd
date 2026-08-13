@@ -41,7 +41,7 @@ func start(sigil: Sigil) -> void:
 	_target_sigil = sigil
 	_target_path.clear()
 	for p in sigil.path_points:
-		var inset := GUIDE_MARGIN + p * (1.0 - 2.0 * GUIDE_MARGIN)
+		var inset: Vector2 = Vector2(GUIDE_MARGIN, GUIDE_MARGIN) + p * (1.0 - 2.0 * GUIDE_MARGIN)
 		_target_path.append(Vector2(inset.x * size.x, inset.y * size.y))
 	_target_length = _path_length(_target_path)
 	_drawn_points.clear()
