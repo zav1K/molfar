@@ -30,7 +30,7 @@ const QUALITY_LABEL := {
 
 signal closed
 
-@onready var ingredient_list: VBoxContainer = $Panel/IngredientList
+@onready var ingredient_list: VBoxContainer = $Panel/IngredientListScroll/IngredientList
 @onready var reset_button: Button = $Panel/BrewButton
 @onready var back_button: Button = $Panel/BackButton
 @onready var status_label: Label = $Panel/StatusLabel

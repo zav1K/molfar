@@ -93,6 +93,14 @@ func _on_release() -> void:
 
 func _draw() -> void:
 	if _background_block != null:
+		# content_rect is a rectangular bounding box around a round disc —
+		# its own corners sit outside the disc and are fully transparent
+		# in the source art. Without an opaque backing, those corners let
+		# the semi-transparent panel behind this canvas show the hut wall
+		# through them, which reads as the block being crookedly cropped.
+		# A solid fill first (matching the panel's own tone) closes that
+		# gap instead of leaving it see-through.
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0.05, 0.05, 0.05, 0.85))
 		var tex := _background_block.texture
 		var tex_size := tex.get_size()
 		var rect := _background_block.content_rect

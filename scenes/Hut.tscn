@@ -549,6 +549,13 @@ offset_top = 62.0
 offset_right = 601.0
 offset_bottom = 520.0
 
+[node name="Background" type="ColorRect" parent="ThresholdDialogue/Panel/PortraitBox"]
+mouse_filter = 2
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.05, 0.05, 0.05, 0.85)
+
 [node name="Icon" type="TextureRect" parent="ThresholdDialogue/Panel/PortraitBox"]
 mouse_filter = 2
 expand_mode = 1
@@ -609,11 +616,16 @@ offset_bottom = 70.0
 horizontal_alignment = 1
 text = "Варіння зілля"
 
-[node name="IngredientList" type="VBoxContainer" parent="BrewingUI/Panel"]
+[node name="IngredientListScroll" type="ScrollContainer" parent="BrewingUI/Panel"]
 offset_left = 20.0
 offset_top = 90.0
 offset_right = 340.0
 offset_bottom = 400.0
+horizontal_scroll_mode = 0
+
+[node name="IngredientList" type="VBoxContainer" parent="BrewingUI/Panel/IngredientListScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
 
 [node name="StatusLabel" type="Label" parent="BrewingUI/Panel"]
 offset_left = 20.0
