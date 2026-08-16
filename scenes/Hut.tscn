@@ -758,11 +758,19 @@ horizontal_alignment = 1
 autowrap_mode = 2
 text = "..."
 
-[node name="ItemList" type="VBoxContainer" parent="ReceptionUI/Panel"]
+[node name="ItemListScroll" type="ScrollContainer" parent="ReceptionUI/Panel"]
 offset_left = 330.0
 offset_top = 165.0
 offset_right = 630.0
 offset_bottom = 335.0
+horizontal_scroll_mode = 0
+
+[node name="ItemList" type="GridContainer" parent="ReceptionUI/Panel/ItemListScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+theme_override_constants/h_separation = 10
+theme_override_constants/v_separation = 10
 
 [node name="TakeButton" type="Button" parent="ReceptionUI/Panel"]
 visible = false

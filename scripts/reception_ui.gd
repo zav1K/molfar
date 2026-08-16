@@ -24,11 +24,13 @@ signal closed
 signal wait_requested(visitor: Visitor)
 
 const DEMAND_MONEY_ITEM_ID := &"groshi"
+const ICON_SIZE := Vector2(64, 64)
+const TILE_WIDTH := 130.0
 
 @onready var portrait: TextureRect = $Panel/Portrait
 @onready var name_label: Label = $Panel/NameLabel
 @onready var problem_label: Label = $Panel/ProblemLabel
-@onready var item_list: VBoxContainer = $Panel/ItemList
+@onready var item_list: GridContainer = $Panel/ItemListScroll/ItemList
 @onready var take_button: Button = $Panel/TakeButton
 @onready var send_away_button: Button = $Panel/SendAwayButton
 @onready var wait_button: Button = $Panel/WaitButton
@@ -81,11 +83,17 @@ func _rebuild_item_list() -> void:
 	for potion in PotionDatabase.get_all():
 		var count := PlayerInventory.get_count(potion.id)
 		if count > 0:
-			item_list.add_child(_build_row(potion.id, "%s (є %d)" % [potion.display_name, count]))
+			var icon_node := _make_icon_node(potion.icon)
+			item_list.add_child(_build_give_tile(icon_node, "%s (є %d)" % [potion.display_name, count], potion.id))
 	for sigil in SigilDatabase.get_all():
 		var count := PlayerInventory.get_count(sigil.id)
 		if count > 0:
-			item_list.add_child(_build_row(sigil.id, "%s (є %d)" % [sigil.display_name, count]))
+			# Whichever physical instance happens to be first — which one
+			## gets shown doesn't matter, same reasoning as take_instance()
+			# picking "whichever's handiest" when the give actually happens.
+			var instances := CarvedSigilRegistry.peek_instances(sigil.id)
+			var icon_node := _make_sigil_icon_node(sigil, instances[0]) if not instances.is_empty() else _make_icon_node(null)
+			item_list.add_child(_build_give_tile(icon_node, "%s (є %d)" % [sigil.display_name, count], sigil.id))
 
 func _item_display_name(item_id: StringName) -> String:
 	var keepsake := KeepsakeDatabase.get_keepsake(item_id)
@@ -102,20 +110,55 @@ func _item_display_name(item_id: StringName) -> String:
 		return ingredient.display_name
 	return String(item_id)
 
-func _build_row(item_id: StringName, label_text: String) -> HBoxContainer:
-	var row := HBoxContainer.new()
+## Both dimensions get shrink-to-center explicitly — a GridContainer row
+## stretches every cell to the tallest one in that row (varying label
+## line-wrap heights), and a plain icon left to SIZE_FILL vertically
+## would get stretched tall along with it, distorting square art.
+func _make_icon_node(icon_texture: Texture2D) -> Control:
+	if icon_texture == null:
+		var swatch := ColorRect.new()
+		swatch.color = Color(0.35, 0.3, 0.25)
+		swatch.custom_minimum_size = ICON_SIZE
+		swatch.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+		return swatch
+	var icon := TextureRect.new()
+	icon.texture = icon_texture
+	icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	icon.custom_minimum_size = ICON_SIZE
+	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	return icon
+
+func _make_sigil_icon_node(sigil: Sigil, instance: CarvedSigilInstance) -> Control:
+	var icon := SigilIcon.new()
+	icon.custom_minimum_size = ICON_SIZE
+	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	icon.setup(sigil, instance)
+	return icon
+
+func _build_give_tile(icon_node: Control, label_text: String, item_id: StringName) -> VBoxContainer:
+	var tile := VBoxContainer.new()
+	tile.custom_minimum_size.x = TILE_WIDTH
+	tile.add_child(icon_node)
 
 	var label := Label.new()
-	label.custom_minimum_size.x = 260
 	label.text = label_text
-	row.add_child(label)
+	label.custom_minimum_size.x = TILE_WIDTH
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	label.add_theme_font_size_override("font_size", 12)
+	tile.add_child(label)
 
 	var give_button := Button.new()
 	give_button.text = "Дати"
+	give_button.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	give_button.pressed.connect(_on_give_pressed.bind(item_id))
-	row.add_child(give_button)
+	tile.add_child(give_button)
 
-	return row
+	return tile
 
 func _on_give_pressed(item_id: StringName) -> void:
 	if item_id != _visitor.desired_result_id:

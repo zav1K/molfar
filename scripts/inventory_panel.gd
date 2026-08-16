@@ -39,6 +39,7 @@ func _ready() -> void:
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
 	title_label.text = "Скриня" if kind == Kind.ALL else SECTION_TITLES[kind]
+	list.add_theme_constant_override("separation", 18)
 
 func open() -> void:
 	_rebuild()
@@ -73,17 +74,38 @@ func _new_grid() -> GridContainer:
 	grid.add_theme_constant_override("v_separation", GRID_SEPARATION)
 	return grid
 
+## A bordered card per category, not just a header label above a grid —
+## Chest mixes four categories in one scroll, and a plain label reads as
+## a running list rather than distinct groups once there are enough
+## tiles to scroll past.
 func _add_section(title: String, tiles: Array) -> void:
 	if tiles.is_empty():
 		return
+	var card := PanelContainer.new()
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var style := StyleBoxFlat.new()
+	style.bg_color = Color(1, 1, 1, 0.04)
+	style.border_color = Color(1, 1, 1, 0.16)
+	style.set_border_width_all(1)
+	style.set_corner_radius_all(8)
+	style.set_content_margin_all(12)
+	card.add_theme_stylebox_override("panel", style)
+
+	var inner := VBoxContainer.new()
+	inner.add_theme_constant_override("separation", 10)
+	card.add_child(inner)
+
 	var header := Label.new()
 	header.text = title
 	header.add_theme_font_size_override("font_size", 16)
-	list.add_child(header)
+	inner.add_child(header)
+
 	var grid := _new_grid()
 	for tile in tiles:
 		grid.add_child(tile)
-	list.add_child(grid)
+	inner.add_child(grid)
+
+	list.add_child(card)
 
 func _ingredient_tiles() -> Array:
 	var tiles: Array = []
@@ -120,6 +142,10 @@ func _keepsake_tiles() -> Array:
 			tiles.append(_build_tile(keepsake.icon, keepsake.placeholder_color, keepsake.display_name, count))
 	return tiles
 
+## Both dimensions get shrink-to-center explicitly — a GridContainer row
+## stretches every cell to the tallest one in that row (varying label
+## line-wrap heights), and a plain icon left to SIZE_FILL vertically
+## would get stretched tall along with it, distorting square art.
 func _build_icon_or_swatch(icon_texture: Texture2D, placeholder_color: Color) -> Control:
 	if icon_texture != null:
 		var icon := TextureRect.new()
@@ -128,11 +154,13 @@ func _build_icon_or_swatch(icon_texture: Texture2D, placeholder_color: Color) ->
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 		icon.custom_minimum_size = ICON_SIZE
 		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		return icon
 	var swatch := ColorRect.new()
 	swatch.color = placeholder_color
 	swatch.custom_minimum_size = ICON_SIZE
 	swatch.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	swatch.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	return swatch
 
 func _build_label(text: String) -> Label:
@@ -158,6 +186,7 @@ func _build_sigil_tile(sigil: Sigil, instance: CarvedSigilInstance) -> VBoxConta
 	var icon := SigilIcon.new()
 	icon.custom_minimum_size = ICON_SIZE
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.setup(sigil, instance)
 	tile.add_child(icon)
 
