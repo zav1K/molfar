@@ -5,10 +5,11 @@ extends CanvasLayer
 ## Hut.tscn: three single-category quick-glance panels opened by their
 ## own decorative trigger zone (drying beam for herbs, potion shelf for
 ## potions, a spot on the desk for sigils), plus the chest on the right
-## panel showing kind ALL — the actual full-stockpile screen, sectioned
-## by category with a header per section. Each item is a big icon tile
-## with its name/count underneath, laid out in a grid — not a text row.
-## No drag-and-drop, no per-slot anchors, no slot-count/equipment-
+## panel showing kind ALL — the actual full-stockpile screen, with a
+## browser-style tab row (one tab per category) instead of everything
+## scrolling past in one long list. Each item is a big icon tile with
+## its name/count underneath, laid out in a grid — not a text row. No
+## drag-and-drop, no per-slot anchors, no slot-count/equipment-
 ## progression bookkeeping anywhere here.
 
 enum Kind { INGREDIENTS, POTIONS, SIGILS, ALL }
@@ -34,25 +35,57 @@ signal potion_selected(potion: Potion)
 @onready var title_label: Label = $Panel/Title
 @onready var list: VBoxContainer = $Panel/ScrollContainer/List
 @onready var close_button: Button = $Panel/CloseButton
+@onready var tab_bar: HBoxContainer = get_node_or_null("Panel/TabBar")
+
+## (tab title, tile-provider function) — only built/used for kind ALL.
+var _tabs: Array[Array] = []
+var _active_tab: int = 0
 
 func _ready() -> void:
 	visible = false
 	close_button.pressed.connect(_on_close_pressed)
 	title_label.text = "Скриня" if kind == Kind.ALL else SECTION_TITLES[kind]
 	list.add_theme_constant_override("separation", 18)
+	if kind == Kind.ALL:
+		_tabs = [
+			[SECTION_TITLES[Kind.INGREDIENTS], _ingredient_tiles],
+			[SECTION_TITLES[Kind.POTIONS], _potion_tiles],
+			[SECTION_TITLES[Kind.SIGILS], _sigil_tiles],
+			[KEEPSAKES_SECTION_TITLE, _keepsake_tiles],
+		]
+		_build_tab_buttons()
 
 func open() -> void:
 	_rebuild()
 	visible = true
 
+func _build_tab_buttons() -> void:
+	for child in tab_bar.get_children():
+		child.queue_free()
+	for i in _tabs.size():
+		var tab_index := i
+		var button := Button.new()
+		button.text = _tabs[i][0]
+		button.toggle_mode = true
+		button.pressed.connect(func() -> void:
+			_active_tab = tab_index
+			_rebuild())
+		tab_bar.add_child(button)
+
+func _refresh_tab_buttons() -> void:
+	for i in tab_bar.get_child_count():
+		(tab_bar.get_child(i) as Button).button_pressed = (i == _active_tab)
+
 func _rebuild() -> void:
 	for child in list.get_children():
 		child.queue_free()
 	if kind == Kind.ALL:
-		_add_section(SECTION_TITLES[Kind.INGREDIENTS], _ingredient_tiles())
-		_add_section(SECTION_TITLES[Kind.POTIONS], _potion_tiles())
-		_add_section(SECTION_TITLES[Kind.SIGILS], _sigil_tiles())
-		_add_section(KEEPSAKES_SECTION_TITLE, _keepsake_tiles())
+		_refresh_tab_buttons()
+		var provider: Callable = _tabs[_active_tab][1]
+		var grid := _new_grid()
+		for tile in provider.call():
+			grid.add_child(tile)
+		list.add_child(grid)
 		return
 	var grid := _new_grid()
 	match kind:
@@ -73,39 +106,6 @@ func _new_grid() -> GridContainer:
 	grid.add_theme_constant_override("h_separation", GRID_SEPARATION)
 	grid.add_theme_constant_override("v_separation", GRID_SEPARATION)
 	return grid
-
-## A bordered card per category, not just a header label above a grid —
-## Chest mixes four categories in one scroll, and a plain label reads as
-## a running list rather than distinct groups once there are enough
-## tiles to scroll past.
-func _add_section(title: String, tiles: Array) -> void:
-	if tiles.is_empty():
-		return
-	var card := PanelContainer.new()
-	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color(1, 1, 1, 0.04)
-	style.border_color = Color(1, 1, 1, 0.16)
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(8)
-	style.set_content_margin_all(12)
-	card.add_theme_stylebox_override("panel", style)
-
-	var inner := VBoxContainer.new()
-	inner.add_theme_constant_override("separation", 10)
-	card.add_child(inner)
-
-	var header := Label.new()
-	header.text = title
-	header.add_theme_font_size_override("font_size", 16)
-	inner.add_child(header)
-
-	var grid := _new_grid()
-	for tile in tiles:
-		grid.add_child(tile)
-	inner.add_child(grid)
-
-	list.add_child(card)
 
 func _ingredient_tiles() -> Array:
 	var tiles: Array = []

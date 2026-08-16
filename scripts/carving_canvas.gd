@@ -17,16 +17,6 @@ const RESAMPLE_COUNT := 40
 const MIN_COVERAGE_TO_COUNT := 0.15 ## below this, a release is a misclick, not an attempt.
 const MIN_POINT_SPACING := 3.0 ## px; drops points closer than this to keep arrays small.
 
-## Sigil.path_points are authored against the full 0..1 unit square, but
-## the wood disc drawn behind them doesn't reach the square's corners —
-## it's round, not square, and its content_rect (see CarvedSigilRegistry)
-## is only a bounding box around that round shape, not a perfect fit.
-## Points near the raw edges (e.g. zigzag_ward's x=0.1/0.9) can land on
-## bark instead of the engravable surface. Inset the guide into a smaller
-## centered square before scaling to pixels so it stays safely on the
-## disc for any block variant.
-const GUIDE_MARGIN := 0.18
-
 var _target_sigil: Sigil
 var _target_path: PackedVector2Array # in local pixel space
 var _target_length: float = 0.0
@@ -39,19 +29,39 @@ func _ready() -> void:
 
 func start(sigil: Sigil) -> void:
 	_target_sigil = sigil
-	_target_path.clear()
-	for p in sigil.path_points:
-		var inset: Vector2 = Vector2(GUIDE_MARGIN, GUIDE_MARGIN) + p * (1.0 - 2.0 * GUIDE_MARGIN)
-		_target_path.append(Vector2(inset.x * size.x, inset.y * size.y))
-	_target_length = _path_length(_target_path)
-	_drawn_points.clear()
-	_drawing = false
 	# Just a preview of what carving generally looks like — the block an
 	# actual success lands on is picked independently (see
 	# CarvedSigilRegistry.add_instance), so this can differ from the
 	# result. Better than showing no wood at all while tracing.
 	_background_block = CarvedSigilRegistry.get_random_block_variant()
+	# Sigil.path_points are authored against the full 0..1 unit square,
+	# but the wood disc doesn't reach the square's corners — it's round,
+	# not square, and content_rect (see CarvedSigilRegistry) is only its
+	# bounding box, drawn here letterboxed to keep the disc undistorted
+	# (see _draw()). Map path_points onto that same letterboxed rect
+	# instead of the full canvas, so the guide always lands on the
+	# visible wood regardless of which block variant this is or how much
+	# it's letterboxed.
+	var dest := _block_dest_rect()
+	_target_path.clear()
+	for p in sigil.path_points:
+		_target_path.append(dest.position + p * dest.size)
+	_target_length = _path_length(_target_path)
+	_drawn_points.clear()
+	_drawing = false
 	queue_redraw()
+
+## Where the block's content_rect lands once scaled uniformly (preserving
+## its own proportions) and centered in this control — shared by start()
+## (to place the guide on it) and _draw() (to actually paint it there).
+func _block_dest_rect() -> Rect2:
+	if _background_block == null:
+		return Rect2(Vector2.ZERO, size)
+	var tex_size := _background_block.texture.get_size()
+	var content_px := _background_block.content_rect.size * tex_size
+	var block_scale: float = minf(size.x / content_px.x, size.y / content_px.y)
+	var dest_size := content_px * block_scale
+	return Rect2((size - dest_size) / 2.0, dest_size)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
@@ -93,19 +103,22 @@ func _on_release() -> void:
 
 func _draw() -> void:
 	if _background_block != null:
-		# content_rect is a rectangular bounding box around a round disc —
-		# its own corners sit outside the disc and are fully transparent
-		# in the source art. Without an opaque backing, those corners let
-		# the semi-transparent panel behind this canvas show the hut wall
-		# through them, which reads as the block being crookedly cropped.
-		# A solid fill first (matching the panel's own tone) closes that
-		# gap instead of leaving it see-through.
+		# content_rect isn't square (the disc is taller than it is wide),
+		# so stretching it to fill this square canvas would distort the
+		# disc into a rounder shape than it actually is, on top of
+		# leaving its bounding box's own transparent corners visible.
+		# _block_dest_rect() scales it uniformly instead (a "contain" fit)
+		# so the disc keeps its real proportions, letterboxed on two
+		# sides rather than stretched into all four corners; a solid
+		# backing first closes both the letterbox bars and the disc's
+		# own transparent corners so the panel's translucent background
+		# doesn't show through.
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.05, 0.05, 0.05, 0.85))
 		var tex := _background_block.texture
 		var tex_size := tex.get_size()
 		var rect := _background_block.content_rect
 		var src := Rect2(rect.position * tex_size, rect.size * tex_size)
-		draw_texture_rect_region(tex, Rect2(Vector2.ZERO, size), src)
+		draw_texture_rect_region(tex, _block_dest_rect(), src)
 	if _target_path.size() >= 2:
 		draw_polyline(_target_path, Color(0.85, 0.75, 0.55, 0.35), 3.0, true)
 		for p in _target_path:
