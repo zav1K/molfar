@@ -164,25 +164,28 @@ func _build_sigil_tile(sigil: Sigil, instance: CarvedSigilInstance) -> VBoxConta
 	tile.add_child(_build_label(sigil.display_name))
 	return tile
 
-func _build_potion_tile(potion: Potion, count: int) -> Button:
-	var button := Button.new()
-	button.custom_minimum_size.x = TILE_WIDTH
-	button.pressed.connect(func() -> void: potion_selected.emit(potion))
-
-	var vbox := VBoxContainer.new()
-	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
-	button.add_child(vbox)
+## Plain VBoxContainer, same as every other tile — a Button doesn't lay
+## out its children (it isn't a Container), so a Button-wrapped tile
+## reports a wrong (too small) minimum size and GridContainer overlaps
+## its row with the next one. Click detection is a gui_input tap instead
+## of Button.pressed.
+func _build_potion_tile(potion: Potion, count: int) -> VBoxContainer:
+	var tile := VBoxContainer.new()
+	tile.custom_minimum_size.x = TILE_WIDTH
+	tile.mouse_filter = Control.MOUSE_FILTER_STOP
+	tile.gui_input.connect(func(event: InputEvent) -> void:
+		if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+			potion_selected.emit(potion))
 
 	var icon_or_swatch := _build_icon_or_swatch(potion.icon, Color(0.4, 0.32, 0.5))
 	icon_or_swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(icon_or_swatch)
+	tile.add_child(icon_or_swatch)
 
 	var label := _build_label("%s ×%d" % [potion.display_name, count])
 	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	vbox.add_child(label)
+	tile.add_child(label)
 
-	return button
+	return tile
 
 func _on_close_pressed() -> void:
 	visible = false
