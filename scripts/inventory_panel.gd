@@ -20,14 +20,13 @@ const SECTION_TITLES := {
 }
 const KEEPSAKES_SECTION_TITLE := "Речі"
 
-const ICON_SIZE := Vector2(64, 64)
-const TILE_WIDTH := 84.0
-const GRID_SEPARATION := 10
+const ICON_SIZE := Vector2(112, 112)
+const TILE_WIDTH := 132.0
+const GRID_SEPARATION := 16
+const LABEL_FONT_SIZE := 11
 
-## Chest (kind ALL) gets a wider panel than the three single-category
-## quick-glance ones, so it fits an extra column.
 @export var kind: Kind = Kind.INGREDIENTS
-@export var columns: int = 3
+@export var columns: int = 6
 
 signal closed
 signal potion_selected(potion: Potion)
@@ -142,6 +141,7 @@ func _build_label(text: String) -> Label:
 	label.custom_minimum_size.x = TILE_WIDTH
 	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	label.add_theme_font_size_override("font_size", LABEL_FONT_SIZE)
 	return label
 
 func _build_tile(icon_texture: Texture2D, placeholder_color: Color, label_text: String, count: int) -> VBoxContainer:

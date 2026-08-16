@@ -114,6 +114,13 @@ func _ready() -> void:
 	if WardRack.get_slot(0) == &"":
 		WardRack.hang(0, &"garlic")
 
+	# DEBUG: seed one of every potion so the inventory grid has something
+	# to show for every icon/no-icon case while testing. Remove once
+	# brewing is the only way potions actually enter the inventory.
+	for potion in PotionDatabase.get_all():
+		if not PlayerInventory.has(potion.id):
+			PlayerInventory.add(potion.id, 1)
+
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
