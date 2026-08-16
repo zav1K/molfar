@@ -36,15 +36,28 @@ const SCAN_STRIDE := 4 ## px; coarse sample, plenty for a bounding box.
 ## mid-coil instead of cleanly excluding or including it. Simpler and
 ## better-looking to just show the whole pendant, rope included, scaled
 ## to fit without distortion (see CarvingCanvas/SigilIcon) — nothing gets
-## cut off mid-shape that way. disc_rect below is kept separately, tighter
-## (same old row/column-extent method), purely so the carving guide still
-## lands on the disc's own surface and not the rope.
+## cut off mid-shape that way.
+##
+## grain_rect below is kept separately, purely so the carving guide lands
+## on smooth engravable wood — not the disc's own bark rim, which a plain
+## "is this part of the disc" test (used for the old disc-only attempt)
+## can't tell apart from the grain, since bark is just a darker patch of
+## the same disc. Classifies by brightness instead (the grain reads
+## noticeably lighter than the bark ring around it) and keeps only rows/
+## columns with a wide enough run of it to be the grain's own body, same
+## shape of test as before, just seeded from a stricter color check.
 const BODY_EXTENT_FRACTION := 0.4
+const GRAIN_LUMINANCE_THRESHOLD := 0.667 ## 0..1; grain reads lighter than the bark ring around it.
+## Extra uniform shrink on top of the measured grain body — the
+## brightness classifier is noisy around tree-ring lines and bark
+## highlights, so this errs toward a smaller guide that's confidently on
+## wood over a bigger one that risks the bark edge.
+const GRAIN_SAFETY_SHRINK := 0.8
 
 class BlockVariant:
 	var texture: Texture2D
 	var content_rect: Rect2 ## normalized 0..1 — whole pendant (rope + disc), for display.
-	var disc_rect: Rect2 ## normalized 0..1 — disc body only, for guide placement.
+	var grain_rect: Rect2 ## normalized 0..1 — smooth wood surface only, for guide placement.
 
 var _instances: Dictionary = {} # StringName -> Array[CarvedSigilInstance]
 var _block_variants: Array[BlockVariant] = []
@@ -67,7 +80,7 @@ func _load_block_textures() -> void:
 				var variant := BlockVariant.new()
 				variant.texture = tex
 				variant.content_rect = _measure_full_bbox(image)
-				variant.disc_rect = _measure_disc_body(image)
+				variant.grain_rect = _measure_grain_body(image)
 				_block_variants.append(variant)
 		file_name = dir.get_next()
 	dir.list_dir_end()
@@ -96,10 +109,15 @@ func _measure_full_bbox(image: Image) -> Rect2:
 		return Rect2(0, 0, 1, 1) # nothing found (shouldn't happen) — fall back to uncropped.
 	return Rect2(float(min_x) / w, float(min_y) / h, float(max_x - min_x) / w, float(max_y - min_y) / h)
 
-## Widest row / tallest column (the disc's own cross-section) — only rows/
-## columns at least BODY_EXTENT_FRACTION of that peak count, which the
-## rope's cord (well short of the disc's own width) mostly fails.
-func _measure_disc_body(image: Image) -> Rect2:
+## Widest row / tallest column of grain-bright pixels (the smooth wood's
+## own cross-section) — only rows/columns with a run at least
+## BODY_EXTENT_FRACTION of that peak count, same reasoning as the old
+## disc-vs-rope test but seeded from a brightness check instead of a
+## plain non-white one, so it separates the light grain from the darker
+## bark ring around it too. Finished off with a uniform shrink
+## (GRAIN_SAFETY_SHRINK) since tree-ring lines and bark highlights make
+## the brightness read noisy right at the true edge.
+func _measure_grain_body(image: Image) -> Rect2:
 	var w := image.get_width()
 	var h := image.get_height()
 
@@ -123,7 +141,9 @@ func _measure_disc_body(image: Image) -> Rect2:
 		var x := 0
 		while x < w:
 			var c := image.get_pixel(x, y)
-			if c.a > 0.05 and not (c.r > WHITE_THRESHOLD and c.g > WHITE_THRESHOLD and c.b > WHITE_THRESHOLD):
+			var is_white := c.r > WHITE_THRESHOLD and c.g > WHITE_THRESHOLD and c.b > WHITE_THRESHOLD
+			var luminance := (c.r + c.g + c.b) / 3.0
+			if c.a > 0.05 and not is_white and luminance > GRAIN_LUMINANCE_THRESHOLD:
 				row_min[y] = mini(row_min[y], x)
 				row_max[y] = maxi(row_max[y], x)
 				col_min[x] = mini(col_min[x], y)
@@ -160,7 +180,10 @@ func _measure_disc_body(image: Image) -> Rect2:
 
 	if max_x < 0 or max_y < 0:
 		return Rect2(0, 0, 1, 1)
-	return Rect2(float(min_x) / w, float(min_y) / h, float(max_x - min_x) / w, float(max_y - min_y) / h)
+
+	var raw_rect := Rect2(float(min_x) / w, float(min_y) / h, float(max_x - min_x) / w, float(max_y - min_y) / h)
+	var shrunk_size := raw_rect.size * GRAIN_SAFETY_SHRINK
+	return Rect2(raw_rect.position + (raw_rect.size - shrunk_size) / 2.0, shrunk_size)
 
 func add_instance(sigil_id: StringName, stroke_points: PackedVector2Array) -> void:
 	if not _instances.has(sigil_id):

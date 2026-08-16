@@ -34,19 +34,20 @@ func start(sigil: Sigil) -> void:
 	# CarvedSigilRegistry.add_instance), so this can differ from the
 	# result. Better than showing no wood at all while tracing.
 	_background_block = CarvedSigilRegistry.get_random_block_variant()
-	# Sigil.path_points are authored against a square "disc surface", but
-	# the drawn background is the whole pendant (rope included, see
-	# _draw()) — mapping path_points onto the full pendant would land
-	# some of them on the rope instead of the disc. Map onto disc_dest,
-	# the disc's own sub-region within the rendered pendant, instead.
+	# Sigil.path_points are authored against a square "engravable surface",
+	# but the drawn background is the whole pendant (rope and bark rim
+	# included, see _draw()) — mapping path_points onto the full pendant
+	# would land some of them on the rope or bark instead of smooth wood.
+	# Map onto grain_dest, the grain's own sub-region within the rendered
+	# pendant, instead.
 	#
 	# Scaled *uniformly* (not stretched independently per axis) so the
 	# pattern's own proportions stay the same shape on every block variant
 	# — some discs are round, some noticeably more triangular/oval, and a
 	# non-uniform stretch to exactly fill each one's differently-shaped
-	# disc_rect warped the same zigzag into a visibly different shape
+	# grain_rect warped the same zigzag into a visibly different shape
 	# depending on which pendant it landed on.
-	var dest := _disc_dest_rect()
+	var dest := _grain_dest_rect()
 	var pattern_scale: float = minf(dest.size.x, dest.size.y)
 	var pattern_center := dest.position + dest.size / 2.0
 	_target_path.clear()
@@ -69,18 +70,19 @@ func _block_dest_rect() -> Rect2:
 	var dest_size := content_px * block_scale
 	return Rect2((size - dest_size) / 2.0, dest_size)
 
-## Where disc_rect (just the disc, excluding the rope) lands within the
-## rendered pendant — content_rect and disc_rect share the same texture,
-## so disc_rect's position as a fraction *of content_rect* carries over
-## directly onto _block_dest_rect() without a separate scale computation.
-func _disc_dest_rect() -> Rect2:
+## Where grain_rect (just the smooth wood, excluding rope and bark) lands
+## within the rendered pendant — content_rect and grain_rect share the
+## same texture, so grain_rect's position as a fraction *of content_rect*
+## carries over directly onto _block_dest_rect() without a separate scale
+## computation.
+func _grain_dest_rect() -> Rect2:
 	if _background_block == null:
 		return Rect2(Vector2.ZERO, size)
 	var content_rect := _background_block.content_rect
-	var disc_rect := _background_block.disc_rect
+	var grain_rect := _background_block.grain_rect
 	var local := Rect2(
-		(disc_rect.position - content_rect.position) / content_rect.size,
-		disc_rect.size / content_rect.size)
+		(grain_rect.position - content_rect.position) / content_rect.size,
+		grain_rect.size / content_rect.size)
 	var bg := _block_dest_rect()
 	return Rect2(bg.position + local.position * bg.size, local.size * bg.size)
 
