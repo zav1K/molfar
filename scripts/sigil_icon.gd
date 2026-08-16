@@ -22,7 +22,6 @@ func setup(sigil: Sigil, instance: CarvedSigilInstance) -> void:
 func _draw() -> void:
 	if _sigil == null or _instance == null:
 		return
-	var content_rect := Rect2(Vector2.ZERO, size) # where the stroke maps to below
 	if _instance.block_texture != null:
 		var tex_size := _instance.block_texture.get_size()
 		var rect := _instance.block_content_rect
@@ -34,7 +33,7 @@ func _draw() -> void:
 		# letterbox/corner gaps read as a clean border, not a see-through.
 		var block_scale: float = minf(size.x / content_px.x, size.y / content_px.y)
 		var dest_size := content_px * block_scale
-		content_rect = Rect2((size - dest_size) / 2.0, dest_size)
+		var content_rect := Rect2((size - dest_size) / 2.0, dest_size)
 		draw_rect(Rect2(Vector2.ZERO, size), WARD_COLOR.darkened(0.85) if _sigil.kind == Sigil.Kind.WARD else CURSE_COLOR.darkened(0.85))
 		var src := Rect2(rect.position * tex_size, content_px)
 		draw_texture_rect_region(_instance.block_texture, content_rect, src)
@@ -45,8 +44,13 @@ func _draw() -> void:
 	var stroke_points := _instance.stroke_points
 	if stroke_points.size() < 2:
 		return
+	# stroke_points are normalized against the full CarvingCanvas square
+	# the player actually traced on (see carving_canvas.gd's _on_release),
+	# not against content_rect's letterboxed sub-region — map onto this
+	# icon's own full square the same way, independent of wherever the
+	# (possibly different, randomly-assigned) pendant art landed.
 	var scaled := PackedVector2Array()
 	scaled.resize(stroke_points.size())
 	for i in stroke_points.size():
-		scaled[i] = content_rect.position + stroke_points[i] * content_rect.size
+		scaled[i] = stroke_points[i] * size
 	draw_polyline(scaled, LINE_COLOR, 2.0, true)

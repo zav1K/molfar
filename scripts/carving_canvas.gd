@@ -39,10 +39,19 @@ func start(sigil: Sigil) -> void:
 	# _draw()) — mapping path_points onto the full pendant would land
 	# some of them on the rope instead of the disc. Map onto disc_dest,
 	# the disc's own sub-region within the rendered pendant, instead.
+	#
+	# Scaled *uniformly* (not stretched independently per axis) so the
+	# pattern's own proportions stay the same shape on every block variant
+	# — some discs are round, some noticeably more triangular/oval, and a
+	# non-uniform stretch to exactly fill each one's differently-shaped
+	# disc_rect warped the same zigzag into a visibly different shape
+	# depending on which pendant it landed on.
 	var dest := _disc_dest_rect()
+	var pattern_scale: float = minf(dest.size.x, dest.size.y)
+	var pattern_center := dest.position + dest.size / 2.0
 	_target_path.clear()
 	for p in sigil.path_points:
-		_target_path.append(dest.position + p * dest.size)
+		_target_path.append(pattern_center + (p - Vector2(0.5, 0.5)) * pattern_scale)
 	_target_length = _path_length(_target_path)
 	_drawn_points.clear()
 	_drawing = false
