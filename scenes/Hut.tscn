@@ -917,6 +917,7 @@ text = "Закрити"
 [node name="ChestPanel" type="CanvasLayer" parent="."]
 script = ExtResource("23")
 kind = 3
+columns = 4
 
 [node name="Panel" type="ColorRect" parent="ChestPanel"]
 offset_right = 960.0

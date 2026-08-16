@@ -6,8 +6,10 @@ extends CanvasLayer
 ## own decorative trigger zone (drying beam for herbs, potion shelf for
 ## potions, a spot on the desk for sigils), plus the chest on the right
 ## panel showing kind ALL — the actual full-stockpile screen, sectioned
-## by category with a header per section. No drag-and-drop, no per-slot
-## anchors, no slot-count/equipment-progression bookkeeping anywhere here.
+## by category with a header per section. Each item is a big icon tile
+## with its name/count underneath, laid out in a grid — not a text row.
+## No drag-and-drop, no per-slot anchors, no slot-count/equipment-
+## progression bookkeeping anywhere here.
 
 enum Kind { INGREDIENTS, POTIONS, SIGILS, ALL }
 
@@ -18,7 +20,14 @@ const SECTION_TITLES := {
 }
 const KEEPSAKES_SECTION_TITLE := "Речі"
 
+const ICON_SIZE := Vector2(64, 64)
+const TILE_WIDTH := 84.0
+const GRID_SEPARATION := 10
+
+## Chest (kind ALL) gets a wider panel than the three single-category
+## quick-glance ones, so it fits an extra column.
 @export var kind: Kind = Kind.INGREDIENTS
+@export var columns: int = 3
 
 signal closed
 signal potion_selected(potion: Potion)
@@ -40,107 +49,139 @@ func _rebuild() -> void:
 	for child in list.get_children():
 		child.queue_free()
 	if kind == Kind.ALL:
-		_add_section(SECTION_TITLES[Kind.INGREDIENTS], _ingredient_rows())
-		_add_section(SECTION_TITLES[Kind.POTIONS], _potion_rows())
-		_add_section(SECTION_TITLES[Kind.SIGILS], _sigil_rows())
-		_add_section(KEEPSAKES_SECTION_TITLE, _keepsake_rows())
+		_add_section(SECTION_TITLES[Kind.INGREDIENTS], _ingredient_tiles())
+		_add_section(SECTION_TITLES[Kind.POTIONS], _potion_tiles())
+		_add_section(SECTION_TITLES[Kind.SIGILS], _sigil_tiles())
+		_add_section(KEEPSAKES_SECTION_TITLE, _keepsake_tiles())
 		return
+	var grid := _new_grid()
 	match kind:
 		Kind.INGREDIENTS:
-			for row in _ingredient_rows():
-				list.add_child(row)
+			for tile in _ingredient_tiles():
+				grid.add_child(tile)
 		Kind.POTIONS:
-			for row in _potion_rows():
-				list.add_child(row)
+			for tile in _potion_tiles():
+				grid.add_child(tile)
 		Kind.SIGILS:
-			for row in _sigil_rows():
-				list.add_child(row)
+			for tile in _sigil_tiles():
+				grid.add_child(tile)
+	list.add_child(grid)
 
-func _add_section(title: String, rows: Array) -> void:
-	if rows.is_empty():
+func _new_grid() -> GridContainer:
+	var grid := GridContainer.new()
+	grid.columns = columns
+	grid.add_theme_constant_override("h_separation", GRID_SEPARATION)
+	grid.add_theme_constant_override("v_separation", GRID_SEPARATION)
+	return grid
+
+func _add_section(title: String, tiles: Array) -> void:
+	if tiles.is_empty():
 		return
 	var header := Label.new()
 	header.text = title
 	header.add_theme_font_size_override("font_size", 16)
 	list.add_child(header)
-	for row in rows:
-		list.add_child(row)
+	var grid := _new_grid()
+	for tile in tiles:
+		grid.add_child(tile)
+	list.add_child(grid)
 
-func _ingredient_rows() -> Array:
-	var rows: Array = []
+func _ingredient_tiles() -> Array:
+	var tiles: Array = []
 	for ingredient in IngredientDatabase.get_all():
 		var count := PlayerInventory.get_count(ingredient.id)
 		if count > 0:
-			rows.append(_build_icon_row(ingredient.bundle_icon, ingredient.placeholder_color, ingredient.display_name, count))
-	return rows
+			tiles.append(_build_tile(ingredient.bundle_icon, ingredient.placeholder_color, ingredient.display_name, count))
+	return tiles
 
-func _potion_rows() -> Array:
-	var rows: Array = []
+func _potion_tiles() -> Array:
+	var tiles: Array = []
 	for potion in PotionDatabase.get_all():
 		var count := PlayerInventory.get_count(potion.id)
 		if count > 0:
-			rows.append(_build_potion_row(potion, count))
-	return rows
+			tiles.append(_build_potion_tile(potion, count))
+	return tiles
 
-func _sigil_rows() -> Array:
-	var rows: Array = []
-	# One row per physical carved object, not grouped by type+count —
+func _sigil_tiles() -> Array:
+	var tiles: Array = []
+	# One tile per physical carved object, not grouped by type+count —
 	# each shows that specific instance's own traced stroke (see
 	# CarvedSigilRegistry), so two of "the same" sigil can look
 	# different, which is the whole point.
 	for sigil in SigilDatabase.get_all():
 		for instance in CarvedSigilRegistry.peek_instances(sigil.id):
-			rows.append(_build_sigil_row(sigil, instance))
-	return rows
+			tiles.append(_build_sigil_tile(sigil, instance))
+	return tiles
 
-func _keepsake_rows() -> Array:
-	var rows: Array = []
+func _keepsake_tiles() -> Array:
+	var tiles: Array = []
 	for keepsake in KeepsakeDatabase.get_all():
 		var count := PlayerInventory.get_count(keepsake.id)
 		if count > 0:
-			rows.append(_build_icon_row(keepsake.icon, keepsake.placeholder_color, keepsake.display_name, count))
-	return rows
+			tiles.append(_build_tile(keepsake.icon, keepsake.placeholder_color, keepsake.display_name, count))
+	return tiles
 
-func _build_icon_row(icon_texture: Texture2D, placeholder_color: Color, label_text: String, count: int) -> HBoxContainer:
-	var row := HBoxContainer.new()
-
+func _build_icon_or_swatch(icon_texture: Texture2D, placeholder_color: Color) -> Control:
 	if icon_texture != null:
 		var icon := TextureRect.new()
 		icon.texture = icon_texture
 		icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 		icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		icon.custom_minimum_size = Vector2(28, 28)
-		row.add_child(icon)
-	else:
-		var swatch := ColorRect.new()
-		swatch.color = placeholder_color
-		swatch.custom_minimum_size = Vector2(20, 20)
-		row.add_child(swatch)
+		icon.custom_minimum_size = ICON_SIZE
+		icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+		return icon
+	var swatch := ColorRect.new()
+	swatch.color = placeholder_color
+	swatch.custom_minimum_size = ICON_SIZE
+	swatch.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	return swatch
 
+func _build_label(text: String) -> Label:
 	var label := Label.new()
-	label.text = "%s ×%d" % [label_text, count]
-	row.add_child(label)
+	label.text = text
+	label.custom_minimum_size.x = TILE_WIDTH
+	label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	return label
 
-	return row
+func _build_tile(icon_texture: Texture2D, placeholder_color: Color, label_text: String, count: int) -> VBoxContainer:
+	var tile := VBoxContainer.new()
+	tile.custom_minimum_size.x = TILE_WIDTH
+	tile.add_child(_build_icon_or_swatch(icon_texture, placeholder_color))
+	tile.add_child(_build_label("%s ×%d" % [label_text, count]))
+	return tile
 
-func _build_sigil_row(sigil: Sigil, instance: CarvedSigilInstance) -> HBoxContainer:
-	var row := HBoxContainer.new()
+func _build_sigil_tile(sigil: Sigil, instance: CarvedSigilInstance) -> VBoxContainer:
+	var tile := VBoxContainer.new()
+	tile.custom_minimum_size.x = TILE_WIDTH
 
 	var icon := SigilIcon.new()
-	icon.custom_minimum_size = Vector2(36, 36)
+	icon.custom_minimum_size = ICON_SIZE
+	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	icon.setup(sigil, instance)
-	row.add_child(icon)
+	tile.add_child(icon)
 
-	var label := Label.new()
-	label.text = sigil.display_name
-	row.add_child(label)
+	tile.add_child(_build_label(sigil.display_name))
+	return tile
 
-	return row
-
-func _build_potion_row(potion: Potion, count: int) -> Button:
+func _build_potion_tile(potion: Potion, count: int) -> Button:
 	var button := Button.new()
-	button.text = "%s ×%d" % [potion.display_name, count]
+	button.custom_minimum_size.x = TILE_WIDTH
 	button.pressed.connect(func() -> void: potion_selected.emit(potion))
+
+	var vbox := VBoxContainer.new()
+	vbox.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.set_anchors_preset(Control.PRESET_FULL_RECT)
+	button.add_child(vbox)
+
+	var icon_or_swatch := _build_icon_or_swatch(potion.icon, Color(0.4, 0.32, 0.5))
+	icon_or_swatch.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(icon_or_swatch)
+
+	var label := _build_label("%s ×%d" % [potion.display_name, count])
+	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	vbox.add_child(label)
+
 	return button
 
 func _on_close_pressed() -> void:
