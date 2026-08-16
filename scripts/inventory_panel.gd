@@ -22,6 +22,11 @@ const SECTION_TITLES := {
 const KEEPSAKES_SECTION_TITLE := "Речі"
 
 const ICON_SIZE := Vector2(112, 112)
+## Sigil pendant art is consistently portrait (~0.6 width/height, rope
+## included) — a square box like every other icon leaves it small with
+## wide empty margins on both sides. Same rough area as ICON_SIZE, but
+## shaped to match instead of leaving that dead space.
+const SIGIL_ICON_SIZE := Vector2(88, 144)
 const TILE_WIDTH := 132.0
 const GRID_SEPARATION := 16
 const LABEL_FONT_SIZE := 11
@@ -184,7 +189,7 @@ func _build_sigil_tile(sigil: Sigil, instance: CarvedSigilInstance) -> VBoxConta
 	tile.custom_minimum_size.x = TILE_WIDTH
 
 	var icon := SigilIcon.new()
-	icon.custom_minimum_size = ICON_SIZE
+	icon.custom_minimum_size = SIGIL_ICON_SIZE
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.setup(sigil, instance)

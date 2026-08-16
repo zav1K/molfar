@@ -25,6 +25,10 @@ signal wait_requested(visitor: Visitor)
 
 const DEMAND_MONEY_ITEM_ID := &"groshi"
 const ICON_SIZE := Vector2(64, 64)
+## Sigil pendant art is consistently portrait (~0.6 width/height, rope
+## included) — a square box leaves it small with wide empty margins on
+## both sides. Same rough area as ICON_SIZE, shaped to match instead.
+const SIGIL_ICON_SIZE := Vector2(50, 82)
 const TILE_WIDTH := 130.0
 
 @onready var portrait: TextureRect = $Panel/Portrait
@@ -133,7 +137,7 @@ func _make_icon_node(icon_texture: Texture2D) -> Control:
 
 func _make_sigil_icon_node(sigil: Sigil, instance: CarvedSigilInstance) -> Control:
 	var icon := SigilIcon.new()
-	icon.custom_minimum_size = ICON_SIZE
+	icon.custom_minimum_size = SIGIL_ICON_SIZE
 	icon.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
 	icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 	icon.setup(sigil, instance)

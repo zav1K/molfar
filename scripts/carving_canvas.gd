@@ -141,9 +141,16 @@ func _draw() -> void:
 		var src := Rect2(rect.position * tex_size, rect.size * tex_size)
 		draw_texture_rect_region(tex, _block_dest_rect(), src)
 	if _target_path.size() >= 2:
-		draw_polyline(_target_path, Color(0.85, 0.75, 0.55, 0.35), 3.0, true)
+		# The old warm tan guide was close enough to the wood's own light
+		# grain color to nearly disappear against it. A cool, high-contrast
+		# color reads clearly against warm wood regardless of how light or
+		# dark that particular patch of grain is; a dark outline underneath
+		# guarantees contrast against the lightest parts too.
+		draw_polyline(_target_path, Color(0, 0, 0, 0.45), 5.0, true)
+		draw_polyline(_target_path, Color(0.3, 0.8, 1.0, 0.95), 2.5, true)
 		for p in _target_path:
-			draw_circle(p, 3.0, Color(0.85, 0.75, 0.55, 0.5))
+			draw_circle(p, 5.0, Color(0, 0, 0, 0.45))
+			draw_circle(p, 3.5, Color(0.3, 0.8, 1.0, 0.95))
 	if _drawn_points.size() >= 2:
 		draw_polyline(_drawn_points, Color(0.95, 0.85, 0.4, 0.9), 3.0, true)
 
