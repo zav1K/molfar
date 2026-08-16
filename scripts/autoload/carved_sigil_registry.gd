@@ -60,9 +60,10 @@ func _load_block_textures() -> void:
 	var file_name := dir.get_next()
 	while file_name != "":
 		if not dir.current_is_dir() and (file_name.ends_with(".png") or file_name.ends_with(".PNG")):
-			var tex := load(BLOCK_TEXTURES_DIR + file_name)
-			if tex is Texture2D:
-				var image := tex.get_image()
+			var loaded := load(BLOCK_TEXTURES_DIR + file_name)
+			if loaded is Texture2D:
+				var tex: Texture2D = loaded
+				var image: Image = tex.get_image()
 				var variant := BlockVariant.new()
 				variant.texture = tex
 				variant.content_rect = _measure_full_bbox(image)
