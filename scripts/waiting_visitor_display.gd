@@ -31,6 +31,16 @@ const WIDTH_FILL := 0.88 ## leaves a small side margin instead of the figure tou
 ## just floated above the table instead of standing behind it.
 const MIN_HEIGHT_OVERFLOW := 1.10
 
+## Upper bound on content_scale: for a portrait wide enough (an arm held
+## out to the side, two people side by side), chasing MIN_HEIGHT_OVERFLOW
+## can blow the rendered width past this control's own — clip_contents
+## then cuts an arm or shoulder off in a straight vertical line, and
+## whatever pokes out the sides renders on top of the door frame instead
+## of just the table's legroom. Never scale past exactly filling the
+## width; a portrait that wide simply doesn't get the guaranteed leg
+## overflow, which is the lesser problem of the two.
+const MAX_WIDTH_FRACTION := 1.0
+
 signal clicked
 
 @onready var icon: TextureRect = $Icon
@@ -48,9 +58,11 @@ func show_visitor(visitor: Visitor) -> void:
 	icon.texture = tex
 	var rect := visitor.waiting_portrait_content_rect
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
-	var width_scale := (size.x * WIDTH_FILL) / (rect.size.x * tex_size.x)
+	var content_width: float = rect.size.x * tex_size.x
+	var width_scale := (size.x * WIDTH_FILL) / content_width
 	var min_height_scale := (size.y * MIN_HEIGHT_OVERFLOW) / (rect.size.y * tex_size.y)
-	var content_scale: float = max(width_scale, min_height_scale)
+	var max_safe_scale := (size.x * MAX_WIDTH_FRACTION) / content_width
+	var content_scale: float = minf(maxf(width_scale, min_height_scale), max_safe_scale)
 	icon.size = tex_size * content_scale
 	var side_margin := (size.x - rect.size.x * tex_size.x * content_scale) / 2.0
 	icon.position = Vector2(side_margin, 0.0) - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
