@@ -18,9 +18,9 @@ const BLOCK_TEXTURES_DIR := "res://assets/hut/sigil_blocks/"
 
 ## The uploaded block art turned out to be saved on an oversized blank
 ## white canvas (looks like an unintentional sprite-sheet export — each
-## file only has one variant's disc drawn somewhere in it, the rest is
+## file only has one variant's pendant drawn somewhere in it, the rest is
 ## empty) rather than tightly cropped to the block itself. Drawing the
-## raw texture verbatim squishes the actual disc into a corner. Measured
+## raw texture verbatim squishes the actual pendant into a corner. Measured
 ## once per texture at load time instead — same reasoning as Visitor's
 ## offline-measured waiting_portrait_content_rect, except this can be done
 ## at runtime since it's a flat white background, not a translucent haze.
@@ -28,20 +28,23 @@ const WHITE_THRESHOLD := 0.97 ## 0..1 (Color channel scale); anything lighter co
 const SCAN_STRIDE := 4 ## px; coarse sample, plenty for a bounding box.
 
 ## Each block is a wood disc with a thin rope loop knotted through a hole
-## near its top — the rope leans off to one side, so a plain "bounding
-## box of every non-white pixel" pulls that corner out to include it.
-## Stretched to fill a square canvas, that squeezes/offsets the actual
-## disc badly enough that the guide template no longer sits on it and
-## the disc itself renders warped. Instead, measure the widest row and
-## tallest column (the disc's own cross-section) and only count rows/
-## columns whose extent is at least this fraction of that peak — the
-## rope's rows/columns fall well short and get excluded, so the
-## resulting rect tracks the disc's body, not the rope.
+## near its top. Tried excluding the rope from content_rect entirely (a
+## plain bounding box pulls its corner out, off-center) by keeping only
+## rows/columns wide enough to be the disc's own body — but the rope's
+## thick knot, right where it meets the disc, is wide enough to partly
+## pass that test too, so the crop caught half the rope and cut it off
+## mid-coil instead of cleanly excluding or including it. Simpler and
+## better-looking to just show the whole pendant, rope included, scaled
+## to fit without distortion (see CarvingCanvas/SigilIcon) — nothing gets
+## cut off mid-shape that way. disc_rect below is kept separately, tighter
+## (same old row/column-extent method), purely so the carving guide still
+## lands on the disc's own surface and not the rope.
 const BODY_EXTENT_FRACTION := 0.4
 
 class BlockVariant:
 	var texture: Texture2D
-	var content_rect: Rect2 # normalized 0..1
+	var content_rect: Rect2 ## normalized 0..1 — whole pendant (rope + disc), for display.
+	var disc_rect: Rect2 ## normalized 0..1 — disc body only, for guide placement.
 
 var _instances: Dictionary = {} # StringName -> Array[CarvedSigilInstance]
 var _block_variants: Array[BlockVariant] = []
@@ -59,18 +62,46 @@ func _load_block_textures() -> void:
 		if not dir.current_is_dir() and (file_name.ends_with(".png") or file_name.ends_with(".PNG")):
 			var tex := load(BLOCK_TEXTURES_DIR + file_name)
 			if tex is Texture2D:
+				var image := tex.get_image()
 				var variant := BlockVariant.new()
 				variant.texture = tex
-				variant.content_rect = _measure_content_rect(tex.get_image())
+				variant.content_rect = _measure_full_bbox(image)
+				variant.disc_rect = _measure_disc_body(image)
 				_block_variants.append(variant)
 		file_name = dir.get_next()
 	dir.list_dir_end()
 
-func _measure_content_rect(image: Image) -> Rect2:
+## Plain bounding box of every non-white pixel — the whole pendant.
+func _measure_full_bbox(image: Image) -> Rect2:
+	var w := image.get_width()
+	var h := image.get_height()
+	var min_x := w
+	var min_y := h
+	var max_x := -1
+	var max_y := -1
+	var y := 0
+	while y < h:
+		var x := 0
+		while x < w:
+			var c := image.get_pixel(x, y)
+			if c.a > 0.05 and not (c.r > WHITE_THRESHOLD and c.g > WHITE_THRESHOLD and c.b > WHITE_THRESHOLD):
+				min_x = mini(min_x, x)
+				min_y = mini(min_y, y)
+				max_x = maxi(max_x, x)
+				max_y = maxi(max_y, y)
+			x += SCAN_STRIDE
+		y += SCAN_STRIDE
+	if max_x < 0:
+		return Rect2(0, 0, 1, 1) # nothing found (shouldn't happen) — fall back to uncropped.
+	return Rect2(float(min_x) / w, float(min_y) / h, float(max_x - min_x) / w, float(max_y - min_y) / h)
+
+## Widest row / tallest column (the disc's own cross-section) — only rows/
+## columns at least BODY_EXTENT_FRACTION of that peak count, which the
+## rope's cord (well short of the disc's own width) mostly fails.
+func _measure_disc_body(image: Image) -> Rect2:
 	var w := image.get_width()
 	var h := image.get_height()
 
-	# Per-row and per-column non-white extent, sampled on the same grid.
 	var row_min := PackedInt32Array()
 	var row_max := PackedInt32Array()
 	row_min.resize(h)
@@ -108,7 +139,7 @@ func _measure_content_rect(image: Image) -> Rect2:
 		if col_max[cx] >= 0:
 			peak_col_height = maxi(peak_col_height, col_max[cx] - col_min[cx])
 	if peak_row_width == 0 or peak_col_height == 0:
-		return Rect2(0, 0, 1, 1) # nothing found (shouldn't happen) — fall back to uncropped.
+		return Rect2(0, 0, 1, 1)
 
 	var row_threshold := peak_row_width * BODY_EXTENT_FRACTION
 	var col_threshold := peak_col_height * BODY_EXTENT_FRACTION

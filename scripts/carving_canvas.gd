@@ -34,15 +34,12 @@ func start(sigil: Sigil) -> void:
 	# CarvedSigilRegistry.add_instance), so this can differ from the
 	# result. Better than showing no wood at all while tracing.
 	_background_block = CarvedSigilRegistry.get_random_block_variant()
-	# Sigil.path_points are authored against the full 0..1 unit square,
-	# but the wood disc doesn't reach the square's corners — it's round,
-	# not square, and content_rect (see CarvedSigilRegistry) is only its
-	# bounding box, drawn here letterboxed to keep the disc undistorted
-	# (see _draw()). Map path_points onto that same letterboxed rect
-	# instead of the full canvas, so the guide always lands on the
-	# visible wood regardless of which block variant this is or how much
-	# it's letterboxed.
-	var dest := _block_dest_rect()
+	# Sigil.path_points are authored against a square "disc surface", but
+	# the drawn background is the whole pendant (rope included, see
+	# _draw()) — mapping path_points onto the full pendant would land
+	# some of them on the rope instead of the disc. Map onto disc_dest,
+	# the disc's own sub-region within the rendered pendant, instead.
+	var dest := _disc_dest_rect()
 	_target_path.clear()
 	for p in sigil.path_points:
 		_target_path.append(dest.position + p * dest.size)
@@ -51,9 +48,9 @@ func start(sigil: Sigil) -> void:
 	_drawing = false
 	queue_redraw()
 
-## Where the block's content_rect lands once scaled uniformly (preserving
-## its own proportions) and centered in this control — shared by start()
-## (to place the guide on it) and _draw() (to actually paint it there).
+## Where the block's content_rect (the whole pendant) lands once scaled
+## uniformly (preserving its own proportions) and centered in this
+## control — used by _draw() to actually paint it there.
 func _block_dest_rect() -> Rect2:
 	if _background_block == null:
 		return Rect2(Vector2.ZERO, size)
@@ -62,6 +59,21 @@ func _block_dest_rect() -> Rect2:
 	var block_scale: float = minf(size.x / content_px.x, size.y / content_px.y)
 	var dest_size := content_px * block_scale
 	return Rect2((size - dest_size) / 2.0, dest_size)
+
+## Where disc_rect (just the disc, excluding the rope) lands within the
+## rendered pendant — content_rect and disc_rect share the same texture,
+## so disc_rect's position as a fraction *of content_rect* carries over
+## directly onto _block_dest_rect() without a separate scale computation.
+func _disc_dest_rect() -> Rect2:
+	if _background_block == null:
+		return Rect2(Vector2.ZERO, size)
+	var content_rect := _background_block.content_rect
+	var disc_rect := _background_block.disc_rect
+	var local := Rect2(
+		(disc_rect.position - content_rect.position) / content_rect.size,
+		disc_rect.size / content_rect.size)
+	var bg := _block_dest_rect()
+	return Rect2(bg.position + local.position * bg.size, local.size * bg.size)
 
 func _gui_input(event: InputEvent) -> void:
 	if event is InputEventMouseButton:
