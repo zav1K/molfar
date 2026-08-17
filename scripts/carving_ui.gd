@@ -12,10 +12,13 @@ extends CanvasLayer
 ## Pass/fail only, no quality tiers: with the on-canvas guide gone, even
 ## a correctly-remembered shape won't land pixel-perfect the way tracing
 ## it did, so grading it into "weak/normal/good" bands read as noise
-## rather than a meaningful signal. PASS_ERROR is deliberately looser
-## than the old tracing thresholds for the same reason.
-
-const PASS_ERROR := 30.0
+## rather than a meaningful signal.
+##
+## PASS_ERROR is in CarvingCanvas's normalized comparison space (each
+## path rescaled to its own bounding box, longer side = 1.0 — see
+## _normalize_for_comparison), not raw canvas pixels, so it isn't
+## comparable to the old tracing-era thresholds at all.
+const PASS_ERROR := 0.22
 const PATTERN_ICON_SIZE := Vector2(72, 72)
 const BOOK_TILE_WIDTH := 96.0
 

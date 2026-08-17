@@ -3,12 +3,14 @@ extends Control
 ## Draw-from-memory carving gesture: the target sigil's stroke path is
 ## NOT shown here — the player has to recall its shape (see CarvingUI's
 ## reference book) and draw it freehand on the wood in one continuous
-## stroke. On release both paths are resampled to the same point count
-## and compared — average deviation plus how much of the target's own
-## length was actually covered decide pass/fail (read by carving_ui.gd,
-## same spirit as stir_cauldron.gd's rotation/evenness split for
-## brewing). _target_path itself is still computed here since scoring
-## needs it — it's just never drawn.
+## stroke. On release both paths are resampled to the same point count,
+## each recentered and rescaled to its own bounding box (see
+## _normalize_for_comparison) so position/size differences from drawing
+## freehand don't count against the player — average deviation of that,
+## plus how much of the target's own length was actually covered, decide
+## pass/fail (read by carving_ui.gd, same spirit as stir_cauldron.gd's
+## rotation/evenness split for brewing). _target_path itself is still
+## computed here since scoring needs it — it's just never drawn.
 
 ## normalized_stroke: the player's own traced path, 0..1 unit square —
 ## same space as Sigil.path_points, kept for whatever ends up carved
@@ -115,16 +117,55 @@ func _on_release() -> void:
 		_drawn_points.clear()
 		queue_redraw()
 		return
-	var resampled_target := _resample(_target_path, RESAMPLE_COUNT)
-	var resampled_drawn := _resample(_drawn_points, RESAMPLE_COUNT)
-	var total_error := 0.0
-	for i in RESAMPLE_COUNT:
-		total_error += resampled_target[i].distance_to(resampled_drawn[i])
+	# Compared in each path's own bounding box, not raw canvas pixels — with
+	# no guide pinning it down, a correctly-shaped attempt can freely land
+	# a bit off-center or at a different size than _target_path, and that
+	# alone shouldn't read as error. Checked in both directions too: an
+	# open shape like a semicircle has two equally natural places to start
+	# tracing from, and only one of them matches _target_path's own
+	# recorded direction — the other is a same-shape "failure" otherwise.
+	var normalized_target := _normalize_for_comparison(_resample(_target_path, RESAMPLE_COUNT))
+	var normalized_drawn := _normalize_for_comparison(_resample(_drawn_points, RESAMPLE_COUNT))
+	var reversed_drawn := normalized_drawn.duplicate()
+	reversed_drawn.reverse()
+	var avg_error := minf(
+		_average_distance(normalized_target, normalized_drawn),
+		_average_distance(normalized_target, reversed_drawn))
 	var normalized_stroke := PackedVector2Array()
 	normalized_stroke.resize(_drawn_points.size())
 	for i in _drawn_points.size():
 		normalized_stroke[i] = _drawn_points[i] / size
-	finished.emit(total_error / RESAMPLE_COUNT, coverage, normalized_stroke)
+	finished.emit(avg_error, coverage, normalized_stroke)
+
+## Recenters a resampled path on its own bounding-box center and scales
+## it so that box's longer side is 1.0 — puts two paths on equal footing
+## regardless of where on the canvas or how big each was actually drawn,
+## so what's left to compare is the shape itself.
+func _normalize_for_comparison(points: PackedVector2Array) -> PackedVector2Array:
+	var min_x := points[0].x
+	var max_x := points[0].x
+	var min_y := points[0].y
+	var max_y := points[0].y
+	for p in points:
+		min_x = minf(min_x, p.x)
+		max_x = maxf(max_x, p.x)
+		min_y = minf(min_y, p.y)
+		max_y = maxf(max_y, p.y)
+	var scale_amount: float = maxf(max_x - min_x, max_y - min_y)
+	if scale_amount <= 0.0:
+		scale_amount = 1.0
+	var center := Vector2((min_x + max_x) / 2.0, (min_y + max_y) / 2.0)
+	var result := PackedVector2Array()
+	result.resize(points.size())
+	for i in points.size():
+		result[i] = (points[i] - center) / scale_amount
+	return result
+
+func _average_distance(a: PackedVector2Array, b: PackedVector2Array) -> float:
+	var total := 0.0
+	for i in a.size():
+		total += a[i].distance_to(b[i])
+	return total / a.size()
 
 func _draw() -> void:
 	if _background_block != null:
