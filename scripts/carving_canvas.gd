@@ -1,12 +1,14 @@
 class_name CarvingCanvas
 extends Control
-## Trace-the-symbol carving gesture: a target sigil's stroke path is shown
-## as a faint guide; the player holds and drags the mouse to trace it in
-## one continuous stroke. On release both paths are resampled to the same
-## point count and compared — average deviation plus how much of the
-## guide was actually covered decide carving quality (read by
-## carving_ui.gd, same spirit as stir_cauldron.gd's rotation/evenness
-## split for brewing).
+## Draw-from-memory carving gesture: the target sigil's stroke path is
+## NOT shown here — the player has to recall its shape (see CarvingUI's
+## reference book) and draw it freehand on the wood in one continuous
+## stroke. On release both paths are resampled to the same point count
+## and compared — average deviation plus how much of the target's own
+## length was actually covered decide pass/fail (read by carving_ui.gd,
+## same spirit as stir_cauldron.gd's rotation/evenness split for
+## brewing). _target_path itself is still computed here since scoring
+## needs it — it's just never drawn.
 
 ## normalized_stroke: the player's own traced path, 0..1 unit square —
 ## same space as Sigil.path_points, kept for whatever ends up carved
@@ -142,17 +144,6 @@ func _draw() -> void:
 		var rect := _background_block.content_rect
 		var src := Rect2(rect.position * tex_size, rect.size * tex_size)
 		draw_texture_rect_region(tex, _block_dest_rect(), src)
-	if _target_path.size() >= 2:
-		# The old warm tan guide was close enough to the wood's own light
-		# grain color to nearly disappear against it. A cool, high-contrast
-		# color reads clearly against warm wood regardless of how light or
-		# dark that particular patch of grain is; a dark outline underneath
-		# guarantees contrast against the lightest parts too.
-		draw_polyline(_target_path, Color(0, 0, 0, 0.45), 5.0, true)
-		draw_polyline(_target_path, Color(0.3, 0.8, 1.0, 0.95), 2.5, true)
-		for p in _target_path:
-			draw_circle(p, 5.0, Color(0, 0, 0, 0.45))
-			draw_circle(p, 3.5, Color(0.3, 0.8, 1.0, 0.95))
 	if _drawn_points.size() >= 2:
 		draw_polyline(_drawn_points, Color(0.95, 0.85, 0.4, 0.9), 3.0, true)
 

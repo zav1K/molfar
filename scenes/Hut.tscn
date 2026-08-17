@@ -715,6 +715,28 @@ offset_right = 630.0
 offset_bottom = 390.0
 script = ExtResource("19")
 
+[node name="Book" type="ScrollContainer" parent="CarvingUI/Panel"]
+offset_left = 700.0
+offset_top = 90.0
+offset_right = 950.0
+offset_bottom = 390.0
+horizontal_scroll_mode = 0
+
+[node name="BookTitle" type="Label" parent="CarvingUI/Panel"]
+offset_left = 700.0
+offset_top = 62.0
+offset_right = 950.0
+offset_bottom = 87.0
+horizontal_alignment = 1
+theme_override_font_sizes/font_size = 14
+text = "Книга зразків"
+
+[node name="BookGrid" type="GridContainer" parent="CarvingUI/Panel/Book"]
+layout_mode = 2
+size_flags_horizontal = 3
+columns = 2
+theme_override_constants/h_separation = 10
+
 [node name="StatusLabel" type="Label" parent="CarvingUI/Panel"]
 offset_left = 230.0
 offset_top = 400.0
