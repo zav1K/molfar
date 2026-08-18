@@ -1,4 +1,4 @@
-[gd_scene load_steps=36 format=3]
+[gd_scene load_steps=38 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -23,6 +23,7 @@
 [ext_resource type="Texture2D" path="res://assets/hut/opened_door.png" id="25"]
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_first.png" id="26"]
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_up_first.png" id="27"]
+[ext_resource type="Script" path="res://scripts/grimoire_ui.gd" id="28"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(178, 132)
@@ -59,6 +60,9 @@ size = Vector2(273, 181)
 
 [sub_resource type="RectangleShape2D" id="Shape_calendar"]
 size = Vector2(130, 90)
+
+[sub_resource type="RectangleShape2D" id="Shape_grimoire"]
+size = Vector2(110, 55)
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -465,6 +469,32 @@ offset_right = 57.0
 offset_bottom = 65.0
 horizontal_alignment = 1
 text = "Скриня"
+
+[node name="Grimoire" type="Area2D" parent="PanelRight/Zones"]
+position = Vector2(715, 320)
+script = ExtResource("2")
+zone_id = &"grimoire"
+zone_label = "Гримуар"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PanelRight/Zones/Grimoire"]
+shape = SubResource("Shape_grimoire")
+
+[node name="Visual" type="ColorRect" parent="PanelRight/Zones/Grimoire"]
+mouse_filter = 2
+offset_left = -55.0
+offset_top = -27.0
+offset_right = 55.0
+offset_bottom = 27.0
+color = Color(0.5, 0.35, 0.15, 0.25)
+
+[node name="Label" type="Label" parent="PanelRight/Zones/Grimoire"]
+mouse_filter = 2
+offset_left = -55.0
+offset_top = 30.0
+offset_right = 55.0
+offset_bottom = 55.0
+horizontal_alignment = 1
+text = "Гримуар"
 
 [node name="GardenWindow" type="Area2D" parent="PanelRight/Zones"]
 position = Vector2(240, 235)
@@ -1068,4 +1098,46 @@ offset_left = 430.0
 offset_top = 485.0
 offset_right = 530.0
 offset_bottom = 520.0
+text = "Закрити"
+
+[node name="GrimoireUI" type="CanvasLayer" parent="."]
+script = ExtResource("28")
+
+[node name="Panel" type="ColorRect" parent="GrimoireUI"]
+offset_right = 960.0
+offset_bottom = 540.0
+color = Color(0.05, 0.05, 0.05, 0.85)
+
+[node name="Title" type="Label" parent="GrimoireUI/Panel"]
+offset_left = 280.0
+offset_top = 30.0
+offset_right = 680.0
+offset_bottom = 60.0
+horizontal_alignment = 1
+text = "Гримуар"
+
+[node name="TabBar" type="HBoxContainer" parent="GrimoireUI/Panel"]
+offset_left = 30.0
+offset_top = 68.0
+offset_right = 930.0
+offset_bottom = 98.0
+theme_override_constants/separation = 8
+
+[node name="ScrollContainer" type="ScrollContainer" parent="GrimoireUI/Panel"]
+offset_left = 30.0
+offset_top = 105.0
+offset_right = 930.0
+offset_bottom = 480.0
+horizontal_scroll_mode = 0
+
+[node name="List" type="VBoxContainer" parent="GrimoireUI/Panel/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 14
+
+[node name="CloseButton" type="Button" parent="GrimoireUI/Panel"]
+offset_left = 415.0
+offset_top = 490.0
+offset_right = 545.0
+offset_bottom = 525.0
 text = "Закрити"

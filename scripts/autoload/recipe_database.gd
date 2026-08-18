@@ -24,6 +24,12 @@ func _load_all() -> void:
 		file_name = dir.get_next()
 	dir.list_dir_end()
 
+## For GrimoireUI's reverse lookups (which recipe makes this potion, which
+## recipes use this herb) — find_recipe() only matches forward, by exact
+## selection.
+func get_all() -> Array[Recipe]:
+	return _recipes
+
 ## selection: Dictionary of ingredient_id (StringName) -> count (int).
 ## Returns null if nothing matches exactly.
 func find_recipe(selection: Dictionary) -> Recipe:
