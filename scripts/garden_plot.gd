@@ -31,6 +31,15 @@ const SPROUT_COLOR := Color(0.5, 0.7, 0.35, 1)
 ## transparent at the edge, see _build_wet_soil_texture().
 const WET_SOIL_COLOR := Color(0.15, 0.09, 0.04, 0.55)
 
+## The sprout art paints its own little soil mound around the stem, and
+## that mound came out visibly lighter than the surrounding bed dirt —
+## a plain multiply tint pulls it back down to blend in, per feedback
+## against an actual in-game screenshot. Growth/mature sprites (once
+## they exist) aren't necessarily painted with their own soil mound the
+## same way, so this is scoped to the sprout stage only, not the shared
+## growth_icon_texture node in general — see refresh()'s SPROUT case.
+const SPROUT_TINT := Color(0.72, 0.72, 0.72, 1.0)
+
 @export var plot_index: int = 0
 
 ## Emitted on click when this plot needs the planting minigame (empty or
@@ -107,18 +116,21 @@ func refresh() -> void:
 			_set_visual(growth_icon_color, growth_icon_texture, SPROUT_COLOR, null, false)
 		GardenState.Stage.SPROUT:
 			var sprout_texture: Texture2D = load(SHARED_SPROUT_TEXTURE_PATH) if ResourceLoader.exists(SHARED_SPROUT_TEXTURE_PATH) else null
+			growth_icon_texture.modulate = SPROUT_TINT
 			_set_visual(growth_icon_color, growth_icon_texture, SPROUT_COLOR, sprout_texture, true)
 			label.text = "Паросток (%d/%d)" % [plot.days_grown, plot.days_to_growing]
 		GardenState.Stage.GROWING:
 			var growing_ingredient := IngredientDatabase.get_ingredient(plot.ingredient_id)
 			var growing_color := growing_ingredient.placeholder_color if growing_ingredient else SPROUT_COLOR
 			var growing_texture := growing_ingredient.growth_sprite if growing_ingredient else null
+			growth_icon_texture.modulate = Color.WHITE
 			_set_visual(growth_icon_color, growth_icon_texture, growing_color, growing_texture, true)
 			label.text = "Росте... (%d/%d)" % [plot.days_grown, plot.days_to_growing + plot.days_to_mature]
 		GardenState.Stage.MATURE:
 			var mature_ingredient := IngredientDatabase.get_ingredient(plot.ingredient_id)
 			var mature_color := mature_ingredient.placeholder_color if mature_ingredient else SPROUT_COLOR
 			var mature_texture := mature_ingredient.mature_sprite if mature_ingredient else null
+			growth_icon_texture.modulate = Color.WHITE
 			_set_visual(growth_icon_color, growth_icon_texture, mature_color, mature_texture, true)
 			label.text = "Готово!"
 
