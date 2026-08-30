@@ -12,7 +12,7 @@ extends Node
 ## unplanted and coming back to it later is harmless.
 enum Stage { EMPTY, DUG, SPROUT, GROWING, MATURE }
 
-const PLOT_COUNT := 3 ## matches the 3 plots baked into the garden background art.
+const PLOT_COUNT := 9 ## 3 sub-plots per bed × the 3 beds baked into the garden background art.
 const WATER_BONUS_DAYS := 1
 
 class Plot:

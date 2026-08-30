@@ -6,8 +6,8 @@
 [ext_resource type="Script" path="res://scripts/planting_ui.gd" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/garden.png" id="5"]
 
-[sub_resource type="RectangleShape2D" id="Shape_plot"]
-size = Vector2(190, 250)
+[sub_resource type="RectangleShape2D" id="Shape_subplot"]
+size = Vector2(60, 250)
 
 [sub_resource type="RectangleShape2D" id="Shape_exit"]
 size = Vector2(140, 60)
@@ -36,36 +36,55 @@ position = Vector2(718, 280)
 
 [node name="Plots" type="Node2D" parent="."]
 
-[node name="Plot1" type="Area2D" parent="Plots"]
-position = Vector2(217, 280)
+[node name="Bed1Plot1" type="Area2D" parent="Plots"]
+position = Vector2(154, 280)
 script = ExtResource("2")
-zone_id = &"plot_1"
-zone_label = "Грядка 1"
+zone_id = &"plot_1_1"
+zone_label = "Грядка 1, ділянка 1"
 plot_index = 0
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot1"]
-shape = SubResource("Shape_plot")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed1Plot1"]
+shape = SubResource("Shape_subplot")
 
-[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot1"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed1Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
-[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot1"]
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed1Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot1"]
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed1Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed1Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed1Plot1"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -74,7 +93,7 @@ offset_right = 28.0
 offset_bottom = 28.0
 color = Color(0.5, 0.7, 0.35, 1)
 
-[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot1"]
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed1Plot1"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -84,67 +103,68 @@ offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot1"]
-visible = false
+[node name="Label" type="Label" parent="Plots/Bed1Plot1"]
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
-color = Color(0.15, 0.09, 0.04, 0.55)
-
-[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot1"]
-visible = false
-mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Plots/Plot1"]
-mouse_filter = 2
-offset_left = -100.0
-offset_top = 125.0
-offset_right = 100.0
-offset_bottom = 150.0
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
 
-[node name="WetSoilTimer" type="Timer" parent="Plots/Plot1"]
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed1Plot1"]
 one_shot = true
 
-[node name="Plot2" type="Area2D" parent="Plots"]
-position = Vector2(477, 280)
+[node name="Bed1Plot2" type="Area2D" parent="Plots"]
+position = Vector2(217, 280)
 script = ExtResource("2")
-zone_id = &"plot_2"
-zone_label = "Грядка 2"
+zone_id = &"plot_1_2"
+zone_label = "Грядка 1, ділянка 2"
 plot_index = 1
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot2"]
-shape = SubResource("Shape_plot")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed1Plot2"]
+shape = SubResource("Shape_subplot")
 
-[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot2"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed1Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
-[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot2"]
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed1Plot2"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot2"]
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed1Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed1Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed1Plot2"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -153,7 +173,7 @@ offset_right = 28.0
 offset_bottom = 28.0
 color = Color(0.5, 0.7, 0.35, 1)
 
-[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot2"]
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed1Plot2"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -163,67 +183,68 @@ offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot2"]
-visible = false
+[node name="Label" type="Label" parent="Plots/Bed1Plot2"]
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
-color = Color(0.15, 0.09, 0.04, 0.55)
-
-[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot2"]
-visible = false
-mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
-expand_mode = 1
-stretch_mode = 5
-
-[node name="Label" type="Label" parent="Plots/Plot2"]
-mouse_filter = 2
-offset_left = -100.0
-offset_top = 125.0
-offset_right = 100.0
-offset_bottom = 150.0
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
 horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
 
-[node name="WetSoilTimer" type="Timer" parent="Plots/Plot2"]
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed1Plot2"]
 one_shot = true
 
-[node name="Plot3" type="Area2D" parent="Plots"]
-position = Vector2(718, 280)
+[node name="Bed1Plot3" type="Area2D" parent="Plots"]
+position = Vector2(280, 280)
 script = ExtResource("2")
-zone_id = &"plot_3"
-zone_label = "Грядка 3"
+zone_id = &"plot_1_3"
+zone_label = "Грядка 1, ділянка 3"
 plot_index = 2
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Plot3"]
-shape = SubResource("Shape_plot")
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed1Plot3"]
+shape = SubResource("Shape_subplot")
 
-[node name="DugHoleColor" type="ColorRect" parent="Plots/Plot3"]
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed1Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 color = Color(0.25, 0.16, 0.08, 0.85)
 
-[node name="DugHoleTexture" type="TextureRect" parent="Plots/Plot3"]
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed1Plot3"]
 visible = false
 mouse_filter = 2
-offset_left = -85.0
-offset_top = -115.0
-offset_right = 85.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GrowthIconColor" type="ColorRect" parent="Plots/Plot3"]
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed1Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed1Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed1Plot3"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -232,7 +253,7 @@ offset_right = 28.0
 offset_bottom = 28.0
 color = Color(0.5, 0.7, 0.35, 1)
 
-[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Plot3"]
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed1Plot3"]
 visible = false
 mouse_filter = 2
 offset_left = -28.0
@@ -242,35 +263,497 @@ offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="WetSoilColor" type="ColorRect" parent="Plots/Plot3"]
-visible = false
+[node name="Label" type="Label" parent="Plots/Bed1Plot3"]
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
-color = Color(0.15, 0.09, 0.04, 0.55)
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
 
-[node name="WetSoilTexture" type="TextureRect" parent="Plots/Plot3"]
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed1Plot3"]
+one_shot = true
+
+[node name="Bed2Plot1" type="Area2D" parent="Plots"]
+position = Vector2(414, 280)
+script = ExtResource("2")
+zone_id = &"plot_2_1"
+zone_label = "Грядка 2, ділянка 1"
+plot_index = 3
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed2Plot1"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed2Plot1"]
 visible = false
 mouse_filter = 2
-offset_left = -90.0
-offset_top = -115.0
-offset_right = 90.0
-offset_bottom = 115.0
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed2Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="Plots/Plot3"]
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed2Plot1"]
+visible = false
 mouse_filter = 2
-offset_left = -100.0
-offset_top = 125.0
-offset_right = 100.0
-offset_bottom = 150.0
-horizontal_alignment = 1
-theme_override_font_sizes/font_size = 12
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
 
-[node name="WetSoilTimer" type="Timer" parent="Plots/Plot3"]
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed2Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed2Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed2Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed2Plot1"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed2Plot1"]
+one_shot = true
+
+[node name="Bed2Plot2" type="Area2D" parent="Plots"]
+position = Vector2(477, 280)
+script = ExtResource("2")
+zone_id = &"plot_2_2"
+zone_label = "Грядка 2, ділянка 2"
+plot_index = 4
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed2Plot2"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed2Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed2Plot2"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed2Plot2"]
+one_shot = true
+
+[node name="Bed2Plot3" type="Area2D" parent="Plots"]
+position = Vector2(540, 280)
+script = ExtResource("2")
+zone_id = &"plot_2_3"
+zone_label = "Грядка 2, ділянка 3"
+plot_index = 5
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed2Plot3"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed2Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed2Plot3"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed2Plot3"]
+one_shot = true
+
+[node name="Bed3Plot1" type="Area2D" parent="Plots"]
+position = Vector2(655, 280)
+script = ExtResource("2")
+zone_id = &"plot_3_1"
+zone_label = "Грядка 3, ділянка 1"
+plot_index = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed3Plot1"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed3Plot1"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed3Plot1"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed3Plot1"]
+one_shot = true
+
+[node name="Bed3Plot2" type="Area2D" parent="Plots"]
+position = Vector2(718, 280)
+script = ExtResource("2")
+zone_id = &"plot_3_2"
+zone_label = "Грядка 3, ділянка 2"
+plot_index = 7
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed3Plot2"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed3Plot2"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed3Plot2"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed3Plot2"]
+one_shot = true
+
+[node name="Bed3Plot3" type="Area2D" parent="Plots"]
+position = Vector2(781, 280)
+script = ExtResource("2")
+zone_id = &"plot_3_3"
+zone_label = "Грядка 3, ділянка 3"
+plot_index = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Plots/Bed3Plot3"]
+shape = SubResource("Shape_subplot")
+
+[node name="DugHoleColor" type="ColorRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.25, 0.16, 0.08, 0.85)
+
+[node name="DugHoleTexture" type="TextureRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="WetSoilColor" type="ColorRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+color = Color(0.15, 0.09, 0.04, 0.55)
+
+[node name="WetSoilTexture" type="TextureRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -30.0
+offset_top = -30.0
+offset_right = 30.0
+offset_bottom = 30.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="GrowthIconColor" type="ColorRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+color = Color(0.5, 0.7, 0.35, 1)
+
+[node name="GrowthIconTexture" type="TextureRect" parent="Plots/Bed3Plot3"]
+visible = false
+mouse_filter = 2
+offset_left = -28.0
+offset_top = -28.0
+offset_right = 28.0
+offset_bottom = 28.0
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="Plots/Bed3Plot3"]
+mouse_filter = 2
+offset_left = -31.0
+offset_top = 32.0
+offset_right = 31.0
+offset_bottom = 62.0
+horizontal_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 10
+
+[node name="WetSoilTimer" type="Timer" parent="Plots/Bed3Plot3"]
 one_shot = true
 
 [node name="ExitZone" type="Area2D" parent="."]

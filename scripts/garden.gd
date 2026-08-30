@@ -1,8 +1,13 @@
 extends Node2D
 ## Interactive garden plot map, reached through the hut's garden-window portal.
 
+## 3 sub-plots per bed × 3 beds baked into the garden background art —
+## order matches GardenState's plot_index (0-2 = bed 1, 3-5 = bed 2,
+## 6-8 = bed 3), see GardenPlot.plot_index on each node.
 @onready var plots: Array[GardenPlot] = [
-	$Plots/Plot1, $Plots/Plot2, $Plots/Plot3,
+	$Plots/Bed1Plot1, $Plots/Bed1Plot2, $Plots/Bed1Plot3,
+	$Plots/Bed2Plot1, $Plots/Bed2Plot2, $Plots/Bed2Plot3,
+	$Plots/Bed3Plot1, $Plots/Bed3Plot2, $Plots/Bed3Plot3,
 ]
 @onready var exit_zone: InteractionZone = $ExitZone
 @onready var planting_ui: PlantingUI = $PlantingUI
