@@ -14,10 +14,11 @@ extends InteractionZone
 
 ## Shared by every plot/species — the sprout right after planting doesn't
 ## vary by ingredient, only growing/mature do (Ingredient.growth_sprite/
-## mature_sprite).
-const SHARED_SPROUT_TEXTURE_PATH := "res://assets/hut/garden/sprout.png"
-const DUG_HOLE_TEXTURE_PATH := "res://assets/hut/garden/dug_hole.png"
-const WET_SOIL_TEXTURE_PATH := "res://assets/hut/garden/wet_soil.png"
+## mature_sprite). Flat under assets/hut/ like every other asset in the
+## game, not a garden/ subfolder — one less thing to get wrong uploading.
+const SHARED_SPROUT_TEXTURE_PATH := "res://assets/hut/garden_sprout.png"
+const DUG_HOLE_TEXTURE_PATH := "res://assets/hut/garden_dug_hole.png"
+const WET_SOIL_TEXTURE_PATH := "res://assets/hut/garden_wet_soil.png"
 
 const WET_SOIL_SECONDS := 3.0
 
