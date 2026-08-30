@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Keepsake" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Keepsake" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/keepsake.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/mat_metal.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -8,3 +9,4 @@ id = &"mat_metal"
 display_name = "Кований метал"
 description = "Деталі й лом від коваля — годяться на ремонт чи підсилення обладнання, коли до того дійдуть руки."
 placeholder_color = Color(0.45, 0.47, 0.5, 1)
+icon = ExtResource("2")
