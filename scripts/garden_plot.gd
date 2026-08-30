@@ -42,9 +42,10 @@ const SPROUT_TINT := Color(0.72, 0.72, 0.72, 1.0)
 
 @export var plot_index: int = 0
 
-## Emitted on click when this plot needs the planting minigame (empty or
-## already dug) — garden.gd opens PlantingUI for it, then calls refresh()
-## once the UI closes.
+## Emitted on click when this plot is DUG and needs a seed chosen —
+## garden.gd opens PlantingUI for it, then calls refresh() once the UI
+## closes. EMPTY plots dig themselves on click with no UI at all (see
+## _on_activated); nothing to choose there.
 signal planting_requested(plot: GardenPlot)
 signal harvested(plot: GardenPlot, ingredient_id: StringName)
 
@@ -70,7 +71,15 @@ func _ready() -> void:
 func _on_activated(_zone: InteractionZone) -> void:
 	var plot := GardenState.get_plot(plot_index)
 	match plot.stage:
-		GardenState.Stage.EMPTY, GardenState.Stage.DUG:
+		GardenState.Stage.EMPTY:
+			# Free, no choices involved — same one-click-and-done pattern as
+			# watering below, rather than a UI step. Per feedback: digging,
+			# choosing a seed, and watering should each cost their own
+			# separate click on the plot instead of all running together
+			# in one sitting.
+			GardenState.dig(plot_index)
+			refresh()
+		GardenState.Stage.DUG:
 			planting_requested.emit(self)
 		GardenState.Stage.SPROUT, GardenState.Stage.GROWING:
 			if GardenState.water(plot_index):

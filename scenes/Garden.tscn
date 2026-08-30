@@ -313,37 +313,13 @@ offset_top = 40.0
 offset_right = 680.0
 offset_bottom = 70.0
 horizontal_alignment = 1
-text = "Крок 1/4: викопай ямку"
-
-[node name="DigButton" type="Button" parent="PlantingUI/Panel"]
-offset_left = 400.0
-offset_top = 240.0
-offset_right = 560.0
-offset_bottom = 280.0
-text = "Копати"
+text = "Обери насіння для посадки"
 
 [node name="SeedList" type="VBoxContainer" parent="PlantingUI/Panel"]
-visible = false
 offset_left = 330.0
 offset_top = 110.0
 offset_right = 630.0
 offset_bottom = 400.0
-
-[node name="CoverButton" type="Button" parent="PlantingUI/Panel"]
-visible = false
-offset_left = 400.0
-offset_top = 240.0
-offset_right = 560.0
-offset_bottom = 280.0
-text = "Загорнути землею"
-
-[node name="WaterButton" type="Button" parent="PlantingUI/Panel"]
-visible = false
-offset_left = 400.0
-offset_top = 240.0
-offset_right = 560.0
-offset_bottom = 280.0
-text = "Полити"
 
 [node name="WarningLabel" type="Label" parent="PlantingUI/Panel"]
 offset_left = 230.0
