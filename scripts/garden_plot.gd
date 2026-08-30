@@ -8,9 +8,12 @@ extends InteractionZone
 ## default, so EMPTY needs no overlay at all. DUG and the growth stages
 ## each show one overlay/sprite on top of that; WetSoil is a separate
 ## timed flash on top of everything, shown briefly after any successful
-## watering regardless of stage. None of the overlay/stage art exists
-## yet — every slot below falls back to a flat color box (same pattern
-## as FloatingToken's ingredient fallback) until Viktor provides it.
+## watering regardless of stage. DUG and SPROUT have real art now; the
+## growth-stage sprites are per-ingredient (Ingredient.growth_sprite/
+## mature_sprite) and still pending. WetSoil deliberately has none — a
+## painted "just watered" patch kept reading as flat/unconvincing (tried
+## and dropped), so it's a procedural radial darkening instead (see
+## _build_wet_soil_texture) rather than more art to chase.
 
 ## Shared by every plot/species — the sprout right after planting doesn't
 ## vary by ingredient, only growing/mature do (Ingredient.growth_sprite/
@@ -18,12 +21,14 @@ extends InteractionZone
 ## game, not a garden/ subfolder — one less thing to get wrong uploading.
 const SHARED_SPROUT_TEXTURE_PATH := "res://assets/hut/garden_sprout.png"
 const DUG_HOLE_TEXTURE_PATH := "res://assets/hut/garden_dug_hole.png"
-const WET_SOIL_TEXTURE_PATH := "res://assets/hut/garden_wet_soil.png"
 
 const WET_SOIL_SECONDS := 3.0
+const WET_SOIL_TEXTURE_SIZE := 128 ## px; small is fine, it's just a soft radial blob.
 
 const DUG_COLOR := Color(0.25, 0.16, 0.08, 0.85)
 const SPROUT_COLOR := Color(0.5, 0.7, 0.35, 1)
+## Darkest point of the procedural "just watered" patch — fades to fully
+## transparent at the edge, see _build_wet_soil_texture().
 const WET_SOIL_COLOR := Color(0.15, 0.09, 0.04, 0.55)
 
 @export var plot_index: int = 0
@@ -43,8 +48,11 @@ signal harvested(plot: GardenPlot, ingredient_id: StringName)
 @onready var label: Label = $Label
 @onready var _wet_soil_timer: Timer = $WetSoilTimer
 
+var _wet_soil_texture: GradientTexture2D
+
 func _ready() -> void:
 	super._ready()
+	_wet_soil_texture = _build_wet_soil_texture()
 	activated.connect(_on_activated)
 	GameCalendar.day_changed.connect(func(_d: int) -> void: refresh())
 	_wet_soil_timer.timeout.connect(func() -> void: _set_visual(wet_soil_color, wet_soil_texture, WET_SOIL_COLOR, null, false))
@@ -65,9 +73,24 @@ func _on_activated(_zone: InteractionZone) -> void:
 			refresh()
 
 func _flash_wet_soil() -> void:
-	var texture: Texture2D = load(WET_SOIL_TEXTURE_PATH) if ResourceLoader.exists(WET_SOIL_TEXTURE_PATH) else null
-	_set_visual(wet_soil_color, wet_soil_texture, WET_SOIL_COLOR, texture, true)
+	_set_visual(wet_soil_color, wet_soil_texture, WET_SOIL_COLOR, _wet_soil_texture, true)
 	_wet_soil_timer.start(WET_SOIL_SECONDS)
+
+## A soft-edged dark blob, radially faded from WET_SOIL_COLOR at the
+## center to fully transparent at the rim — built once at runtime rather
+## than loaded, so "just watered" needs no art asset at all.
+func _build_wet_soil_texture() -> GradientTexture2D:
+	var gradient := Gradient.new()
+	gradient.set_color(0, WET_SOIL_COLOR)
+	gradient.set_color(1, Color(WET_SOIL_COLOR.r, WET_SOIL_COLOR.g, WET_SOIL_COLOR.b, 0.0))
+	var texture := GradientTexture2D.new()
+	texture.gradient = gradient
+	texture.width = WET_SOIL_TEXTURE_SIZE
+	texture.height = WET_SOIL_TEXTURE_SIZE
+	texture.fill = GradientTexture2D.FILL_RADIAL
+	texture.fill_from = Vector2(0.5, 0.5)
+	texture.fill_to = Vector2(1.0, 0.5)
+	return texture
 
 func refresh() -> void:
 	var plot := GardenState.get_plot(plot_index)
