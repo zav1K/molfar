@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" path="res://assets/hut/garden.png" id="5"]
 
 [sub_resource type="RectangleShape2D" id="Shape_subplot"]
-size = Vector2(60, 250)
+size = Vector2(180, 78)
 
 [sub_resource type="RectangleShape2D" id="Shape_exit"]
 size = Vector2(140, 60)
@@ -37,7 +37,7 @@ position = Vector2(718, 280)
 [node name="Plots" type="Node2D" parent="."]
 
 [node name="Bed1Plot1" type="Area2D" parent="Plots"]
-position = Vector2(154, 280)
+position = Vector2(217, 200)
 script = ExtResource("2")
 zone_id = &"plot_1_1"
 zone_label = "Грядка 1, ділянка 1"
@@ -105,10 +105,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed1Plot1"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -185,10 +185,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed1Plot2"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -197,7 +197,7 @@ theme_override_font_sizes/font_size = 10
 one_shot = true
 
 [node name="Bed1Plot3" type="Area2D" parent="Plots"]
-position = Vector2(280, 280)
+position = Vector2(217, 360)
 script = ExtResource("2")
 zone_id = &"plot_1_3"
 zone_label = "Грядка 1, ділянка 3"
@@ -265,10 +265,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed1Plot3"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -277,7 +277,7 @@ theme_override_font_sizes/font_size = 10
 one_shot = true
 
 [node name="Bed2Plot1" type="Area2D" parent="Plots"]
-position = Vector2(414, 280)
+position = Vector2(477, 200)
 script = ExtResource("2")
 zone_id = &"plot_2_1"
 zone_label = "Грядка 2, ділянка 1"
@@ -345,10 +345,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed2Plot1"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -425,10 +425,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed2Plot2"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -437,7 +437,7 @@ theme_override_font_sizes/font_size = 10
 one_shot = true
 
 [node name="Bed2Plot3" type="Area2D" parent="Plots"]
-position = Vector2(540, 280)
+position = Vector2(477, 360)
 script = ExtResource("2")
 zone_id = &"plot_2_3"
 zone_label = "Грядка 2, ділянка 3"
@@ -505,10 +505,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed2Plot3"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -517,7 +517,7 @@ theme_override_font_sizes/font_size = 10
 one_shot = true
 
 [node name="Bed3Plot1" type="Area2D" parent="Plots"]
-position = Vector2(655, 280)
+position = Vector2(718, 200)
 script = ExtResource("2")
 zone_id = &"plot_3_1"
 zone_label = "Грядка 3, ділянка 1"
@@ -585,10 +585,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed3Plot1"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -665,10 +665,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed3Plot2"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
@@ -677,7 +677,7 @@ theme_override_font_sizes/font_size = 10
 one_shot = true
 
 [node name="Bed3Plot3" type="Area2D" parent="Plots"]
-position = Vector2(781, 280)
+position = Vector2(718, 360)
 script = ExtResource("2")
 zone_id = &"plot_3_3"
 zone_label = "Грядка 3, ділянка 3"
@@ -745,10 +745,10 @@ stretch_mode = 5
 
 [node name="Label" type="Label" parent="Plots/Bed3Plot3"]
 mouse_filter = 2
-offset_left = -31.0
-offset_top = 32.0
-offset_right = 31.0
-offset_bottom = 62.0
+offset_left = -70.0
+offset_top = 30.0
+offset_right = 70.0
+offset_bottom = 48.0
 horizontal_alignment = 1
 autowrap_mode = 2
 theme_override_font_sizes/font_size = 10
