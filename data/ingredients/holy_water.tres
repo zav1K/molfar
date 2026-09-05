@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/holy_water_vial.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"holy_water"
+display_name = "Свячена вода"
+description = "Освячена в церкві на Великий четвер — сильний засіб проти чарів і наслання, тримають про запас цілий рік."
+source = 0
+rarity = 3
+season_start_day = 10
+season_end_day = 10
+festival_id = &"velykyi_chetver"
+placeholder_color = Color(0.75, 0.85, 0.8, 1)
+bundle_icon = ExtResource("2")
+ward_threat = 3
+ward_hint_text = "у пляшечці ледь чутно дзвенить, хоч ніхто її не торкався..."

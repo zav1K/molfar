@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/mara_night.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Мара"
+problem_text = "\"Не бійся мене, мольфаре. Я лиш хочу зілля, звареного проти сонця — таке ж, як твоя друга душа.\""
+true_threat = 1
+desired_result_id = &"curse_brew"
+satisfied_text = "\"Бачиш? Ми з тобою не такі й різні.\""
+unhelped_text = "\"Ще навідаюсь. Ти й сам не знаєш, куди тебе тягне.\""
+night_visitor = true
+required_flag = &"met_drowned_woman"
+knocked_sets_flag = &"mara_first_visit"
+satisfied_path_shift = -1
+unhelped_path_shift = 1
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.287109, 0.065104, 0.460938, 0.859375)
+payment_flavor_text = "Це не оборудка. Просто подяка, яку не покладеш у скриню."

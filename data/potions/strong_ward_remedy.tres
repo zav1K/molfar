@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/strong_ward_remedy.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"strong_ward_remedy"
+display_name = "Захисний відвар (посилений)"
+description = "Кріп, часник і полин — вішають над дверима, бо відьми не терплять цього запаху."
+icon = ExtResource("2")

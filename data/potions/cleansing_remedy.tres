@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Potion" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/potion.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/cleansing_remedy.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"cleansing_remedy"
+display_name = "Очисний відвар"
+description = "Полин як основний очисний і захисний компонент, часник підсилює захисну дію."
+icon = ExtResource("2")

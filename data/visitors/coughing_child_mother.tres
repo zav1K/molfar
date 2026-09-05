@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/coughing_child_mother.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Молода жінка"
+problem_text = "\"Дитина кашляє вже третю ніч, а мольфар-сусід каже — то не застуда...\""
+true_threat = 2
+desired_result_id = &"cold_remedy"
+satisfied_text = "Дякую, мольфаре. Кашель ущух ще тої ж ночі."
+unhelped_text = "Це не помогло... дитині й не легше."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.057416, 0, 0.861244, 0.992367)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Домашній хліб, вишитий рушник"

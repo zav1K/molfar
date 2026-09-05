@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/wandering_soldier.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Колишній вояк"
+problem_text = "\"Вернувся з походу, а спокою нема. Щось причепилось за мною по дорозі, мольфаре...\""
+true_threat = 1
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "Наче... легше стало. Вперше за довгий час."
+unhelped_text = "Не відпускає. Іде за мною, хоч куди піду."
+payment_type = 3
+payment_flag_id = &"soldier_stories_heard"
+payment_flavor_text = "Заморська дрібничка, історії з доріг"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.238281, 0.0625, 0.550781, 0.847656)

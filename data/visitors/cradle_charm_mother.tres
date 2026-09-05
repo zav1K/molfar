@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/cradle_charm_mother.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Молода мати з немовлям"
+problem_text = "\"Тільки народила... прошу, змайструй оберіг на колиску — боюсь вроків, дуже боюсь...\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+satisfied_text = "Дякую, мольфаре. Тепер спатиму спокійніше, знаючи, що дитя під захистом."
+unhelped_text = "Це... не той оберіг. Мені страшно за дитину."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.232422, 0.076823, 0.529297, 0.824219)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_amount = 1
+payment_flavor_text = "Полотно — більшого немає"

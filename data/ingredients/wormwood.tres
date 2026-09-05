@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/wormwood.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"wormwood"
+display_name = "Полин"
+description = "Гіркий полин з городу — оберігає від злих духів, використовується і в зіллях, і в обрядах."
+source = 1
+rarity = 1
+season_start_day = 1
+season_end_day = 84
+festival_id = &""
+placeholder_color = Color(0.55, 0.6, 0.35, 1)
+bundle_icon = ExtResource("2")
+base_growth_days = 4
+ward_threat = 1
+ward_hint_text = "пучок полину тихо шелестить сам по собі..."

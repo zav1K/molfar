@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/hail_elder.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Сільський староста"
+problem_text = "\"Хмари над полониною чорніють — громада просить захистити врожай від граду, мольфаре...\""
+true_threat = 0
+satisfied_text = "Громада не забуде цього, мольфаре."
+unhelped_text = "Що ж... якщо не можеш — не можеш. Врожай у Божих руках."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.201172, 0.049479, 0.595703, 0.877604)
+payment_type = 2
+payment_item_id = &"groshi"
+payment_amount = 2
+payment_flavor_text = "Гроші, а то й цінна худоба"
