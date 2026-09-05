@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3]
+[gd_scene load_steps=9 format=3]
 
 [ext_resource type="Script" path="res://scripts/garden.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/garden_plot.gd" id="2"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="3"]
 [ext_resource type="Script" path="res://scripts/planting_ui.gd" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/garden.png" id="5"]
+[ext_resource type="Script" path="res://scripts/hover_glow.gd" id="6"]
 
 [sub_resource type="RectangleShape2D" id="Shape_subplot"]
 size = Vector2(180, 78)
@@ -765,13 +766,16 @@ zone_label = "Назад до хати"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="ExitZone"]
 shape = SubResource("Shape_exit")
 
-[node name="Visual" type="ColorRect" parent="ExitZone"]
+[node name="Visual" type="ReferenceRect" parent="ExitZone"]
 mouse_filter = 2
 offset_left = -70.0
 offset_top = -30.0
 offset_right = 70.0
 offset_bottom = 30.0
-color = Color(0.15, 0.12, 0.1, 0.6)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("6")
 
 [node name="Label" type="Label" parent="ExitZone"]
 mouse_filter = 2

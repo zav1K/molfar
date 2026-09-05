@@ -1,4 +1,4 @@
-[gd_scene load_steps=38 format=3]
+[gd_scene load_steps=39 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -24,6 +24,7 @@
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_first.png" id="26"]
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_up_first.png" id="27"]
 [ext_resource type="Script" path="res://scripts/grimoire_ui.gd" id="28"]
+[ext_resource type="Script" path="res://scripts/hover_glow.gd" id="29"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(178, 132)
@@ -106,6 +107,17 @@ texture = ExtResource("26")
 expand_mode = 1
 stretch_mode = 0
 
+[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/Cauldron"]
+mouse_filter = 2
+offset_left = -75.0
+offset_top = -49.0
+offset_right = 75.0
+offset_bottom = 101.0
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
+
 [node name="Label" type="Label" parent="PanelLeft/Zones/Cauldron"]
 mouse_filter = 2
 offset_left = -75.0
@@ -124,13 +136,16 @@ zone_label = "Сволок"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/DryingBeam"]
 shape = SubResource("Shape_dryingbeam")
 
-[node name="Visual" type="ColorRect" parent="PanelLeft/Zones/DryingBeam"]
+[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/DryingBeam"]
 mouse_filter = 2
 offset_left = -208.0
 offset_top = -56.0
 offset_right = 208.0
 offset_bottom = 56.0
-color = Color(0.3, 0.22, 0.15, 0.2)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelLeft/Zones/DryingBeam"]
 mouse_filter = 2
@@ -150,13 +165,16 @@ zone_label = "Полиця з зіллям"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/PotionShelf"]
 shape = SubResource("Shape_potionshelf")
 
-[node name="Visual" type="ColorRect" parent="PanelLeft/Zones/PotionShelf"]
+[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/PotionShelf"]
 mouse_filter = 2
 offset_left = -136.0
 offset_top = -90.0
 offset_right = 137.0
 offset_bottom = 91.0
-color = Color(0.3, 0.22, 0.15, 0.2)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelLeft/Zones/PotionShelf"]
 mouse_filter = 2
@@ -189,13 +207,16 @@ zone_label = "Двері"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Door"]
 shape = SubResource("Shape_door")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Door"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
 offset_left = -105.0
 offset_top = -175.0
 offset_right = 105.0
 offset_bottom = 175.0
-color = Color(0.3, 0.22, 0.15, 0.18)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
@@ -215,13 +236,16 @@ zone_label = "Стіл для різьблення"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Desk"]
 shape = SubResource("Shape_desk")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Desk"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/Desk"]
 mouse_filter = 2
 offset_left = -70.0
 offset_top = -45.0
 offset_right = 70.0
 offset_bottom = 45.0
-color = Color(0.3, 0.22, 0.15, 0.18)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelCenter/Zones/Desk"]
 mouse_filter = 2
@@ -241,13 +265,16 @@ zone_label = "Обереги на столі"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/SigilShelf"]
 shape = SubResource("Shape_sigilshelf")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/SigilShelf"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/SigilShelf"]
 mouse_filter = 2
 offset_left = -65.0
 offset_top = -45.0
 offset_right = 65.0
 offset_bottom = 45.0
-color = Color(0.3, 0.22, 0.15, 0.18)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelCenter/Zones/SigilShelf"]
 mouse_filter = 2
@@ -268,13 +295,16 @@ slot_index = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot1"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot1"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot1"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-color = Color(0.3, 0.22, 0.15, 0.2)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot1"]
 mouse_filter = 2
@@ -305,13 +335,16 @@ slot_index = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot2"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot2"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot2"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-color = Color(0.3, 0.22, 0.15, 0.2)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot2"]
 mouse_filter = 2
@@ -342,13 +375,16 @@ slot_index = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot3"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot3"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot3"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-color = Color(0.3, 0.22, 0.15, 0.2)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot3"]
 mouse_filter = 2
@@ -378,13 +414,16 @@ zone_label = "Календар"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Calendar"]
 shape = SubResource("Shape_calendar")
 
-[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Calendar"]
+[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/Calendar"]
 mouse_filter = 2
 offset_left = -65.0
 offset_top = -45.0
 offset_right = 65.0
 offset_bottom = 45.0
-color = Color(0.3, 0.22, 0.15, 0.18)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelCenter/Zones/Calendar"]
 mouse_filter = 2
@@ -441,6 +480,17 @@ zone_label = "Полиці"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelRight/Zones/Shelves"]
 shape = SubResource("Shape_shelves")
 
+[node name="Visual" type="ReferenceRect" parent="PanelRight/Zones/Shelves"]
+mouse_filter = 2
+offset_left = -163.5
+offset_top = -76.0
+offset_right = 163.5
+offset_bottom = 76.0
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
+
 [node name="Chest" type="Area2D" parent="PanelRight/Zones"]
 position = Vector2(150, 430)
 script = ExtResource("2")
@@ -461,6 +511,17 @@ texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 0
 
+[node name="Visual" type="ReferenceRect" parent="PanelRight/Zones/Chest"]
+mouse_filter = 2
+offset_left = -72.0
+offset_top = -179.0
+offset_right = 70.0
+offset_bottom = 35.0
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
+
 [node name="Label" type="Label" parent="PanelRight/Zones/Chest"]
 mouse_filter = 2
 offset_left = -57.0
@@ -479,13 +540,16 @@ zone_label = "Гримуар"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelRight/Zones/Grimoire"]
 shape = SubResource("Shape_grimoire")
 
-[node name="Visual" type="ColorRect" parent="PanelRight/Zones/Grimoire"]
+[node name="Visual" type="ReferenceRect" parent="PanelRight/Zones/Grimoire"]
 mouse_filter = 2
 offset_left = -55.0
 offset_top = -27.0
 offset_right = 55.0
 offset_bottom = 27.0
-color = Color(0.5, 0.35, 0.15, 0.25)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelRight/Zones/Grimoire"]
 mouse_filter = 2
@@ -505,13 +569,16 @@ zone_label = "Вікно (город)"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelRight/Zones/GardenWindow"]
 shape = SubResource("Shape_gardenwindow")
 
-[node name="Visual" type="ColorRect" parent="PanelRight/Zones/GardenWindow"]
+[node name="Visual" type="ReferenceRect" parent="PanelRight/Zones/GardenWindow"]
 mouse_filter = 2
 offset_left = -107.0
 offset_top = -100.0
 offset_right = 107.0
 offset_bottom = 100.0
-color = Color(0.3, 0.45, 0.25, 0.25)
+editor_only = false
+border_color = Color(0.95, 0.85, 0.55, 0.95)
+border_width = 3.0
+script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelRight/Zones/GardenWindow"]
 mouse_filter = 2
