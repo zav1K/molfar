@@ -13,6 +13,11 @@ extends CanvasLayer
 ## take-it-or-not side quest — neither choice is a fail state, they just
 ## play different flavor text.
 ##
+## A visitor with neither desired_result_id nor offers_item_id (e.g.
+## drowned_woman_night, forest_warden) isn't asking for anything material
+## at all — being invited in and heard out is the whole interaction, so
+## the give-list is replaced with a single "Вислухати" button instead.
+##
 ## Once satisfied, whatever the visitor was already offering (payment_type)
 ## is granted automatically — voluntary thanks, not a price (see
 ## CONCEPT.md). DemandMoneyButton is the one deliberate override: pressuring
@@ -41,6 +46,7 @@ const TILE_WIDTH := 130.0
 @onready var result_label: Label = $Panel/ResultLabel
 @onready var demand_money_button: Button = $Panel/DemandMoneyButton
 @onready var finish_button: Button = $Panel/FinishButton
+@onready var listen_button: Button = $Panel/ListenButton
 
 var _visitor: Visitor
 var _resolved: bool = false
@@ -54,6 +60,7 @@ func _ready() -> void:
 	wait_button.pressed.connect(_on_wait_pressed)
 	demand_money_button.pressed.connect(_on_demand_money_pressed)
 	finish_button.pressed.connect(_on_finish_pressed)
+	listen_button.pressed.connect(_on_listen_pressed)
 
 func show_visitor(visitor: Visitor) -> void:
 	_visitor = visitor
@@ -76,6 +83,7 @@ func _rebuild_item_list() -> void:
 	wait_button.visible = not _resolved
 	finish_button.visible = _resolved
 	take_button.visible = not _resolved and _visitor.offers_item_id != &""
+	listen_button.visible = not _resolved and _visitor.offers_item_id == &"" and _visitor.desired_result_id == &""
 	demand_money_button.visible = _resolved and _satisfied and not _payment_settled and _visitor.payment_type != Visitor.PaymentType.MONEY
 	if _resolved:
 		return
@@ -83,6 +91,9 @@ func _rebuild_item_list() -> void:
 		# Reversed direction — they're handing something to the player, not
 		# asking for one, so the normal give-list doesn't apply here.
 		take_button.text = "Взяти: %s" % _item_display_name(_visitor.offers_item_id)
+		return
+	if _visitor.desired_result_id == &"":
+		# Nothing material to give or take — listen_button covers this case.
 		return
 	for potion in PotionDatabase.get_all():
 		var count := PlayerInventory.get_count(potion.id)
@@ -177,6 +188,9 @@ func _on_give_pressed(item_id: StringName) -> void:
 
 func _on_take_pressed() -> void:
 	PlayerInventory.add(_visitor.offers_item_id, 1)
+	_resolve(true)
+
+func _on_listen_pressed() -> void:
 	_resolve(true)
 
 func _on_send_away_pressed() -> void:

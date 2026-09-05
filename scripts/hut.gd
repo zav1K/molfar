@@ -124,6 +124,17 @@ func _ready() -> void:
 		if not PlayerInventory.has(potion.id):
 			PlayerInventory.add(potion.id, 1)
 
+	# DEBUG: jump straight into the river/Мара/священник story chain
+	# instead of waiting on RNG through the whole regular rotation — see
+	# STORY.md's test order. Uncomment ONLY the flag for the beat you
+	# want to test next (each one already implies everything before it
+	# happened); leave all commented out for the normal from-scratch
+	# playthrough. Remove this whole block once the chain has enough
+	# content that skipping ahead isn't the normal way to reach it.
+#	StoryFlags.set_flag(&"river_unrest_reported") # -> unlocks Утоплениця (night)
+#	StoryFlags.set_flag(&"met_drowned_woman") # -> unlocks Мара (night)
+#	StoryFlags.set_flag(&"mara_first_visit") # -> unlocks Незнайомець у рясі (night)
+
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:

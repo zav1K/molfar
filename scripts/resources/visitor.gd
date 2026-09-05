@@ -74,6 +74,19 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## get_waiting_portrait().
 @export var portrait_waiting: Texture2D
 
+## Story gating, for scripted one-time beats rather than the ordinary
+## repeating rotation (see VisitorDatabase.get_random()). Empty (the
+## default) means always eligible, same as every ordinary client today.
+## required_flag: won't turn up at all until StoryFlags has this set.
+## knocked_sets_flag: set the moment this visitor knocks (not on a
+## successful resolution — being seen at the door is enough to have
+## "happened," same as problem_text playing regardless of invite/refuse).
+## Also doubles as this visitor's own once-only guard: once their own
+## knocked_sets_flag is set, they stop being eligible too, so a scripted
+## beat never repeats the way an ordinary client does.
+@export var required_flag: StringName = &""
+@export var knocked_sets_flag: StringName = &""
+
 ## Normalized (0..1) content bounding box of the *waiting* portrait,
 ## ignoring transparent canvas padding — measured offline (see
 ## scratchpad png_bbox.py) rather than at runtime because these

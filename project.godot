@@ -34,11 +34,11 @@ WardRack="*res://scripts/autoload/ward_rack.gd"
 PotionDatabase="*res://scripts/autoload/potion_database.gd"
 RecipeDatabase="*res://scripts/autoload/recipe_database.gd"
 SigilDatabase="*res://scripts/autoload/sigil_database.gd"
+StoryFlags="*res://scripts/autoload/story_flags.gd"
 VisitorDatabase="*res://scripts/autoload/visitor_database.gd"
 CarvedSigilRegistry="*res://scripts/autoload/carved_sigil_registry.gd"
 GardenState="*res://scripts/autoload/garden_state.gd"
 KeepsakeDatabase="*res://scripts/autoload/keepsake_database.gd"
-StoryFlags="*res://scripts/autoload/story_flags.gd"
 PathBalance="*res://scripts/autoload/path_balance.gd"
 
 [rendering]

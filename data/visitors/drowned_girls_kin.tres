@@ -14,5 +14,6 @@ unhelped_text = "Боюсь, вона й далі кличе живих до в�
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Родинна реліквія, трохи харчів про запас"
+knocked_sets_flag = &"river_unrest_reported"
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.310547, 0.104167, 0.470703, 0.804688)
