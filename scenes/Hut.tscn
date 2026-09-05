@@ -207,16 +207,13 @@ zone_label = "Двері"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/Door"]
 shape = SubResource("Shape_door")
 
-[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/Door"]
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
 offset_left = -105.0
 offset_top = -175.0
 offset_right = 105.0
 offset_bottom = 175.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+color = Color(0.3, 0.22, 0.15, 0.18)
 
 [node name="Label" type="Label" parent="PanelCenter/Zones/Door"]
 mouse_filter = 2
@@ -295,16 +292,13 @@ slot_index = 0
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot1"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot1"]
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot1"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+color = Color(0.3, 0.22, 0.15, 0.2)
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot1"]
 mouse_filter = 2
@@ -335,16 +329,13 @@ slot_index = 1
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot2"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot2"]
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot2"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+color = Color(0.3, 0.22, 0.15, 0.2)
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot2"]
 mouse_filter = 2
@@ -375,16 +366,13 @@ slot_index = 2
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelCenter/Zones/WardSlot3"]
 shape = SubResource("Shape_wardslot")
 
-[node name="Visual" type="ReferenceRect" parent="PanelCenter/Zones/WardSlot3"]
+[node name="Visual" type="ColorRect" parent="PanelCenter/Zones/WardSlot3"]
 mouse_filter = 2
 offset_left = -25.0
 offset_top = -20.0
 offset_right = 25.0
 offset_bottom = 20.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+color = Color(0.3, 0.22, 0.15, 0.2)
 
 [node name="Icon" type="TextureRect" parent="PanelCenter/Zones/WardSlot3"]
 mouse_filter = 2
