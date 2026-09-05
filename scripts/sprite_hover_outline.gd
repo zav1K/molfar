@@ -12,6 +12,11 @@ extends CanvasItem
 @onready var _material: ShaderMaterial = material
 
 func _ready() -> void:
+	# outline_width is defined in on-screen pixels (see the shader's own
+	# comment) — needs this Control's actual displayed size, not the
+	# source texture's, or the line shrinks along with everything else
+	# once a ~1024px sprite is downscaled to fit a much smaller zone.
+	_material.set_shader_parameter("rect_size_px", size)
 	zone.hover_started.connect(_on_hover_started)
 	zone.hover_ended.connect(_on_hover_ended)
 
