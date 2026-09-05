@@ -23,7 +23,7 @@ const ZONE_SCENES := {
 ## testing. See the seeding block in _ready().
 const NEW_TEST_HERBS: Array[StringName] = [
 	&"calendula", &"chamomile", &"deadnettle", &"dill", &"elderberry",
-	&"hawthorn", &"hops", &"immortelle", &"lovage", &"marigold",
+	&"hawthorn", &"lovage", &"marigold",
 	&"nettle", &"oregano", &"parsley", &"rosehip", &"st_johns_wort", &"thyme",
 ]
 

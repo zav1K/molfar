@@ -24,6 +24,13 @@ extends CanvasLayer
 ## someone into money instead of what they actually offered nudges
 ## PathBalance toward the black path, whether or not they had anything to
 ## give in the first place.
+##
+## A visitor can also carry its own PathBalance weight independent of
+## money (satisfied_path_shift/unhelped_path_shift — e.g. mara_night: help
+## her and it costs something, refuse her and that's worth something too),
+## and, rarer still, a post-resolution choice (choice_prompt and friends)
+## for the one "thank you" that deserves an actual response instead of
+## just closing the window — see _on_choice_a_pressed/_on_choice_b_pressed.
 
 signal closed
 signal wait_requested(visitor: Visitor)
@@ -47,11 +54,15 @@ const TILE_WIDTH := 130.0
 @onready var demand_money_button: Button = $Panel/DemandMoneyButton
 @onready var finish_button: Button = $Panel/FinishButton
 @onready var listen_button: Button = $Panel/ListenButton
+@onready var choice_prompt_label: Label = $Panel/ChoicePromptLabel
+@onready var choice_a_button: Button = $Panel/ChoiceAButton
+@onready var choice_b_button: Button = $Panel/ChoiceBButton
 
 var _visitor: Visitor
 var _resolved: bool = false
 var _satisfied: bool = false
 var _payment_settled: bool = false ## true once the natural (or demanded) payment has been granted
+var _choice_made: bool = false ## true once choice_a/b picked, for a visitor that has one at all
 
 func _ready() -> void:
 	visible = false
@@ -61,12 +72,15 @@ func _ready() -> void:
 	demand_money_button.pressed.connect(_on_demand_money_pressed)
 	finish_button.pressed.connect(_on_finish_pressed)
 	listen_button.pressed.connect(_on_listen_pressed)
+	choice_a_button.pressed.connect(_on_choice_a_pressed)
+	choice_b_button.pressed.connect(_on_choice_b_pressed)
 
 func show_visitor(visitor: Visitor) -> void:
 	_visitor = visitor
 	_resolved = false
 	_satisfied = false
 	_payment_settled = false
+	_choice_made = false
 	var waiting_portrait := visitor.get_waiting_portrait()
 	portrait.texture = waiting_portrait
 	portrait.visible = waiting_portrait != null
@@ -79,12 +93,22 @@ func show_visitor(visitor: Visitor) -> void:
 func _rebuild_item_list() -> void:
 	for child in item_list.get_children():
 		child.queue_free()
+	# Awaiting a post-resolution choice takes over the Finish/DemandMoney
+	# row entirely until it's answered — see class doc.
+	var awaiting_choice := _resolved and _satisfied and _visitor.choice_prompt != "" and not _choice_made
 	send_away_button.visible = not _resolved
 	wait_button.visible = not _resolved
-	finish_button.visible = _resolved
+	finish_button.visible = _resolved and not awaiting_choice
 	take_button.visible = not _resolved and _visitor.offers_item_id != &""
 	listen_button.visible = not _resolved and _visitor.offers_item_id == &"" and _visitor.desired_result_id == &""
-	demand_money_button.visible = _resolved and _satisfied and not _payment_settled and _visitor.payment_type != Visitor.PaymentType.MONEY
+	demand_money_button.visible = _resolved and _satisfied and not _payment_settled and _visitor.payment_type != Visitor.PaymentType.MONEY and not awaiting_choice
+	choice_prompt_label.visible = awaiting_choice
+	choice_a_button.visible = awaiting_choice
+	choice_b_button.visible = awaiting_choice
+	if awaiting_choice:
+		choice_prompt_label.text = _visitor.choice_prompt
+		choice_a_button.text = _visitor.choice_a_label
+		choice_b_button.text = _visitor.choice_b_label
 	if _resolved:
 		return
 	if _visitor.offers_item_id != &"":
@@ -176,7 +200,9 @@ func _build_give_tile(icon_node: Control, label_text: String, item_id: StringNam
 	return tile
 
 func _on_give_pressed(item_id: StringName) -> void:
-	if item_id != _visitor.desired_result_id:
+	var matches := item_id == _visitor.desired_result_id \
+		or (_visitor.alt_desired_result_id != &"" and item_id == _visitor.alt_desired_result_id)
+	if not matches:
 		# Wrong guess — say so but don't waste the item, same "free to
 		# experiment" reasoning as brewing/carving elsewhere.
 		result_label.text = "Це не те, що мені треба..."
@@ -209,6 +235,23 @@ func _resolve(satisfied: bool) -> void:
 	if not satisfied and _visitor.refusal_loot_chance > 0.0 and randf() < _visitor.refusal_loot_chance:
 		PlayerInventory.add(_visitor.refusal_loot_item_id, 1)
 		result_label.text += "\n(Відходячи, лишає по собі щось із награбованого.)"
+	var shift := _visitor.satisfied_path_shift if satisfied else _visitor.unhelped_path_shift
+	if shift != 0:
+		PathBalance.shift(shift)
+	_rebuild_item_list()
+
+func _on_choice_a_pressed() -> void:
+	_apply_choice(_visitor.choice_a_response, _visitor.choice_a_path_shift)
+
+func _on_choice_b_pressed() -> void:
+	_apply_choice(_visitor.choice_b_response, _visitor.choice_b_path_shift)
+
+func _apply_choice(response: String, shift: int) -> void:
+	_choice_made = true
+	if response != "":
+		result_label.text += "\n\n%s" % response
+	if shift != 0:
+		PathBalance.shift(shift)
 	_rebuild_item_list()
 
 ## Whatever they were already offering — deferred until Finish so

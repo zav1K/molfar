@@ -1,20 +1,26 @@
 class_name GrimoireUI
 extends CanvasLayer
-## The грим "щоденник попереднього мольфара" spot on PanelRight's desk —
+## The "щоденник попереднього мольфара" spot on PanelRight's desk —
 ## a standing reference for all three guidebooks (GUIDEBOOKS.md is the
 ## source-of-truth content this reads off of): what each brew is for,
 ## which herbs go into it, what each sigil is for. Same tabbed-panel
 ## pattern as InventoryPanel's Kind.ALL "Chest" screen — one tab per
 ## section, content rebuilt into a scrollable list on tab switch.
 ##
-## Purely a lookup aid, same spirit as CarvingUI's reference book —
-## nothing here is clickable/selectable, it only reads the databases.
+## Three of the four tabs are purely a lookup aid, same spirit as
+## CarvingUI's reference book — nothing there is clickable/selectable,
+## it only reads the databases. The fourth, "Щоденник", is different: a
+## short in-fiction note per story beat (see STORY.md), appearing once
+## its StoryFlags flag is set — the one place in the game a player can
+## actually notice the scripted visitor chain is A Thing, rather than
+## just more one-off vignettes indistinguishable from everyone else's.
 
-enum Section { POTIONS, INGREDIENTS, SIGILS }
+enum Section { POTIONS, INGREDIENTS, SIGILS, DIARY }
 const SECTION_TITLES := {
 	Section.POTIONS: "Відвари",
 	Section.INGREDIENTS: "Трави",
 	Section.SIGILS: "Обереги",
+	Section.DIARY: "Щоденник",
 }
 
 const ENTRY_TITLE_FONT_SIZE := 16
@@ -22,6 +28,21 @@ const ENTRY_SUBTITLE_FONT_SIZE := 12
 const ENTRY_SUBTITLE_COLOR := Color(0.85, 0.75, 0.55)
 const NO_RECIPE_TEXT := "рецепт ще невідомий"
 const UNUSED_INGREDIENT_TEXT := "не використовується у відварах"
+const EMPTY_DIARY_TEXT := "Поки що нічого записати."
+
+## Curated, not a raw flag dump — StoryFlags accumulates all sorts of
+## small barter-for-information flags too, not every one of them is a
+## diary-worthy beat. Shown in this fixed order, skipping any flag not
+## yet set — so this reads as notes accumulating over the playthrough,
+## never a spoiler list of what's still to come.
+const DIARY_ENTRIES: Array[Dictionary] = [
+	{flag = &"river_unrest_reported", text = "Кажуть, потонула дівчина не знайшла спокою — кличе живих до води."},
+	{flag = &"met_drowned_woman", text = "Вона сама приходила. Просилась до вогню. Я не прогнав."},
+	{flag = &"mara_first_visit", text = "Мара навідалась цієї ночі. Каже, ми з нею не такі й різні."},
+	{flag = &"priest_confession_heard", text = "Священник зізнався: не відспівав ту дівчину як належить. Тепер не знаю, кому з нас двох важче з цим жити."},
+	{flag = &"soldier_stories_heard", text = "Вояк розповів дещо про дороги, якими йшов додому."},
+	{flag = &"upyr_curse_origin_known", text = "Упириця обмовилась, звідки насправді взялося їхнє прокляття."},
+]
 
 signal closed
 
@@ -68,6 +89,8 @@ func _rebuild() -> void:
 		Section.SIGILS:
 			for sigil in SigilDatabase.get_all():
 				list.add_child(_build_sigil_entry(sigil))
+		Section.DIARY:
+			_build_diary()
 
 func _build_potion_entry(potion: Potion) -> PanelContainer:
 	var recipe_lines: Array[String] = []
@@ -94,6 +117,23 @@ func _build_ingredient_entry(ingredient: Ingredient) -> PanelContainer:
 func _build_sigil_entry(sigil: Sigil) -> PanelContainer:
 	var subtitle := "оберіг" if sigil.kind == Sigil.Kind.WARD else "клеймо (прокляття)"
 	return _build_entry(sigil.display_name, subtitle, sigil.description)
+
+func _build_diary() -> void:
+	var shown := 0
+	for entry in DIARY_ENTRIES:
+		if StoryFlags.has_flag(entry.flag):
+			list.add_child(_build_diary_entry(entry.text))
+			shown += 1
+	if shown == 0:
+		list.add_child(_build_diary_entry(EMPTY_DIARY_TEXT))
+
+func _build_diary_entry(text: String) -> PanelContainer:
+	var panel := PanelContainer.new()
+	var body_label := Label.new()
+	body_label.text = text
+	body_label.autowrap_mode = TextServer.AUTOWRAP_WORD
+	panel.add_child(body_label)
+	return panel
 
 func _ingredients_text(ingredients: Dictionary) -> String:
 	var parts: Array[String] = []

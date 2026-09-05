@@ -21,6 +21,15 @@ extends Resource
 ## for now this is just what ReceptionUI checks a given item against.
 @export var desired_result_id: StringName = &""
 
+## A second acceptable answer, equally "correct" — for the rare visitor
+## whose own words support two different readings (e.g. jealous_wife's
+## "зніми з нього ті чари, або... поверни мені, що моє" is literally two
+## asks in one line). Same satisfied_text plays either way; the point
+## isn't different flavor text, it's that the player had to actually
+## decide which reading fit instead of pattern-matching one fixed id.
+## Empty (the default) means there's only one right answer, as before.
+@export var alt_desired_result_id: StringName = &""
+
 ## Reversed direction: a Keepsake (or any item) id this visitor is trying
 ## to hand OFF to the player instead of asking for something — e.g.
 ## found_doll's Солом'яна лялька. Optional either way, never a fail
@@ -86,6 +95,29 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## beat never repeats the way an ordinary client does.
 @export var required_flag: StringName = &""
 @export var knocked_sets_flag: StringName = &""
+
+## Moves PathBalance the moment this visitor resolves — satisfied_path_shift
+## on a successful give/take/listen, unhelped_path_shift on refusal/wrong
+## item/sent away. Zero (the default, for nearly everyone) means this
+## particular visitor doesn't carry moral weight either way; DemandMoneyButton's
+## override in ReceptionUI is separate and always applies regardless of this.
+@export var satisfied_path_shift: int = 0
+@export var unhelped_path_shift: int = 0
+
+## Optional post-resolution moral beat, shown instead of the plain Finish
+## button once satisfied — for the rare "thank you" that deserves an
+## actual response from the player rather than just closing the window
+## (currently only priest_secret_visit's confession). Empty choice_prompt
+## (the default) means no such beat; ReceptionUI just shows Finish as
+## normal. Both choices are equally valid — this isn't a right/wrong
+## quiz, it's another PathBalance-weighted fork like the shifts above.
+@export var choice_prompt: String = ""
+@export var choice_a_label: String = ""
+@export var choice_a_response: String = ""
+@export var choice_a_path_shift: int = 0
+@export var choice_b_label: String = ""
+@export var choice_b_response: String = ""
+@export var choice_b_path_shift: int = 0
 
 ## Normalized (0..1) content bounding box of the *waiting* portrait,
 ## ignoring transparent canvas padding — measured offline (see
