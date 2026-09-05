@@ -135,15 +135,11 @@ zone_label = "Сволок"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/DryingBeam"]
 shape = SubResource("Shape_dryingbeam")
 
-[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/DryingBeam"]
-mouse_filter = 2
-offset_left = -208.0
-offset_top = -56.0
-offset_right = 208.0
-offset_bottom = 56.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
+[node name="Visual" type="Line2D" parent="PanelLeft/Zones/DryingBeam"]
+points = PackedVector2Array(-211.3, -41.3, -122.4, -48.2, -7.5, -45.9, 107.3, -47.1, 239.3, -40.2, 239.3, 36.2, 204.9, 50.5, 164.7, 56.3, 118.7, 62, 78.6, 47.6, 38.4, 59.1, -7.5, 64.9, -64.9, 56.3, -110.9, 44.8, -151, 53.4, -185.5, 41.9, -211.3, 36.2)
+closed = true
+width = 3.0
+default_color = Color(0.95, 0.85, 0.55, 0.95)
 script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelLeft/Zones/DryingBeam"]
@@ -164,15 +160,11 @@ zone_label = "Полиця з зіллям"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="PanelLeft/Zones/PotionShelf"]
 shape = SubResource("Shape_potionshelf")
 
-[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/PotionShelf"]
-mouse_filter = 2
-offset_left = -136.0
-offset_top = -90.0
-offset_right = 137.0
-offset_bottom = 91.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
+[node name="Visual" type="Line2D" parent="PanelLeft/Zones/PotionShelf"]
+points = PackedVector2Array(-121.8, -67, -75.8, -81.3, -35.6, -75.6, 21.8, -61.2, 79.2, -69.8, 116.5, -64.1, 136.6, -35.4, 136.6, 24.9, 133.7, 62.2, 79.2, 82.3, 21.8, 76.6, -35.6, 47.9, -93.1, 79.4, -130.4, 68, -130.4, 4.8, -124.6, -35.4)
+closed = true
+width = 3.0
+default_color = Color(0.95, 0.85, 0.55, 0.95)
 script = ExtResource("29")
 
 [node name="Label" type="Label" parent="PanelLeft/Zones/PotionShelf"]
