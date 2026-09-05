@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3]
+[gd_scene load_steps=43 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -25,6 +25,8 @@
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_up_first.png" id="27"]
 [ext_resource type="Script" path="res://scripts/grimoire_ui.gd" id="28"]
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="29"]
+[ext_resource type="Shader" path="res://shaders/sprite_outline.gdshader" id="30"]
+[ext_resource type="Script" path="res://scripts/sprite_hover_outline.gd" id="31"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(178, 132)
@@ -46,6 +48,12 @@ size = Vector2(215, 201)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_liquid"]
 shader = ExtResource("17")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_outline_cauldron"]
+shader = ExtResource("30")
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_outline_chest"]
+shader = ExtResource("30")
 
 [sub_resource type="RectangleShape2D" id="Shape_desk"]
 size = Vector2(140, 90)
@@ -106,17 +114,8 @@ offset_bottom = 101.0
 texture = ExtResource("26")
 expand_mode = 1
 stretch_mode = 0
-
-[node name="Visual" type="ReferenceRect" parent="PanelLeft/Zones/Cauldron"]
-mouse_filter = 2
-offset_left = -75.0
-offset_top = -49.0
-offset_right = 75.0
-offset_bottom = 101.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+material = SubResource("ShaderMaterial_outline_cauldron")
+script = ExtResource("31")
 
 [node name="Label" type="Label" parent="PanelLeft/Zones/Cauldron"]
 mouse_filter = 2
@@ -498,17 +497,8 @@ offset_bottom = 35.0
 texture = ExtResource("5")
 expand_mode = 1
 stretch_mode = 0
-
-[node name="Visual" type="ReferenceRect" parent="PanelRight/Zones/Chest"]
-mouse_filter = 2
-offset_left = -72.0
-offset_top = -179.0
-offset_right = 70.0
-offset_bottom = 35.0
-editor_only = false
-border_color = Color(0.95, 0.85, 0.55, 0.95)
-border_width = 3.0
-script = ExtResource("29")
+material = SubResource("ShaderMaterial_outline_chest")
+script = ExtResource("31")
 
 [node name="Label" type="Label" parent="PanelRight/Zones/Chest"]
 mouse_filter = 2
