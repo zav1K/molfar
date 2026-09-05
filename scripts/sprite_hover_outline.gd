@@ -1,10 +1,12 @@
-extends CanvasItem
+extends Control
 ## Tweens sprite_outline.gdshader's `highlight` uniform 0..1 while the
 ## parent InteractionZone is hovered — the silhouette-outline equivalent
 ## of hover_glow.gd's modulate.a fade, for a zone with real cutout art
 ## (a TextureRect whose own material uses that shader) instead of a
 ## generic overlay rect. Attach directly to the sprite itself, not a
 ## separate "Visual" child — the shader reads that same sprite's texture.
+## extends Control (not the more generic CanvasItem) specifically for
+## `size` below — every attachment point here is a TextureRect.
 
 @export var fade_time: float = 0.15
 
