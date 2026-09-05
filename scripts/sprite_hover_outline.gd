@@ -19,6 +19,13 @@ func _ready() -> void:
 	# source texture's, or the line shrinks along with everything else
 	# once a ~1024px sprite is downscaled to fit a much smaller zone.
 	_material.set_shader_parameter("rect_size_px", size)
+	# A ShaderMaterial only reports a shader_parameter's value once it's
+	# been explicitly set at least once on that instance — the shader's
+	# own declared default (0.0) is used for rendering either way, but
+	# tween_property below reads the *current* value first to know what
+	# to interpolate from, and gets null instead of 0.0 without this,
+	# silently breaking the very first hover's fade-in.
+	_material.set_shader_parameter("highlight", 0.0)
 	zone.hover_started.connect(_on_hover_started)
 	zone.hover_ended.connect(_on_hover_ended)
 
