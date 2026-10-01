@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/anxious_neighbor.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Господиня з сусіднього хутора"
+problem_text = "\"Серце як не своє, тривога заїдає, спокою собі не найду відколи чоловік поїхав на полонину...\""
+true_threat = 0
+desired_result_id = &"calming_remedy"
+satisfied_text = "Ох, полегшало... дякую, мольфаре."
+unhelped_text = "Не те... тривога й досі точить."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.224609, 0.059896, 0.564453, 0.870313)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Яйця, сир, вовняна пряжа"

@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/drowned_woman_night.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Утоплениця"
+problem_text = "\"Тут... тепло. Пусти мене до вогню, мольфаре, я так змерзла у воді...\""
+true_threat = 2
+satisfied_text = "\"...дякую, що не прогнав.\""
+unhelped_text = "Вона мовчки повертається до ночі — і до води."
+night_visitor = true
+required_flag = &"river_unrest_reported"
+knocked_sets_flag = &"met_drowned_woman"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.28125, 0.055990, 0.4629, 0.898438)
+payment_type = 1
+payment_item_id = &"predecessor_relic"
+payment_flavor_text = "Повертає щось загублене у воді — річ, що належала попередньому мольфару"

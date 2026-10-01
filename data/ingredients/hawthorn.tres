@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/herb_bundle_hawthorn.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"hawthorn"
+display_name = "Глід"
+description = "Терпкі плоди глоду — для серця й для спокою, коли тривога не відпускає."
+source = 0
+rarity = 2
+season_start_day = 43
+season_end_day = 63
+festival_id = &""
+placeholder_color = Color(0.7, 0.15, 0.15, 1)
+bundle_icon = ExtResource("2")

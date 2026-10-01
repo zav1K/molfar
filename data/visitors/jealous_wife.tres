@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/jealous_wife.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Ревнива дружина"
+problem_text = "\"Приворожила його якась... я знаю, відчуваю. Зніми з нього ті чари, або... поверни мені, що моє...\""
+true_threat = 0
+desired_result_id = &"love_potion"
+alt_desired_result_id = &"anti_curse_remedy"
+satisfied_text = "Дякую, мольфаре. Тепер я знаю правду."
+unhelped_text = "Ти мені не допоміг. Доведеться самій щось робити."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Консерви, тканини"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.238281, 0.072917, 0.529297, 0.850260)

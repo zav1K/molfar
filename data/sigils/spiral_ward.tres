@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Sigil" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/sigil.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"spiral_ward"
+display_name = "Сонячна спіраль"
+description = "Спіраль — один з найстаріших сонячних знаків, що зустрічається в різьбленні по всій Європі. Різьбиться на дверях і скринях як оберіг достатку й тепла."
+kind = 0
+path_points = PackedVector2Array(0.92, 0.5, 0.74, 0.816, 0.4, 0.86, 0.175, 0.629, 0.221, 0.331, 0.468, 0.198, 0.704, 0.308, 0.753, 0.543, 0.608, 0.707, 0.411, 0.69, 0.317, 0.539, 0.376, 0.393, 0.509, 0.36, 0.597, 0.435, 0.588, 0.531, 0.522, 0.567)

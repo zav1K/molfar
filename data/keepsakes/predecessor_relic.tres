@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/keepsake.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"predecessor_relic"
+display_name = "Річ попереднього мольфара"
+description = "Повернута з води — хтось носив це до тебе. Чому вона опинилась там, і хто був той, кому вона належала?"
+placeholder_color = Color(0.4, 0.5, 0.55, 1)

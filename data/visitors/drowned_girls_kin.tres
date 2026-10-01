@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/drowned_girls_kin.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Родичка утопленої дівчини"
+problem_text = "\"Небога потонула навесні... тепер, кажуть, кличе живих до води. Боюсь, що то правда...\""
+true_threat = 0
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "Дякую, мольфаре. Хай упокоїться її душа."
+unhelped_text = "Боюсь, вона й далі кличе живих до води..."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Родинна реліквія, трохи харчів про запас"
+knocked_sets_flag = &"river_unrest_reported"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.310547, 0.104167, 0.470703, 0.804688)

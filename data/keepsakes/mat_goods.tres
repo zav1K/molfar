@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/keepsake.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"mat_goods"
+display_name = "Дрібні дарунки"
+description = "Хліб, полотно, яйця, сир, шкури — щирі дрібнички від тих, кому мольфар допоміг. Різне, зібране докупи."
+placeholder_color = Color(0.7, 0.55, 0.35, 1)

@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Sigil" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/sigil.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"zigzag_ward"
+display_name = "Кривулька"
+description = "Хвилястий різьблений візерунок — справжній гуцульський оберігальний мотив, яким прикрашали сволок і одвірки, щоб лихе не переступило поріг."
+kind = 0
+path_points = PackedVector2Array(0.1, 0.6, 0.3, 0.25, 0.5, 0.6, 0.7, 0.25, 0.9, 0.6)
