@@ -62,27 +62,47 @@ func get_all() -> Array[Visitor]:
 ## `exclude`, if given, is left out even if otherwise eligible — hut.gd
 ## passes today's/tonight's already-decided forced visitor (see
 ## CHAPTER1_SCRIPT) so a random slot earlier in the same phase can't
-## accidentally hand out the exact same visitor a second time.
+## accidentally hand out the exact same visitor a second time. If
+## `exclude` belongs to a recurring_group (e.g. a scripted Упир beat,
+## whose group also has ordinary variants in the ordinary pool), the
+## whole group is excluded too — otherwise an earlier random slot could
+## hand out upyr_brutal_male_lost, say, and the forced upyr_brutal_male
+## would still show up later that same night regardless, which is
+## exactly the "same person twice in one night" recurring_group exists
+## to prevent.
 ##
 ## A visitor with recurring_group set is additionally excluded unless
 ## it's still "pending" in that group's current cycle — see
-## _advance_group_cycle(). Unlike _seen (cleared every phase, see
-## reset_seen), this persists for the whole playthrough: every member
-## of a group (e.g. anxious_neighbor's 3 variants) has to come up once
-## before any of them can repeat, rather than risking the same one
-## again after just one other.
+## _advance_group_cycle(). That part persists for the whole
+## playthrough (unlike _seen): every member of a group (e.g.
+## anxious_neighbor's 3 variants) has to come up once before any of
+## them can repeat. Separately, picking ANY member of a group marks
+## the WHOLE group seen for the rest of this phase (not just that one
+## variant) — the same person showing up twice in one day, just as a
+## different variant, is exactly the thing recurring_group exists to
+## prevent.
 func get_random(night: bool, exclude: Visitor = null) -> Visitor:
+	var exclude_group: StringName = exclude.recurring_group if exclude != null else &""
 	var available := _visitors.filter(func(v: Visitor) -> bool:
 		return v.night_visitor == night and not _seen.has(v) and v != exclude \
+			and (exclude_group == &"" or v.recurring_group != exclude_group) \
 			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
 			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)) \
 			and (v.recurring_group == &"" or _group_pending.get(v.recurring_group, [v]).has(v)))
 	if available.is_empty():
 		return null
 	var visitor: Visitor = available[randi() % available.size()]
-	_seen.append(visitor)
 	if visitor.recurring_group != &"":
+		# The same person showing up twice in one day/night is wrong
+		# regardless of which of their variants it is — so seed ALL of
+		# that group into _seen here, not just the one picked, even
+		# though only one of them actually knocked.
+		for member in _visitors:
+			if member.recurring_group == visitor.recurring_group:
+				_seen.append(member)
 		_advance_group_cycle(visitor)
+	else:
+		_seen.append(visitor)
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor
