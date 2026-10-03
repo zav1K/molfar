@@ -1,4 +1,4 @@
-[gd_scene load_steps=39 format=3]
+[gd_scene load_steps=41 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
@@ -25,6 +25,7 @@
 [ext_resource type="Texture2D" path="res://assets/hut/cauldron_up_first.png" id="27"]
 [ext_resource type="Script" path="res://scripts/grimoire_ui.gd" id="28"]
 [ext_resource type="Script" path="res://scripts/hover_glow.gd" id="29"]
+[ext_resource type="Script" path="res://scripts/day_night_toast.gd" id="30"]
 
 [sub_resource type="RectangleShape2D" id="Shape_cauldron"]
 size = Vector2(178, 132)
@@ -64,6 +65,18 @@ size = Vector2(130, 90)
 
 [sub_resource type="RectangleShape2D" id="Shape_grimoire"]
 size = Vector2(110, 55)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_toast"]
+bg_color = Color(0.11, 0.09, 0.06, 0.92)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.9, 0.8, 0.5, 1)
+corner_radius_top_left = 4
+corner_radius_top_right = 4
+corner_radius_bottom_right = 4
+corner_radius_bottom_left = 4
 
 [node name="Hut" type="Node2D"]
 script = ExtResource("1")
@@ -1213,3 +1226,24 @@ offset_top = 490.0
 offset_right = 545.0
 offset_bottom = 525.0
 text = "Закрити"
+
+[node name="DayNightToast" type="CanvasLayer" parent="."]
+layer = 10
+script = ExtResource("30")
+
+[node name="Panel" type="PanelContainer" parent="DayNightToast"]
+mouse_filter = 2
+offset_left = 330.0
+offset_top = 220.0
+offset_right = 630.0
+offset_bottom = 268.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
+
+[node name="Label" type="Label" parent="DayNightToast/Panel"]
+mouse_filter = 2
+custom_minimum_size = Vector2(0, 48)
+horizontal_alignment = 1
+vertical_alignment = 1
+theme_override_font_sizes/font_size = 22
+theme_override_colors/font_color = Color(0.95, 0.85, 0.55, 1)
+text = "День 1"

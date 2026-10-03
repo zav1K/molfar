@@ -9,6 +9,7 @@ const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
 const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
+const DEBUG_SEED_AMOUNT := 10 ## see the potion/sigil seeding block in _ready().
 const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
 const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below, which forces exactly one.
@@ -71,6 +72,7 @@ const NEW_TEST_HERBS: Array[StringName] = [
 @onready var waiting_indicator: Button = $UI/WaitingIndicator
 @onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 @onready var calendar_label: Label = $UI/CalendarLabel
+@onready var day_night_toast: DayNightToast = $DayNightToast
 
 ## Calendar deliberately excluded — see _update_calendar_label. The zone
 ## node itself is also hidden in _ready() rather than deleted from the
@@ -159,12 +161,18 @@ func _ready() -> void:
 	if WardRack.get_slot(0) == &"":
 		WardRack.hang(0, &"garlic")
 
-	# DEBUG: seed one of every potion so the inventory grid has something
-	# to show for every icon/no-icon case while testing. Remove once
-	# brewing is the only way potions actually enter the inventory.
+	# DEBUG: seed a generous stock of every potion AND every sigil so a
+	# full click-through of Розділ 1 never runs dry mid-chapter — several
+	# recipes (calming_remedy, cleansing_remedy, zigzag_ward...) get asked
+	# for more than once across 7 days, by both the scripted beats and
+	# the ordinary background rotation. Remove once brewing/carving are
+	# the only way these actually enter the inventory.
 	for potion in PotionDatabase.get_all():
 		if not PlayerInventory.has(potion.id):
-			PlayerInventory.add(potion.id, 1)
+			PlayerInventory.add(potion.id, DEBUG_SEED_AMOUNT)
+	for sigil in SigilDatabase.get_all():
+		if not PlayerInventory.has(sigil.id):
+			PlayerInventory.add(sigil.id, DEBUG_SEED_AMOUNT)
 
 	_knock_with_random_visitor()
 
@@ -334,6 +342,7 @@ func _advance_visitor_slot() -> void:
 			_night_visitor_count = 0
 			_night_forced_used = false
 			GameCalendar.set_phase(GameCalendar.Phase.NIGHT)
+			day_night_toast.show_message("Ніч %d" % _story_day)
 	else:
 		_night_visitor_count += 1
 		if _night_visitor_count >= _night_quota:
@@ -343,6 +352,7 @@ func _advance_visitor_slot() -> void:
 			_day_forced_used = false
 			_story_day += 1
 			GameCalendar.set_phase(GameCalendar.Phase.DAY)
+			day_night_toast.show_message("День %d" % _story_day)
 
 func _current_day_cap() -> int:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
