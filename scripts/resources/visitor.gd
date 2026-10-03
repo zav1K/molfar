@@ -103,6 +103,15 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## the priest's finale line noticing the player sheltered upyr_hidden).
 @export var satisfied_sets_flag: StringName = &""
 
+## Groups together several independent Visitor resources that are "the
+## same person" with a different request each (e.g. anxious_neighbor /
+## anxious_neighbor_livestock) — same display_name/portrait, never
+## meant to repeat back-to-back. Empty (the default) means this visitor
+## isn't part of such a group and is never excluded on that basis; see
+## VisitorDatabase.get_random()'s last-shown-per-group tracking, which
+## is the only thing that actually reads this.
+@export var recurring_group: StringName = &""
+
 ## Moves PathBalance the moment this visitor resolves — satisfied_path_shift
 ## on a successful give/take/listen, unhelped_path_shift on refusal/wrong
 ## item/sent away. Zero (the default, for nearly everyone) means this

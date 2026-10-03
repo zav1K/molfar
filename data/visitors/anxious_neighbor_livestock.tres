@@ -16,3 +16,4 @@ waiting_portrait_content_rect = Rect2(0.224609, 0.059896, 0.564453, 0.870313)
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Яйця, сир, вовняна пряжа"
+recurring_group = &"anxious_neighbor"

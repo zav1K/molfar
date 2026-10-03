@@ -22,6 +22,7 @@ const SPECIAL_VISITORS_DIR := "res://data/visitors/special/"
 
 var _visitors: Array[Visitor] = []
 var _seen: Array[Visitor] = []
+var _last_shown_in_group: Dictionary = {} # StringName (recurring_group) -> Visitor
 
 func _ready() -> void:
 	_load_dir(VISITORS_DIR)
@@ -62,15 +63,27 @@ func get_all() -> Array[Visitor]:
 ## passes today's/tonight's already-decided forced visitor (see
 ## CHAPTER1_SCRIPT) so a random slot earlier in the same phase can't
 ## accidentally hand out the exact same visitor a second time.
+##
+## A visitor with recurring_group set is additionally excluded if it
+## was the LAST one shown from that group — unlike _seen (cleared every
+## phase, see reset_seen), this check persists for the whole
+## playthrough, so e.g. anxious_neighbor and anxious_neighbor_livestock
+## strictly alternate instead of risking the same line twice in a row
+## across different days. It only ever blocks that one most-recent
+## pick, not the group's other members, so a 2-variant group still
+## cycles freely (A, B, A, B...) rather than locking up.
 func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 	var available := _visitors.filter(func(v: Visitor) -> bool:
 		return v.night_visitor == night and not _seen.has(v) and v != exclude \
 			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
-			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)))
+			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)) \
+			and (v.recurring_group == &"" or v != _last_shown_in_group.get(v.recurring_group)))
 	if available.is_empty():
 		return null
 	var visitor: Visitor = available[randi() % available.size()]
 	_seen.append(visitor)
+	if visitor.recurring_group != &"":
+		_last_shown_in_group[visitor.recurring_group] = visitor
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor

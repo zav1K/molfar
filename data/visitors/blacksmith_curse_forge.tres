@@ -16,3 +16,4 @@ waiting_portrait_content_rect = Rect2(0.246094, 0.053385, 0.476563, 0.872396)
 payment_type = 1
 payment_item_id = &"mat_metal"
 payment_flavor_text = "Кований метал і деталі для обладнання"
+recurring_group = &"blacksmith_curse"

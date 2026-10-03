@@ -16,3 +16,4 @@ waiting_portrait_content_rect = Rect2(0.238281, 0.052083, 0.541016, 0.867188)
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Дичина, шкури й хутро"
+recurring_group = &"sleepless_hunter"
