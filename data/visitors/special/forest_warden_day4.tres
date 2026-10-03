@@ -21,3 +21,5 @@ choice_a_label = "Піду з тобою, подивимось разом."
 choice_a_response = "\"Ні-ні. Не треба тобі туди. Я й сам не знаю, нащо йду.\""
 choice_b_label = "Нікому поки не кажи. Почекай."
 choice_b_response = "\"Чекав уже досить. Не можу більше сам це носити.\""
+
+required_flag = &"__chapter1_scripted_only__"

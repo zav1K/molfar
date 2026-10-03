@@ -15,3 +15,5 @@ choice_a_label = "Не сьогодні."
 choice_a_response = "\"Шкода. Ти ще навчишся не боятись мене.\" — зникає без образи."
 choice_b_label = "Промовчати."
 choice_b_response = "Вона сміється, тихо й не зловісно, і зникає сама."
+
+required_flag = &"__chapter1_scripted_only__"

@@ -44,12 +44,12 @@ const TILE_WIDTH := 130.0
 
 @onready var portrait: TextureRect = $Panel/Portrait
 @onready var name_label: Label = $Panel/NameLabel
-@onready var problem_label: Label = $Panel/ProblemLabel
+@onready var problem_label: TypewriterLabel = $Panel/ProblemLabel
 @onready var item_list: GridContainer = $Panel/ItemListScroll/ItemList
 @onready var take_button: Button = $Panel/TakeButton
 @onready var send_away_button: Button = $Panel/SendAwayButton
 @onready var wait_button: Button = $Panel/WaitButton
-@onready var result_label: Label = $Panel/ResultLabel
+@onready var result_label: TypewriterLabel = $Panel/ResultLabel
 @onready var demand_money_button: Button = $Panel/DemandMoneyButton
 @onready var finish_button: Button = $Panel/FinishButton
 @onready var listen_button: Button = $Panel/ListenButton
@@ -84,8 +84,8 @@ func show_visitor(visitor: Visitor) -> void:
 	portrait.texture = waiting_portrait
 	portrait.visible = waiting_portrait != null
 	name_label.text = visitor.display_name
-	problem_label.text = visitor.problem_text
-	result_label.text = ""
+	problem_label.show_text(visitor.problem_text)
+	result_label.show_text("")
 	_rebuild_item_list()
 	visible = true
 
@@ -204,7 +204,7 @@ func _on_give_pressed(item_id: StringName) -> void:
 	if not matches:
 		# Wrong guess — say so but don't waste the item, same "free to
 		# experiment" reasoning as brewing/carving elsewhere.
-		result_label.text = "Це не те, що мені треба..."
+		result_label.show_text("Це не те, що мені треба...")
 		return
 	PlayerInventory.remove(item_id)
 	if SigilDatabase.get_sigil(item_id) != null:
@@ -228,12 +228,13 @@ func _on_wait_pressed() -> void:
 func _resolve(satisfied: bool) -> void:
 	_resolved = true
 	_satisfied = satisfied
-	result_label.text = _visitor.satisfied_text if satisfied else _visitor.unhelped_text
+	var full_text := _visitor.satisfied_text if satisfied else _visitor.unhelped_text
 	if satisfied and _visitor.payment_flavor_text != "":
-		result_label.text += "\n(%s)" % _visitor.payment_flavor_text
+		full_text += "\n(%s)" % _visitor.payment_flavor_text
 	if not satisfied and _visitor.refusal_loot_chance > 0.0 and randf() < _visitor.refusal_loot_chance:
 		PlayerInventory.add(_visitor.refusal_loot_item_id, 1)
-		result_label.text += "\n(Відходячи, лишає по собі щось із награбованого.)"
+		full_text += "\n(Відходячи, лишає по собі щось із награбованого.)"
+	result_label.show_text(full_text)
 	var shift := _visitor.satisfied_path_shift if satisfied else _visitor.unhelped_path_shift
 	if shift != 0:
 		PathBalance.shift(shift)
@@ -247,10 +248,13 @@ func _on_choice_a_pressed() -> void:
 func _on_choice_b_pressed() -> void:
 	_apply_choice(_visitor.choice_b_response, _visitor.choice_b_path_shift)
 
+## Replaces the result text outright rather than appending to
+## satisfied_text/unhelped_text — showing both stacked together read as
+## one garbled block instead of a reply to a question actually asked.
 func _apply_choice(response: String, shift: int) -> void:
 	_choice_made = true
 	if response != "":
-		result_label.text += "\n\n%s" % response
+		result_label.show_text(response)
 	if shift != 0:
 		PathBalance.shift(shift)
 	_rebuild_item_list()
@@ -284,7 +288,7 @@ func _on_demand_money_pressed() -> void:
 	PlayerInventory.add(DEMAND_MONEY_ITEM_ID, 1)
 	PathBalance.shift(PathBalance.DEMAND_MONEY_SHIFT)
 	_payment_settled = true
-	result_label.text += "\n(Ти наполіг на платі грошима замість того, що пропонували.)"
+	result_label.append_instant("\n(Ти наполіг на платі грошима замість того, що пропонували.)")
 	_rebuild_item_list()
 
 func _on_finish_pressed() -> void:

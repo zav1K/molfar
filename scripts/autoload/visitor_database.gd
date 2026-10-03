@@ -11,6 +11,11 @@ extends Node
 ## required_flag/knocked_sets_flag on Visitor) rather than ordinary
 ## repeating clients — kept in their own subfolder just so they're easy
 ## to tell apart from the regular rotation while browsing the data.
+## Розділ 1's beats (see hut.gd's CHAPTER1_SCRIPT) are all loaded by
+## direct `load()`/path from hut.gd instead of through get_random() —
+## required_flag = &"__chapter1_scripted_only__" on every one of them
+## is a deliberately-never-set sentinel keeping them out of this pool
+## entirely, since direct load() doesn't check required_flag at all.
 
 const VISITORS_DIR := "res://data/visitors/"
 const SPECIAL_VISITORS_DIR := "res://data/visitors/special/"
@@ -52,9 +57,14 @@ func get_all() -> Array[Visitor]:
 ## knocked_sets_flag itself is set here, the moment they're picked —
 ## same "seen at the door is enough" reasoning as problem_text playing
 ## regardless of invite/refuse.
-func get_random(night: bool) -> Visitor:
+##
+## `exclude`, if given, is left out even if otherwise eligible — hut.gd
+## passes today's/tonight's already-decided forced visitor (see
+## CHAPTER1_SCRIPT) so a random slot earlier in the same phase can't
+## accidentally hand out the exact same visitor a second time.
+func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 	var available := _visitors.filter(func(v: Visitor) -> bool:
-		return v.night_visitor == night and not _seen.has(v) \
+		return v.night_visitor == night and not _seen.has(v) and v != exclude \
 			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
 			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)))
 	if available.is_empty():

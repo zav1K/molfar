@@ -12,7 +12,8 @@ const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around befor
 const DEBUG_SEED_AMOUNT := 10 ## see the potion/sigil seeding block in _ready().
 const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
-const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below, which forces exactly one.
+const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below (freeplay after it ends).
+const SCRIPTED_NIGHT_CAP := 3 ## default night_cap for a scripted night — see CHAPTER1_SCRIPT.
 
 ## Розділ 1 ("Поріг") — deterministic day-by-day script, see STORY.md.
 ## Keyed by _story_day (1-based, counting from a fresh playthrough — see
@@ -20,16 +21,23 @@ const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below, wh
 ## falls back to fully random day/night rotation, same as before this
 ## chapter existed.
 ##
-## "day": forced as the LAST day-phase knock (day_visitor_count reaches
-## day_cap - 1) rather than the first, so it reads as Лісник/Вісник
-## showing up toward evening, after the ordinary day's clients — see
-## STORY.md's "Увечері" framing. With day_cap 1 (Day 7) that's also the
-## only knock, so "last" and "first" coincide.
-## "day_cap": overrides DAY_VISITOR_CAP for that day only; omitted means
-## the normal cap applies.
-## "night": forced as the night phase's only visitor (quota forced to 1
-## instead of the usual random NIGHT_VISITOR_MIN..MAX range). A day with
-## no "night" entry (none in this chapter) would fall back to normal.
+## "day"/"night": forced as that phase's LAST knock (slot count reaches
+## cap - 1) rather than the first, so it reads as Лісник/Вісник/the
+## night's нечисть showing up after the ordinary clients already came
+## and went — see STORY.md's "Увечері" framing. Earlier slots in that
+## same phase are ordinary VisitorDatabase.get_random() picks, same as
+## outside this chapter — EXCLUDING today's/tonight's own forced
+## visitor specifically, so it can't also turn up early by chance and
+## then again when forced (see _knock_with_random_visitor). Every
+## special/ Visitor is additionally sentinel-gated out of get_random()
+## entirely regardless (see VisitorDatabase) — the exclude param only
+## matters for a forced visitor reused from the ordinary pool, like the
+## upyr_* ones below.
+## "day_cap"/"night_cap": override DAY_VISITOR_CAP/SCRIPTED_NIGHT_CAP
+## for that day/night only. Day 7's night_cap is 1 (no random upyr
+## before the priest) — every other scripted night defaults to
+## SCRIPTED_NIGHT_CAP (a couple of ordinary нечисть before tonight's
+## scripted one, not night-then-immediately-morning).
 const CHAPTER1_SCRIPT := {
 	1: {"day": "res://data/visitors/special/forest_warden_day1.tres", "night": "res://data/visitors/special/mavka_night1.tres"},
 	2: {"day": "res://data/visitors/special/forest_warden_day2.tres", "night": "res://data/visitors/upyr_brutal_male.tres"},
@@ -37,7 +45,7 @@ const CHAPTER1_SCRIPT := {
 	4: {"day": "res://data/visitors/special/forest_warden_day4.tres", "night": "res://data/visitors/upyr_hidden_female.tres"},
 	5: {"day": "res://data/visitors/special/forest_warden_day5.tres", "night": "res://data/visitors/upyr_seeking_cure.tres"},
 	6: {"night": "res://data/visitors/special/upyr_night6_strange.tres"},
-	7: {"day": "res://data/visitors/special/visnyk_day7.tres", "day_cap": 1, "night": "res://data/visitors/special/priest_day7.tres"},
+	7: {"day": "res://data/visitors/special/visnyk_day7.tres", "day_cap": 1, "night": "res://data/visitors/special/priest_day7.tres", "night_cap": 1},
 }
 
 ## Zones that are portals to another scene, keyed by zone_id.
@@ -338,7 +346,8 @@ func _advance_visitor_slot() -> void:
 		_day_visitor_count += 1
 		if _day_visitor_count >= _current_day_cap():
 			var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
-			_night_quota = 1 if script.has("night") else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
+			_night_quota = script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") \
+				else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
 			_night_visitor_count = 0
 			_night_forced_used = false
 			GameCalendar.set_phase(GameCalendar.Phase.NIGHT)
@@ -358,23 +367,39 @@ func _current_day_cap() -> int:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
 	return script.get("day_cap", DAY_VISITOR_CAP)
 
+func _current_night_cap() -> int:
+	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+	return script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") else NIGHT_VISITOR_MAX
+
 func _knock_with_random_visitor() -> void:
 	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
 	var visitor := _pop_forced_visitor(is_night)
 	if visitor == null:
-		visitor = VisitorDatabase.get_random(is_night)
+		# Exclude today's/tonight's own forced visitor (if any) from the
+		# ordinary random slots leading up to it — see CHAPTER1_SCRIPT's
+		# doc. A plain load(), not _load_forced_visitor(): just a peek
+		# for identity comparison, no knocked_sets_flag side effect yet.
+		var todays_forced := _peek_forced_path(is_night)
+		var exclude: Visitor = load(todays_forced) if todays_forced != "" else null
+		visitor = VisitorDatabase.get_random(is_night, exclude)
 	if visitor == null:
 		return
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
+func _peek_forced_path(is_night: bool) -> String:
+	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+	return script.get("night" if is_night else "day", "")
+
 ## Розділ 1's deterministic override of the ordinary random pool — see
 ## CHAPTER1_SCRIPT. Returns null (falls back to VisitorDatabase.get_random)
 ## whenever today/tonight has no scripted visitor, it's already been used,
-## or — for the day phase only — this isn't yet the last slot before night.
+## or this isn't yet that phase's last slot (cap - 1).
 func _pop_forced_visitor(is_night: bool) -> Visitor:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
 	if is_night:
 		if _night_forced_used or not script.has("night"):
+			return null
+		if _night_visitor_count != _current_night_cap() - 1:
 			return null
 		_night_forced_used = true
 		return _load_forced_visitor(script["night"])

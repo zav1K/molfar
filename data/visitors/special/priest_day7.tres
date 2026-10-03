@@ -16,3 +16,5 @@ choice_a_path_shift = 1
 choice_b_label = "Засумніватись"
 choice_b_response = "Чому він не просить захисту для себе, а одразу велить, кого цуратись? Ти не кажеш цього вголос — лише дивишся довше, ніж годиться."
 choice_b_path_shift = -1
+
+required_flag = &"__chapter1_scripted_only__"

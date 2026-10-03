@@ -22,7 +22,7 @@ const MAX_FIT_FRACTION := 0.98 ## small margin so the figure doesn't touch the b
 @onready var portrait_box: Control = $Panel/PortraitBox
 @onready var portrait_icon: TextureRect = $Panel/PortraitBox/Icon
 @onready var name_label: Label = $Panel/DialogueBox/NameLabel
-@onready var problem_label: Label = $Panel/DialogueBox/ProblemLabel
+@onready var problem_label: TypewriterLabel = $Panel/DialogueBox/ProblemLabel
 @onready var invite_button: Button = $Panel/DialogueBox/InviteButton
 @onready var refuse_button: Button = $Panel/DialogueBox/RefuseButton
 
@@ -38,7 +38,7 @@ func show_visitor(visitor: Visitor) -> void:
 		portrait_icon.texture = tex
 		_fit_portrait(visitor, tex)
 	name_label.text = visitor.display_name
-	problem_label.text = visitor.problem_text
+	problem_label.show_text(visitor.problem_text)
 	visible = true
 
 ## Scales the measured content rect to fill portrait_box's height — the

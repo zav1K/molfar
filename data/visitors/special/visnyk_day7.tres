@@ -9,3 +9,5 @@ problem_text = "\"Мольфаре... Лісника знайшли вранці
 satisfied_text = "Він хреститься й іде далі, нести звістку сусідам."
 unhelped_text = "Він хреститься й іде далі, нести звістку сусідам."
 knocked_sets_flag = &"lisnyk_found_dead"
+
+required_flag = &"__chapter1_scripted_only__"

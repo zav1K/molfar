@@ -17,3 +17,5 @@ choice_a_label = "Зачекай, не поспішай."
 choice_a_response = "\"Зачекаю до завтра, добре. Але піду.\""
 choice_b_label = "Правильно. Так і зроби."
 choice_b_response = "\"Легше, коли хтось каже, що я не з глузду з'їхав.\""
+
+required_flag = &"__chapter1_scripted_only__"

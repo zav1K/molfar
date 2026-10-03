@@ -15,3 +15,5 @@ waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Дикі гриби, мед, рідкісні лісові трави"
+
+required_flag = &"__chapter1_scripted_only__"

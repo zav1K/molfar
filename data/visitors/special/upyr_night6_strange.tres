@@ -14,3 +14,5 @@ night_visitor = true
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.226563, 0.057292, 0.541016, 0.872396)
 knocked_sets_flag = &"strange_night_before_death"
+
+required_flag = &"__chapter1_scripted_only__"

@@ -20,3 +20,5 @@ choice_a_label = "Що саме бачив?"
 choice_a_response = "\"Та... тінь якусь між дерев. Може, й олень. Чого я взагалі про це завів?\""
 choice_b_label = "Відпочинь, то й мине."
 choice_b_response = "\"Твоя правда. Зайве все це.\""
+
+required_flag = &"__chapter1_scripted_only__"
