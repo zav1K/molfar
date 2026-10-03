@@ -22,7 +22,7 @@ const SPECIAL_VISITORS_DIR := "res://data/visitors/special/"
 
 var _visitors: Array[Visitor] = []
 var _seen: Array[Visitor] = []
-var _last_shown_in_group: Dictionary = {} # StringName (recurring_group) -> Visitor
+var _group_pending: Dictionary = {} # StringName (recurring_group) -> Array[Visitor], this cycle's not-yet-shown members
 
 func _ready() -> void:
 	_load_dir(VISITORS_DIR)
@@ -64,29 +64,42 @@ func get_all() -> Array[Visitor]:
 ## CHAPTER1_SCRIPT) so a random slot earlier in the same phase can't
 ## accidentally hand out the exact same visitor a second time.
 ##
-## A visitor with recurring_group set is additionally excluded if it
-## was the LAST one shown from that group — unlike _seen (cleared every
-## phase, see reset_seen), this check persists for the whole
-## playthrough, so e.g. anxious_neighbor and anxious_neighbor_livestock
-## strictly alternate instead of risking the same line twice in a row
-## across different days. It only ever blocks that one most-recent
-## pick, not the group's other members, so a 2-variant group still
-## cycles freely (A, B, A, B...) rather than locking up.
+## A visitor with recurring_group set is additionally excluded unless
+## it's still "pending" in that group's current cycle — see
+## _advance_group_cycle(). Unlike _seen (cleared every phase, see
+## reset_seen), this persists for the whole playthrough: every member
+## of a group (e.g. anxious_neighbor's 3 variants) has to come up once
+## before any of them can repeat, rather than risking the same one
+## again after just one other.
 func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 	var available := _visitors.filter(func(v: Visitor) -> bool:
 		return v.night_visitor == night and not _seen.has(v) and v != exclude \
 			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
 			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)) \
-			and (v.recurring_group == &"" or v != _last_shown_in_group.get(v.recurring_group)))
+			and (v.recurring_group == &"" or _group_pending.get(v.recurring_group, [v]).has(v)))
 	if available.is_empty():
 		return null
 	var visitor: Visitor = available[randi() % available.size()]
 	_seen.append(visitor)
 	if visitor.recurring_group != &"":
-		_last_shown_in_group[visitor.recurring_group] = visitor
+		_advance_group_cycle(visitor)
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor
+
+## Marks `visitor` as shown this cycle for its recurring_group. Once
+## every member of the group has had a turn, starts a fresh cycle —
+## minus `visitor` itself, so the member that just finished one cycle
+## can't also be the first pick of the next (no back-to-back repeat
+## right at the seam between cycles either).
+func _advance_group_cycle(visitor: Visitor) -> void:
+	var group := visitor.recurring_group
+	if not _group_pending.has(group):
+		_group_pending[group] = _visitors.filter(func(v: Visitor) -> bool: return v.recurring_group == group)
+	_group_pending[group].erase(visitor)
+	if _group_pending[group].is_empty():
+		_group_pending[group] = _visitors.filter(func(v: Visitor) -> bool:
+			return v.recurring_group == group and v != visitor)
 
 ## Clears the seen-list so everyone can knock again — called by hut.gd
 ## on every day/night phase flip.
