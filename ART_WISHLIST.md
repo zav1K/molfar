@@ -23,16 +23,23 @@
 
 ## Пріоритет 2 — часково закрито, є робочий fallback на решту
 
-### "Waiting"-портрети відвідувачів (20 з 21 не мають окремої пози)
+### Портрети для сюжету "Поріг" (2 нові обличчя, відсутні взагалі)
+Мавка й Нічниця (`data/visitors/special/mavka_night1.tres`,
+`nichnytsia_night3.tres`) зараз взагалі без `portrait_door` — поріг
+показує лише ім'я й текст, без постаті. Решта нових сюжетних файлів
+(Лісник × 5, Вісник, Священник, "дивний" Упир Дня 6) перевикористовують
+наявні портрети (`forest_warden.png`, `upyr_brutal_male.png`) або теж
+ще без обличчя (Вісник/Священник — нові персонажі).
+
+### "Waiting"-портрети відвідувачів (не мають окремої пози)
 Коли гостя запрошено й він чекає всередині (`ReceptionUI`), гра показує
 `portrait_waiting`, а за відсутності — просто повторює порогову позу
 (`get_waiting_portrait()` у `visitor.gd`). Працює, але кожен гість виглядає
 однаково і на порозі, і в хаті. Список усіх, кому бракує другої пози:
 anxious_neighbor, blacksmith_curse, coughing_child_mother, cradle_charm_mother,
-drowned_girls_kin, drowned_woman_night, forest_warden, found_doll, hail_elder,
-jealous_wife, mara_night, new_house_owner, runaway_lovers, sleepless_hunter,
-priest_secret_visit, upyr_brutal_female, upyr_brutal_male, upyr_hidden_female,
-upyr_seeking_cure, wake_guest, wandering_soldier.
+forest_warden, found_doll, hail_elder, jealous_wife, new_house_owner,
+runaway_lovers, sleepless_hunter, upyr_brutal_female, upyr_brutal_male,
+upyr_hidden_female, upyr_seeking_cure, wake_guest, wandering_soldier.
 
 ### Речі-реліквії без іконки (4 з 7 лишилось)
 Зараз показуються сірим квадратом-плейсхолдером у скрині.
@@ -41,7 +48,6 @@ upyr_seeking_cure, wake_guest, wandering_soldier.
 - Дрібні дарунки (`mat_goods`)
 - ~~Кований метал (`mat_metal`)~~
 - Дерево (`mat_wood`)
-- Річ попереднього мольфара (`predecessor_relic`)
 - ~~Солом'яна лялька (`straw_doll`)~~
 
 ---

@@ -17,3 +17,5 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Виглядає як звичайний дарунок..."
 payment_is_deceptive = true
+knocked_sets_flag = &"met_hidden_upyr"
+satisfied_sets_flag = &"helped_hidden_upyr"

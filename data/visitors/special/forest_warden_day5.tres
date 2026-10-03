@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/forest_warden.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Лісник"
+problem_text = "\"Мольфаре, я ось що надумав. Піду, скажу все, що бачив, отцю — може, хоч він щось вдіє, чи заспокоїть мене, що то маячня стара. Дякую тобі — відколи твої відвари п'ю, вперше за тижні сплю, не прокидаючись.\""
+satisfied_text = "\"Дякую тобі за все, мольфаре.\""
+unhelped_text = "\"Ну, піду тоді так.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
+knocked_sets_flag = &"lisnyk_decided_to_tell"
+choice_prompt = "Що питаєш?"
+choice_a_label = "Зачекай, не поспішай."
+choice_a_response = "\"Зачекаю до завтра, добре. Але піду.\""
+choice_b_label = "Правильно. Так і зроби."
+choice_b_response = "\"Легше, коли хтось каже, що я не з глузду з'їхав.\""

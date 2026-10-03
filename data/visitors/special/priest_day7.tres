@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Священник"
+problem_text = "\"Не допомагай тим, кого бачив коло хати ночами, мольфаре. Нечисть забрала Лісника — і тих, хто її переховує, тримає на совісті те саме. Начувайся й ти.\""
+satisfied_text = "Він чекає відповіді, не сідаючи."
+unhelped_text = "Він іде, не чекаючи відповіді."
+knocked_sets_flag = &"priest_forbade_nechyst"
+choice_prompt = "Повіриш йому?"
+choice_a_label = "Повірити"
+choice_a_response = "Ти киваєш, не питаючи зайвого... Він ніби й сам полегшено зітхає, хоч і намагається цього не показати."
+choice_a_path_shift = 1
+choice_b_label = "Засумніватись"
+choice_b_response = "Чому він не просить захисту для себе, а одразу велить, кого цуратись? Ти не кажеш цього вголос — лише дивишся довше, ніж годиться."
+choice_b_path_shift = -1

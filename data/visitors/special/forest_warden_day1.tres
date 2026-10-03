@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/forest_warden.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Лісник"
+problem_text = "\"Добре, що застав тебе вдома, мольфаре. Не можу вже спати як слід — щось мені ввижається, відколи був у лісі за Чорним яром. Либонь, старію, чи просто дурниці верзуться. Звар мені чогось заспокійливого, будь ласка, поки сам собі не напридумував зайвого.\""
+desired_result_id = &"calming_remedy"
+satisfied_text = "\"Дякую. Може, це й справді просто нерви.\""
+unhelped_text = "\"Ну, піду тоді так. Може, само минеться.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Дикі гриби, мед, рідкісні лісові трави"
+choice_prompt = "Що питаєш?"
+choice_a_label = "Що саме бачив?"
+choice_a_response = "\"Та... тінь якусь між дерев. Може, й олень. Чого я взагалі про це завів?\""
+choice_b_label = "Відпочинь, то й мине."
+choice_b_response = "\"Твоя правда. Зайве все це.\""

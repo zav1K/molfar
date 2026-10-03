@@ -96,6 +96,13 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 @export var required_flag: StringName = &""
 @export var knocked_sets_flag: StringName = &""
 
+## Set only when this visitor actually resolves satisfied (helped/given/
+## heard out, never on refusal) — unlike knocked_sets_flag, which fires
+## regardless of outcome. For a later visitor's dialogue to react to
+## *how* an earlier one went, not just that they showed up at all (e.g.
+## the priest's finale line noticing the player sheltered upyr_hidden).
+@export var satisfied_sets_flag: StringName = &""
+
 ## Moves PathBalance the moment this visitor resolves — satisfied_path_shift
 ## on a successful give/take/listen, unhelped_path_shift on refusal/wrong
 ## item/sent away. Zero (the default, for nearly everyone) means this
@@ -107,7 +114,7 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## Optional post-resolution moral beat, shown instead of the plain Finish
 ## button once satisfied — for the rare "thank you" that deserves an
 ## actual response from the player rather than just closing the window
-## (currently only priest_secret_visit's confession). Empty choice_prompt
+## (currently used by priest_day7's finale, among others). Empty choice_prompt
 ## (the default) means no such beat; ReceptionUI just shows Finish as
 ## normal. Both choices are equally valid — this isn't a right/wrong
 ## quiz, it's another PathBalance-weighted fork like the shifts above.

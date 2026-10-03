@@ -36,12 +36,14 @@ const EMPTY_DIARY_TEXT := "Поки що нічого записати."
 ## yet set — so this reads as notes accumulating over the playthrough,
 ## never a spoiler list of what's still to come.
 const DIARY_ENTRIES: Array[Dictionary] = [
-	{flag = &"river_unrest_reported", text = "Кажуть, потонула дівчина не знайшла спокою — кличе живих до води."},
-	{flag = &"met_drowned_woman", text = "Вона сама приходила. Просилась до вогню. Я не прогнав."},
-	{flag = &"mara_first_visit", text = "Мара навідалась цієї ночі. Каже, ми з нею не такі й різні."},
-	{flag = &"priest_confession_heard", text = "Священник зізнався: не відспівав ту дівчину як належить. Тепер не знаю, кому з нас двох важче з цим жити."},
-	{flag = &"soldier_stories_heard", text = "Вояк розповів дещо про дороги, якими йшов додому."},
+	{flag = &"lisnyk_saw_digging", text = "Лісник бачив вогник там, де вогню бути не мало. Каже, хтось копав за старою стежкою."},
+	{flag = &"met_hidden_upyr", text = "Ночами в селі ховається не лише нечисть — дехто серед людей теж боїться вигону."},
 	{flag = &"upyr_curse_origin_known", text = "Упириця обмовилась, звідки насправді взялося їхнє прокляття."},
+	{flag = &"lisnyk_decided_to_tell", text = "Лісник вирішив розповісти священнику, що бачив. Сказав, що вперше за тижні спить спокійно."},
+	{flag = &"strange_night_before_death", text = "Цієї ночі нечисть сама просила зачинити двері міцніше. Не питала нічого, не просила нічого."},
+	{flag = &"lisnyk_found_dead", text = "Лісника знайшли мертвим під старим дубом. Село вже каже — то нечисть."},
+	{flag = &"priest_forbade_nechyst", text = "Священник заборонив допомагати нечисті й тим, хто її переховує. Поспішав, наче сам боявся питань."},
+	{flag = &"soldier_stories_heard", text = "Вояк розповів дещо про дороги, якими йшов додому."},
 ]
 
 signal closed

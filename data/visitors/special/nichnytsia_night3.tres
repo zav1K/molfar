@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Нічниця"
+problem_text = "\"Тут стільки безсоння назбиралось, мольфаре... аж мені затишно. Чим більше боїтесь — тим довше лишуся.\""
+true_threat = 2
+satisfied_text = "Вона чекає відповіді, не кліпаючи."
+unhelped_text = "Вона зникає, так і не дочекавшись відповіді."
+night_visitor = true
+choice_prompt = "Що відповіси?"
+choice_a_label = "Я не боюся."
+choice_a_response = "\"Ще й як боїшся. Просто вмієш це ховати.\" — дивиться довше, ніж годиться, і зникає."
+choice_b_label = "Промовчати."
+choice_b_response = "Вона схиляє голову, ніби оцінює, і йде сама, нічого не сказавши більше."

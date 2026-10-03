@@ -14,7 +14,7 @@ extends CanvasLayer
 ## play different flavor text.
 ##
 ## A visitor with neither desired_result_id nor offers_item_id (e.g.
-## drowned_woman_night, forest_warden) isn't asking for anything material
+## mavka_night1, forest_warden_day5) isn't asking for anything material
 ## at all — being invited in and heard out is the whole interaction, so
 ## the give-list is replaced with a single "Вислухати" button instead.
 ##
@@ -26,9 +26,8 @@ extends CanvasLayer
 ## give in the first place.
 ##
 ## A visitor can also carry its own PathBalance weight independent of
-## money (satisfied_path_shift/unhelped_path_shift — e.g. mara_night: help
-## her and it costs something, refuse her and that's worth something too),
-## and, rarer still, a post-resolution choice (choice_prompt and friends)
+## money (satisfied_path_shift/unhelped_path_shift), and, rarer still, a
+## post-resolution choice (choice_prompt and friends — e.g. priest_day7)
 ## for the one "thank you" that deserves an actual response instead of
 ## just closing the window — see _on_choice_a_pressed/_on_choice_b_pressed.
 
@@ -238,6 +237,8 @@ func _resolve(satisfied: bool) -> void:
 	var shift := _visitor.satisfied_path_shift if satisfied else _visitor.unhelped_path_shift
 	if shift != 0:
 		PathBalance.shift(shift)
+	if satisfied:
+		StoryFlags.set_flag(_visitor.satisfied_sets_flag)
 	_rebuild_item_list()
 
 func _on_choice_a_pressed() -> void:

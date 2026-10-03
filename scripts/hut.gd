@@ -9,9 +9,35 @@ const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
 const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
-const DAY_VISITOR_CAP := 10 ## how many day clients knock before night falls.
-const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range.
-const NIGHT_VISITOR_MAX := 5
+const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
+const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
+const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below, which forces exactly one.
+
+## Розділ 1 ("Поріг") — deterministic day-by-day script, see STORY.md.
+## Keyed by _story_day (1-based, counting from a fresh playthrough — see
+## _story_day below). A day not listed here (8+, once the chapter ends)
+## falls back to fully random day/night rotation, same as before this
+## chapter existed.
+##
+## "day": forced as the LAST day-phase knock (day_visitor_count reaches
+## day_cap - 1) rather than the first, so it reads as Лісник/Вісник
+## showing up toward evening, after the ordinary day's clients — see
+## STORY.md's "Увечері" framing. With day_cap 1 (Day 7) that's also the
+## only knock, so "last" and "first" coincide.
+## "day_cap": overrides DAY_VISITOR_CAP for that day only; omitted means
+## the normal cap applies.
+## "night": forced as the night phase's only visitor (quota forced to 1
+## instead of the usual random NIGHT_VISITOR_MIN..MAX range). A day with
+## no "night" entry (none in this chapter) would fall back to normal.
+const CHAPTER1_SCRIPT := {
+	1: {"day": "res://data/visitors/special/forest_warden_day1.tres", "night": "res://data/visitors/special/mavka_night1.tres"},
+	2: {"day": "res://data/visitors/special/forest_warden_day2.tres", "night": "res://data/visitors/upyr_brutal_male.tres"},
+	3: {"day": "res://data/visitors/special/forest_warden_day3.tres", "night": "res://data/visitors/special/nichnytsia_night3.tres"},
+	4: {"day": "res://data/visitors/special/forest_warden_day4.tres", "night": "res://data/visitors/upyr_hidden_female.tres"},
+	5: {"day": "res://data/visitors/special/forest_warden_day5.tres", "night": "res://data/visitors/upyr_seeking_cure.tres"},
+	6: {"night": "res://data/visitors/special/upyr_night6_strange.tres"},
+	7: {"day": "res://data/visitors/special/visnyk_day7.tres", "day_cap": 1, "night": "res://data/visitors/special/priest_day7.tres"},
+}
 
 ## Zones that are portals to another scene, keyed by zone_id.
 const ZONE_SCENES := {
@@ -46,6 +72,9 @@ const NEW_TEST_HERBS: Array[StringName] = [
 @onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 @onready var calendar_label: Label = $UI/CalendarLabel
 
+## Calendar deliberately excluded — see _update_calendar_label. The zone
+## node itself is also hidden in _ready() rather than deleted from the
+## scene, so it's a one-line revert whenever a later chapter wants it back.
 @onready var zones: Array[InteractionZone] = [
 	$PanelLeft/Zones/Cauldron,
 	$PanelLeft/Zones/DryingBeam,
@@ -56,7 +85,6 @@ const NEW_TEST_HERBS: Array[StringName] = [
 	$PanelRight/Zones/Grimoire,
 	$PanelCenter/Zones/Desk,
 	$PanelCenter/Zones/SigilShelf,
-	$PanelCenter/Zones/Calendar,
 ]
 
 var current_panel: int = 1 # start centered on the desk
@@ -66,9 +94,23 @@ var _day_visitor_count: int = 0
 var _night_visitor_count: int = 0
 var _night_quota: int = NIGHT_VISITOR_MIN
 
+## DEBUG: bump _story_day to jump straight into a later day of Розділ 1
+## instead of playing days 1..N for real — see CHAPTER1_SCRIPT. Each
+## later day assumes everything before it already happened; nothing else
+## needs hand-setting anymore (no StoryFlags to jump, unlike the old
+## flag-jump block this replaced). The forced day visitor still only
+## shows up as that day's LAST knock (see CHAPTER1_SCRIPT's doc) — also
+## set _day_visitor_count to _current_day_cap() - 1 (5 - 1 = 4 for every
+## day but 7) if you want it to be the very first knock instead of
+## clicking through that day's ordinary rotation first.
+var _story_day: int = 1
+var _day_forced_used: bool = false
+var _night_forced_used: bool = false
+
 func _ready() -> void:
 	for zone in zones:
 		zone.activated.connect(_on_zone_activated)
+	$PanelCenter/Zones/Calendar.visible = false
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	reception_ui.closed.connect(_on_reception_closed)
@@ -123,17 +165,6 @@ func _ready() -> void:
 	for potion in PotionDatabase.get_all():
 		if not PlayerInventory.has(potion.id):
 			PlayerInventory.add(potion.id, 1)
-
-	# DEBUG: jump straight into the river/Мара/священник story chain
-	# instead of waiting on RNG through the whole regular rotation — see
-	# STORY.md's test order. Uncomment ONLY the flag for the beat you
-	# want to test next (each one already implies everything before it
-	# happened); leave all commented out for the normal from-scratch
-	# playthrough. Remove this whole block once the chain has enough
-	# content that skipping ahead isn't the normal way to reach it.
-#	StoryFlags.set_flag(&"river_unrest_reported") # -> unlocks Утоплениця (night)
-#	StoryFlags.set_flag(&"met_drowned_woman") # -> unlocks Мара (night)
-#	StoryFlags.set_flag(&"mara_first_visit") # -> unlocks Незнайомець у рясі (night)
 
 	_knock_with_random_visitor()
 
@@ -297,9 +328,11 @@ func _schedule_next_knock() -> void:
 func _advance_visitor_slot() -> void:
 	if GameCalendar.phase == GameCalendar.Phase.DAY:
 		_day_visitor_count += 1
-		if _day_visitor_count >= DAY_VISITOR_CAP:
-			_night_quota = randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
+		if _day_visitor_count >= _current_day_cap():
+			var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+			_night_quota = 1 if script.has("night") else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
 			_night_visitor_count = 0
+			_night_forced_used = false
 			GameCalendar.set_phase(GameCalendar.Phase.NIGHT)
 	else:
 		_night_visitor_count += 1
@@ -307,16 +340,64 @@ func _advance_visitor_slot() -> void:
 			GameCalendar.advance_day()
 			VisitorDatabase.reset_seen()
 			_day_visitor_count = 0
+			_day_forced_used = false
+			_story_day += 1
 			GameCalendar.set_phase(GameCalendar.Phase.DAY)
+
+func _current_day_cap() -> int:
+	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+	return script.get("day_cap", DAY_VISITOR_CAP)
 
 func _knock_with_random_visitor() -> void:
 	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
-	var visitor := VisitorDatabase.get_random(is_night)
+	var visitor := _pop_forced_visitor(is_night)
+	if visitor == null:
+		visitor = VisitorDatabase.get_random(is_night)
 	if visitor == null:
 		return
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
+## Розділ 1's deterministic override of the ordinary random pool — see
+## CHAPTER1_SCRIPT. Returns null (falls back to VisitorDatabase.get_random)
+## whenever today/tonight has no scripted visitor, it's already been used,
+## or — for the day phase only — this isn't yet the last slot before night.
+func _pop_forced_visitor(is_night: bool) -> Visitor:
+	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+	if is_night:
+		if _night_forced_used or not script.has("night"):
+			return null
+		_night_forced_used = true
+		return _load_forced_visitor(script["night"])
+	if _day_forced_used or not script.has("day"):
+		return null
+	if _day_visitor_count != _current_day_cap() - 1:
+		return null
+	_day_forced_used = true
+	return _load_forced_visitor(script["day"])
+
+## Loads a scripted visitor and replicates get_random()'s knocked_sets_flag
+## side effect — forced visitors bypass VisitorDatabase entirely, so
+## nothing else sets it for them. The priest's finale line also depends on
+## how the Day 4 упириця encounter went, which satisfied_sets_flag already
+## recorded regardless of how this visitor is reached — so that part needs
+## no special-casing here, just a duplicate + append once it's loaded.
+func _load_forced_visitor(path: String) -> Visitor:
+	var visitor: Visitor = load(path)
+	if path == "res://data/visitors/special/priest_day7.tres" and StoryFlags.has_flag(&"helped_hidden_upyr"):
+		visitor = visitor.duplicate()
+		# problem_text ends with a closing quote mark (speech-styled, like
+		# every other visitor's) — trim it, append the extra sentence, and
+		# re-close, rather than just tacking text on after the quote.
+		visitor.problem_text = visitor.problem_text.trim_suffix("\"") \
+			+ " Хтось у селі вже казав, що бачив тебе з нею. Подумай, на чиєму ти боці, мольфаре.\""
+	if visitor.knocked_sets_flag != &"":
+		StoryFlags.set_flag(visitor.knocked_sets_flag)
+	return visitor
+
+## Розділ 1 is a fixed 7-day span, not tied to any real festival date, so
+## the label just counts chapter days instead of showing GameCalendar's
+## season/festival calendar (see CalendarPanel, dropped from `zones`
+## below for the same reason — nothing in this chapter uses it).
 func _update_calendar_label(_arg = null) -> void:
 	var phase_text := "ніч" if GameCalendar.phase == GameCalendar.Phase.NIGHT else "день"
-	var season_name: String = GameCalendar.SEASON_NAMES[GameCalendar.get_season()]
-	calendar_label.text = "%s, день %d/%d — %s" % [season_name, GameCalendar.get_day_of_season(), GameCalendar.DAYS_PER_SEASON, phase_text]
+	calendar_label.text = "День %d — %s" % [_story_day, phase_text]

@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Мавка"
+problem_text = "\"Мольфаре... чуєш, як вода в яру співає? Приходь танцювати, поки місяць високо.\""
+true_threat = 2
+satisfied_text = "Вона схиляє голову, чекаючи відповіді."
+unhelped_text = "Вона зникає, так і не дочекавшись відповіді."
+night_visitor = true
+choice_prompt = "Що відповіси?"
+choice_a_label = "Не сьогодні."
+choice_a_response = "\"Шкода. Ти ще навчишся не боятись мене.\" — зникає без образи."
+choice_b_label = "Промовчати."
+choice_b_response = "Вона сміється, тихо й не зловісно, і зникає сама."

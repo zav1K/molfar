@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Вісник"
+problem_text = "\"Мольфаре... Лісника знайшли вранці, під старим дубом при дорозі до церкви. Не дійшов... Староста каже — то нечисть, кого ж іще. Люди вже й смолоскипи готують, хочуть вигін обходити зі свяченою водою.\""
+satisfied_text = "Він хреститься й іде далі, нести звістку сусідам."
+unhelped_text = "Він хреститься й іде далі, нести звістку сусідам."
+knocked_sets_flag = &"lisnyk_found_dead"
