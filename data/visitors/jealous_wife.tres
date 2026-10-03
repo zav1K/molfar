@@ -22,3 +22,4 @@ payment_item_id = &"mat_goods"
 payment_flavor_text = "Консерви, тканини"
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.238281, 0.072917, 0.529297, 0.850260)
+knocked_sets_flag = &"met_jealous_wife"

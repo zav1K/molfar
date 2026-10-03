@@ -18,3 +18,4 @@ choice_b_label = "Промовчати."
 choice_b_response = "Він лише киває, явно радий, що вже позбувся."
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.082031, 0.068994, 0.830078, 0.822917)
+knocked_sets_flag = &"met_found_doll"

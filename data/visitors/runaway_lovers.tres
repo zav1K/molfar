@@ -19,3 +19,4 @@ choice_b_response = "Обоє кивають, тримаючись за руки
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.136719, 0.068990, 0.751953, 0.852865)
 payment_flavor_text = "Обіцянка й саморобний знак кохання — нічого, що покладеш у скриню"
+knocked_sets_flag = &"met_runaway_lovers"

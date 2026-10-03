@@ -17,3 +17,4 @@ payment_type = 2
 payment_item_id = &"groshi"
 payment_amount = 2
 payment_flavor_text = "Гроші, а то й цінна худоба"
+knocked_sets_flag = &"kryvulka_given_to_village"

@@ -17,3 +17,4 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_amount = 1
 payment_flavor_text = "Полотно — більшого немає"
+knocked_sets_flag = &"met_cradle_charm_mother"

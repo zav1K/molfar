@@ -21,3 +21,4 @@ payment_flag_id = &"soldier_stories_heard"
 payment_flavor_text = "Заморська дрібничка, історії з доріг"
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.238281, 0.0625, 0.550781, 0.847656)
+knocked_sets_flag = &"met_wandering_soldier"
