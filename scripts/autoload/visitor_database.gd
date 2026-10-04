@@ -118,6 +118,18 @@ func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor
 
+## For a visitor shown through hut.gd's CHAPTER1_SCRIPT forced dispatch
+## instead of get_random() (e.g. Day 2's scripted Упир, reused straight
+## from this same ordinary pool) — that path never touches this
+## database at all otherwise, so without this call the cross-day
+## recurring_group cycle below would have no idea that variant was
+## just shown, and could hand the exact same one out again via
+## ordinary random rotation a day or two later. A no-op for a visitor
+## with no recurring_group.
+func register_shown(visitor: Visitor) -> void:
+	if visitor.recurring_group != &"":
+		_advance_group_cycle(visitor)
+
 ## Marks `visitor` as shown this cycle for its recurring_group. Once
 ## every member of the group has had a turn, starts a fresh cycle —
 ## minus `visitor` itself, so the member that just finished one cycle

@@ -433,6 +433,7 @@ func _load_forced_visitor(path: String) -> Visitor:
 			+ " Хтось у селі вже казав, що бачив тебе з нею. Подумай, на чиєму ти боці, мольфаре.\""
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
+	VisitorDatabase.register_shown(visitor)
 	return visitor
 
 ## Розділ 1 is a fixed 7-day span, not tied to any real festival date, so
