@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Чоловік без талану"
+problem_text = "\"Мольфаре, відколи вже й не пригадаю — все валиться з рук. Корова здохла, дах завалився, хліб не сходить. Люди кажуть — причепилось до мене Лихо, а я вже й сам не знаю, у що вірити. Поможи, бо далі вже нікуди.\""
+true_threat = 0
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "\"...вперше за довгий час нічого не впало й не зламалось. Дякую, мольфаре — може, й справді відчепилось.\""
+unhelped_text = "\"Що ж... значить, так мені й судилося.\""
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Останнє, що лишилось — та від щирого серця"
+knocked_sets_flag = &"met_unlucky_man"
+satisfied_sets_flag = &"likho_driven_off"

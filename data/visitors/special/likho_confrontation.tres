@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Лихо"
+problem_text = "\"Мольфаре... чуже ти в мою справу поліз. Було моє — тепер не моє. Не питаю, чого ти так учинив. Питаю: думаєш, воно того варте було?\""
+true_threat = 3
+satisfied_text = "Лихо чекає відповіді, не моргаючи."
+unhelped_text = "Воно зникає, так і не дочекавшись відповіді."
+night_visitor = true
+required_flag = &"likho_driven_off"
+knocked_sets_flag = &"likho_confronted"
+choice_prompt = "Що відповіси?"
+choice_a_label = "Він тепер під моїм захистом."
+choice_a_response = "Лихо не сперечається. Дивиться довго, байдуже — як вода дивиться на камінь, що на мить перегородив їй шлях. Тоді йде, ніби нічого й не було."
+choice_a_path_shift = 1
+choice_b_label = "Не доводь, щоб я зцілив і тебе."
+choice_b_response = "Щось схоже на сміх — сухе, без тепла. \"Цікаво було б побачити.\" Лихо зникає, та відчуття, що воно тепер пам'ятає твоє ім'я, не минає ще довго."
+choice_b_path_shift = -1
