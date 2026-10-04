@@ -383,6 +383,12 @@ func _knock_with_random_visitor() -> void:
 		var exclude: Visitor = load(todays_forced) if todays_forced != "" else null
 		visitor = VisitorDatabase.get_random(is_night, exclude)
 	if visitor == null:
+		# Nobody eligible this slot — VisitorDatabase's own fallback tier
+		# should make this rare, but a silent door with nothing scheduled
+		# to follow it is a hard freeze (nothing left to call
+		# _advance_visitor_slot again), so treat it as an empty knock and
+		# keep the day/night moving instead of just stopping dead here.
+		_schedule_next_knock()
 		return
 	door.knock(visitor, WardRack.check_visitor(visitor))
 

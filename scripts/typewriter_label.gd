@@ -33,6 +33,18 @@ func show_text(new_text: String) -> void:
 	scroll_vertical = 0
 	set_process(true)
 
+## Shows the text straight away, no animation — for text the player
+## already just read a moment ago elsewhere (e.g. ReceptionUI's
+## problem_label repeating what ThresholdDialogue's just showed at the
+## door), where re-typing it again reads as stalling, not drama.
+func show_instant(new_text: String) -> void:
+	_full_text = new_text
+	label.text = new_text
+	_elapsed = new_text.length()
+	_revealing = false
+	set_process(false)
+	scroll_vertical = 0
+
 ## Replaces the fully-revealed text outright (no re-animation) — for a
 ## reaction appended well after the original line already finished
 ## printing, where re-typing the whole thing from scratch would just

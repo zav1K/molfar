@@ -84,7 +84,10 @@ func show_visitor(visitor: Visitor) -> void:
 	portrait.texture = waiting_portrait
 	portrait.visible = waiting_portrait != null
 	name_label.text = visitor.display_name
-	problem_label.show_text(visitor.problem_text)
+	# Instant, not typed — this is the exact same problem_text
+	# ThresholdDialogue just finished animating at the door a moment
+	# ago; re-typing it again here reads as stalling, not drama.
+	problem_label.show_instant(visitor.problem_text)
 	result_label.show_text("")
 	_rebuild_item_list()
 	visible = true

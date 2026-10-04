@@ -22,6 +22,7 @@ const SPECIAL_VISITORS_DIR := "res://data/visitors/special/"
 
 var _visitors: Array[Visitor] = []
 var _seen: Array[Visitor] = []
+var _seen_groups: Array[StringName] = [] # recurring_group values already shown this phase
 var _group_pending: Dictionary = {} # StringName (recurring_group) -> Array[Visitor], this cycle's not-yet-shown members
 
 func _ready() -> void:
@@ -74,35 +75,45 @@ func get_all() -> Array[Visitor]:
 ## A visitor with recurring_group set is additionally excluded unless
 ## it's still "pending" in that group's current cycle — see
 ## _advance_group_cycle(). That part persists for the whole
-## playthrough (unlike _seen): every member of a group (e.g.
+## playthrough (unlike _seen_groups): every member of a group (e.g.
 ## anxious_neighbor's 3 variants) has to come up once before any of
 ## them can repeat. Separately, picking ANY member of a group marks
 ## the WHOLE group seen for the rest of this phase (not just that one
-## variant) — the same person showing up twice in one day, just as a
+## variant, tracked in _seen_groups, cleared by reset_seen alongside
+## _seen) — the same person showing up twice in one day, just as a
 ## different variant, is exactly the thing recurring_group exists to
 ## prevent.
+##
+## That whole-group block is a two-tier rule, not absolute: once every
+## one-time visitor in a phase's pool has been used up (common by the
+## later chapter days — most of the ordinary cast is one-and-done, see
+## STORY.md), the only things left standing might be 2-3 recurring
+## groups, each already blocked for the rest of THIS phase after a
+## single pick — with DAY_VISITOR_CAP higher than that, the door would
+## otherwise just go silent for the rest of the day with nothing left
+## to knock, and since nothing knocks, hut.gd never advances past it.
+## So if the strict pass comes up empty, retry once ignoring the
+## whole-group block (still never the exact same Visitor instance
+## twice — _seen alone stays absolute) before actually giving up.
 func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 	var exclude_group: StringName = exclude.recurring_group if exclude != null else &""
-	var available := _visitors.filter(func(v: Visitor) -> bool:
-		return v.night_visitor == night and not _seen.has(v) and v != exclude \
+	var base_filter := func(v: Visitor) -> bool:
+		return v.night_visitor == night and v != exclude \
 			and (exclude_group == &"" or v.recurring_group != exclude_group) \
 			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
 			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)) \
-			and (v.recurring_group == &"" or _group_pending.get(v.recurring_group, [v]).has(v)))
+			and (v.recurring_group == &"" or _group_pending.get(v.recurring_group, [v]).has(v))
+	var available := _visitors.filter(func(v: Visitor) -> bool:
+		return base_filter.call(v) and not _seen.has(v) and not _seen_groups.has(v.recurring_group))
+	if available.is_empty():
+		available = _visitors.filter(func(v: Visitor) -> bool: return base_filter.call(v) and not _seen.has(v))
 	if available.is_empty():
 		return null
 	var visitor: Visitor = available[randi() % available.size()]
+	_seen.append(visitor)
 	if visitor.recurring_group != &"":
-		# The same person showing up twice in one day/night is wrong
-		# regardless of which of their variants it is — so seed ALL of
-		# that group into _seen here, not just the one picked, even
-		# though only one of them actually knocked.
-		for member in _visitors:
-			if member.recurring_group == visitor.recurring_group:
-				_seen.append(member)
+		_seen_groups.append(visitor.recurring_group)
 		_advance_group_cycle(visitor)
-	else:
-		_seen.append(visitor)
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor
@@ -125,3 +136,4 @@ func _advance_group_cycle(visitor: Visitor) -> void:
 ## on every day/night phase flip.
 func reset_seen() -> void:
 	_seen.clear()
+	_seen_groups.clear()
