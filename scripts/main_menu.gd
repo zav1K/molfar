@@ -17,6 +17,7 @@ extends Control
 ## says "not yet" — re-enable it in _ready() once that screen exists.
 
 const HUT_SCENE := "res://scenes/Hut.tscn"
+const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
 
 @onready var continue_button: Button = $Panel/Buttons/Continue
 @onready var new_game_button: Button = $Panel/Buttons/NewGame
@@ -33,18 +34,25 @@ func _ready() -> void:
 	var has_save := SaveGame.has_save()
 	continue_button.disabled = not has_save
 	continue_hint.visible = not has_save
+	if has_save and SaveGame.peek_chapter_complete():
+		# "Продовжити" would be a lie — there's nothing left to play on a
+		# finished save, it only reopens the chronicle.
+		continue_button.text = "Прочитати хроніку"
 	if has_save:
 		continue_button.grab_focus()
 	else:
 		new_game_button.grab_focus()
 
 func _on_continue_pressed() -> void:
-	# hut.gd's _ready() reads this once and pulls the snapshot in itself —
-	# the actual load can't happen here, because half of what's restored
-	# (the visitor slot counters, the forced-beat bookkeeping) lives on
-	# the Hut scene that doesn't exist yet at this point.
+	# The receiving scene's _ready() reads this once and pulls the
+	# snapshot in itself — the actual load can't happen here, because
+	# half of what's restored (the visitor slot counters, the forced-beat
+	# bookkeeping) lives on the Hut scene that doesn't exist yet at this
+	# point. A finished save has no day left to play, so it goes to the
+	# chronicle instead; see SaveGame.save's chapter_complete.
 	SaveGame.pending_load = true
-	get_tree().change_scene_to_file(HUT_SCENE)
+	var target := CHAPTER_END_SCENE if SaveGame.peek_chapter_complete() else HUT_SCENE
+	get_tree().change_scene_to_file(target)
 
 func _on_new_game_pressed() -> void:
 	# Deliberately does NOT wipe the existing save: the next day/night

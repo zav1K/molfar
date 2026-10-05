@@ -14,12 +14,18 @@ const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
 const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below (freeplay after it ends).
 const SCRIPTED_NIGHT_CAP := 3 ## default night_cap for a scripted night — see CHAPTER1_SCRIPT.
+const CHAPTER1_LAST_DAY := 7 ## after this night the chapter ends — see _end_chapter().
+const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
 
 ## Розділ 1 ("Поріг") — deterministic day-by-day script, see STORY.md.
 ## Keyed by _story_day (1-based, counting from a fresh playthrough — see
-## _story_day below). A day not listed here (8+, once the chapter ends)
-## falls back to fully random day/night rotation, same as before this
-## chapter existed.
+## _story_day below). Every day of the chapter is listed; there is no day
+## 8, since the end of night 7 hands over to ChapterEnd instead of
+## advancing (see _end_chapter). The unscripted-day fallbacks elsewhere
+## in this file (_roll_night_quota's random range, get_random's ordinary
+## rotation) are therefore unreachable in the chapter as it ships — kept
+## because they're what a later chapter's freeplay stretch will use, and
+## because a day_cap/night_cap left unset above still falls through them.
 ##
 ## "day"/"night": forced as that phase's LAST knock (slot count reaches
 ## cap - 1) rather than the first, so it reads as Лісник/Вісник/the
@@ -294,6 +300,14 @@ func _on_visitor_resolved(invited: bool) -> void:
 	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
 	if invited:
 		var visitor := door.current_visitor
+		if not visitor.is_human():
+			# Counted on crossing the threshold, not on being served:
+			# what the village would notice is someone being let in at
+			# all, the same "seen at the door is enough" reasoning behind
+			# Visitor.knocked_sets_flag. Any нечисть counts, day or
+			# night — the priest's charge on day 7 is helping them, not
+			# specifically after dark.
+			VillageSuspicion.record_sheltered()
 		door.clear()
 		reception_ui.show_visitor(visitor)
 		return
@@ -362,6 +376,9 @@ func _advance_visitor_slot() -> void:
 	else:
 		_night_visitor_count += 1
 		if _night_visitor_count >= _night_quota:
+			if _story_day >= CHAPTER1_LAST_DAY:
+				_end_chapter()
+				return
 			GameCalendar.advance_day()
 			VisitorDatabase.reset_seen()
 			_day_visitor_count = 0
@@ -370,6 +387,14 @@ func _advance_visitor_slot() -> void:
 			GameCalendar.set_phase(GameCalendar.Phase.DAY)
 			day_night_toast.show_message("День %d" % _story_day)
 			SaveGame.save(_story_day)
+
+## Розділ І is over — there is no day 8. Writes the finished save (so the
+## menu's "Продовжити" can bring the player back to their own chronicle
+## rather than to a hut with nothing left to happen in it) and hands over
+## to ChapterEnd, which reads the live autoload state directly.
+func _end_chapter() -> void:
+	SaveGame.save(_story_day, true)
+	get_tree().change_scene_to_file(CHAPTER_END_SCENE)
 
 ## Pulls the autosave back in, if the menu asked for it. Only _story_day
 ## and the calendar phase come from the file — every slot counter below
