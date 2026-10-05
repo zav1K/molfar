@@ -669,11 +669,13 @@ offset_right = 570.0
 offset_bottom = 165.0
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="ThresholdDialogue/Panel/DialogueBox/ProblemLabel"]
+[node name="Label" type="RichTextLabel" parent="ThresholdDialogue/Panel/DialogueBox/ProblemLabel"]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
-autowrap_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 16
 text = "..."
 
 [node name="InviteButton" type="Button" parent="ThresholdDialogue/Panel/DialogueBox"]
@@ -881,11 +883,13 @@ offset_right = 730.0
 offset_bottom = 160.0
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="ReceptionUI/Panel/ProblemLabel"]
+[node name="Label" type="RichTextLabel" parent="ReceptionUI/Panel/ProblemLabel"]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
-autowrap_mode = 2
+bbcode_enabled = true
+fit_content = true
+scroll_active = false
+theme_override_font_sizes/normal_font_size = 16
 text = "..."
 
 [node name="ItemListScroll" type="ScrollContainer" parent="ReceptionUI/Panel"]
@@ -940,11 +944,9 @@ offset_right = 730.0
 offset_bottom = 478.0
 horizontal_scroll_mode = 0
 
-[node name="Label" type="Label" parent="ReceptionUI/Panel/ResultLabel"]
+[node name="Label" type="RichTextLabel" parent="ReceptionUI/Panel/ResultLabel"]
 layout_mode = 2
 size_flags_horizontal = 3
-horizontal_alignment = 1
-autowrap_mode = 2
 
 [node name="ChoicePromptLabel" type="Label" parent="ReceptionUI/Panel"]
 visible = false
