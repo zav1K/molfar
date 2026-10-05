@@ -105,6 +105,14 @@ func _chronicle_lines() -> Array[String]:
 	elif VillageSuspicion.sheltered == 0:
 		lines.append("За сім ночей я не відчинив жодному з них. Село спокійне, і я разом із ним. Тільки сни стали коротші.")
 
+	# The craft axis, read here and nowhere else — the player never sees a
+	# number for it, only this one line at the end (see PathBalance).
+	var leaning := PathBalance.leaning()
+	if leaning == PathBalance.Leaning.DARK:
+		lines.append("Я брав плату з тих, кому платити було нічим. Казав собі, що ремесло теж їсти хоче. Це теж пам'ятають.")
+	elif leaning == PathBalance.Leaning.LIGHT:
+		lines.append("Я не взяв нічого з тих, хто не мав. Скриня від того не повнішає, зате й дивитися людям в очі легше.")
+
 	if StoryFlags.has_flag(&"likho_confronted"):
 		lines.append("Лихо так і не відчепилося остаточно. Воно вміє чекати довше за людину.")
 

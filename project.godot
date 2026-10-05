@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Молфар"
-config/description="2D crafting-simulator про мольфара-спадкоємця в Карпатах, 17 століття."
+config/description="2D crafting-simulator про гуцульського мольфара в Карпатах, 17 століття. Демка (Розділ І) — приквел про старого мольфара; повна версія — про його спадкоємця."
 run/main_scene="res://scenes/MainMenu.tscn"
 config/features=PackedStringArray("4.3", "GL Compatibility")
 config/icon="res://icon.svg"

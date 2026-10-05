@@ -1,8 +1,16 @@
 class_name GrimoireUI
 extends CanvasLayer
-## The "щоденник попереднього мольфара" spot on PanelRight's desk —
-## a standing reference for all three guidebooks (GUIDEBOOKS.md is the
-## source-of-truth content this reads off of): what each brew is for,
+## The molfar's own diary and reference shelf on PanelRight's desk. In
+## Розділ І the player IS the old molfar (see Molfar), so this is his
+## book, written as he goes — and it is the same book CONCEPT.md lists as
+## a full-game feature, "щоденники попереднього мольфара", found and read
+## by the heir who comes after him. Whatever the player opens here is
+## what that heir will later find, which is why the Щоденник tab is
+## written in his voice rather than as UI copy.
+##
+## It doubles as a standing reference for all three guidebooks
+## (GUIDEBOOKS.md is the source-of-truth content this reads off of):
+## what each brew is for,
 ## which herbs go into it, what each sigil is for. Same tabbed-panel
 ## pattern as InventoryPanel's Kind.ALL "Chest" screen — one tab per
 ## section, content rebuilt into a scrollable list on tab switch.

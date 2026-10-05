@@ -9,7 +9,7 @@ const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
 const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
-const DEBUG_SEED_AMOUNT := 10 ## see the potion/sigil seeding block in _ready().
+const STARTING_STOCK := 10 ## the old molfar's standing stock — see the seeding block in _ready().
 const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
 const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below (freeplay after it ends).
@@ -59,9 +59,9 @@ const ZONE_SCENES := {
 	&"garden_window": "res://scenes/Garden.tscn",
 }
 
-## DEBUG: the 16 herbs added for the new recipe batch — none have any
-## acquisition path yet (no gathering mechanic), so seed 10 of each for
-## testing. See the seeding block in _ready().
+## The 16 herbs added for the newer recipe batch. There is no gathering
+## mechanic in this chapter by design (see the seeding block in _ready),
+## so these are simply part of what he already has hanging up.
 const NEW_TEST_HERBS: Array[StringName] = [
 	&"calendula", &"chamomile", &"deadnettle", &"dill", &"elderberry",
 	&"hawthorn", &"lovage", &"marigold",
@@ -166,9 +166,16 @@ func _ready() -> void:
 		_knock_with_random_visitor()
 		return
 
-	# DEBUG: seed the inventory so there's something to see in InventoryPanel
-	# and to brew/give until the garden/gathering loop actually grants
-	# ingredients. Remove once that exists.
+	# A well-stocked hut is characterisation, not a debug leftover: the
+	# player is the OLD molfar, forty years into the trade, so of course
+	# the drying beam is full (see Molfar, and CONCEPT.md's "Демка — це
+	# приквел"). Gathering herbs is the HEIR's problem and belongs to the
+	# full game, where the hut starts bare. So this stays — it just isn't
+	# a shortcut any more.
+	#
+	# Still worth tuning rather than leaving alone: the amounts below are
+	# generous enough that nothing ever runs low, which means the cauldron
+	# is optional for a whole playthrough. See TODO_DEMO.md.
 	if not PlayerInventory.has(&"garlic"):
 		PlayerInventory.add(&"garlic", 3)
 	if not PlayerInventory.has(&"wormwood"):
@@ -178,29 +185,28 @@ func _ready() -> void:
 	if not PlayerInventory.has(&"dream_grass"):
 		PlayerInventory.add(&"dream_grass", 3)
 
-	# DEBUG: seed 10 of each newly-added herb so the new recipes are
-	# testable without a gathering mechanic yet either. Remove alongside
-	# the block above once that exists.
+	# Same reasoning as the block above, for the newer recipe batch.
 	for herb_id in NEW_TEST_HERBS:
 		if not PlayerInventory.has(herb_id):
 			PlayerInventory.add(herb_id, 10)
 
-	# DEBUG: hang a garlic ward so the door hint hook is testable too.
+	# A garlic ward is already hanging: a man who has worked nights for
+	# decades would not leave the door bare. Also what makes the door
+	# hint visible from the first knock.
 	if WardRack.get_slot(0) == &"":
 		WardRack.hang(0, &"garlic")
 
-	# DEBUG: seed a generous stock of every potion AND every sigil so a
-	# full click-through of Розділ 1 never runs dry mid-chapter — several
-	# recipes (calming_remedy, cleansing_remedy, zigzag_ward...) get asked
-	# for more than once across 7 days, by both the scripted beats and
-	# the ordinary background rotation. Remove once brewing/carving are
-	# the only way these actually enter the inventory.
+	# A shelf of ready brews and a drawer of cut sigils, for the same
+	# reason: several recipes (calming_remedy, cleansing_remedy,
+	# zigzag_ward...) are asked for more than once across the seven days,
+	# by both the scripted beats and the background rotation, and the
+	# chapter assumes he can meet those without a trip to the forest.
 	for potion in PotionDatabase.get_all():
 		if not PlayerInventory.has(potion.id):
-			PlayerInventory.add(potion.id, DEBUG_SEED_AMOUNT)
+			PlayerInventory.add(potion.id, STARTING_STOCK)
 	for sigil in SigilDatabase.get_all():
 		if not PlayerInventory.has(sigil.id):
-			PlayerInventory.add(sigil.id, DEBUG_SEED_AMOUNT)
+			PlayerInventory.add(sigil.id, STARTING_STOCK)
 
 	_knock_with_random_visitor()
 
