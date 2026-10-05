@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/widow_accused_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -20,3 +21,5 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_amount = 1
 payment_flavor_text = "Вузлик, який вона все-таки лишає: масло й сухі груші"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.219941, 0.072266, 0.596774, 0.864258)

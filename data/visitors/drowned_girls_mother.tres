@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/drowned_girls_kin_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -16,3 +17,5 @@ satisfied_sets_flag = &"promised_drowned_girls_mother"
 payment_type = 3
 payment_flag_id = &"drowned_girl_was_refused_burial"
 payment_flavor_text = "Ти знаєш тепер, кого саме не дали поховати при церкві й чому"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.252375, 0.044304, 0.513658, 0.889636)

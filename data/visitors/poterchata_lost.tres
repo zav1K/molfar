@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/poterchata.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -15,3 +16,5 @@ unhelped_text = "\"Ну нічого.\" Вони беруться за руки 
 required_flag = &"met_poterchata"
 recurring_group = &"poterchata"
 knocked_sets_flag = &"poterchata_lost_one"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.110626, 0.108398, 0.793304, 0.842773)

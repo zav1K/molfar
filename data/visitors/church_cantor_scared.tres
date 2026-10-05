@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/church_cantor.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -21,3 +22,5 @@ choice_a_response = "Він довго мовчить. \"Ви перший. На
 choice_a_path_shift = -1
 choice_b_label = "Не питати"
 choice_b_response = "Ти не питаєш — бо й так знаєш. Він дивиться з полегкістю, що не довелося казати вголос."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.262009, 0.062500, 0.465793, 0.896484)

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/noon_spirit.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -14,3 +15,5 @@ unhelped_text = "\"Ну то й не неси.\" Вона не сердитьс�
 knocked_sets_flag = &"met_noon_spirit"
 satisfied_sets_flag = &"saved_reaper_woman"
 satisfied_path_shift = 1
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.195051, 0.060547, 0.703057, 0.898438)

@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/priest_secret_visit_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -17,4 +18,6 @@ choice_b_label = "Засумніватись"
 choice_b_response = "Чому він не просить захисту для себе, а одразу велить, кого цуратись? Ти не кажеш цього вголос — лише дивишся довше, ніж годиться."
 choice_b_path_shift = -1
 
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.236070, 0.073242, 0.514663, 0.862305)
 required_flag = &"__chapter1_scripted_only__"
