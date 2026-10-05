@@ -87,6 +87,7 @@ const NEW_TEST_HERBS: Array[StringName] = [
 @onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 @onready var calendar_label: Label = $UI/CalendarLabel
 @onready var day_night_toast: DayNightToast = $DayNightToast
+@onready var pause_menu: PauseMenu = $PauseMenu
 
 ## Calendar deliberately excluded — see _update_calendar_label. The zone
 ## node itself is also hidden in _ready() rather than deleted from the
@@ -199,12 +200,42 @@ func _ready() -> void:
 	_knock_with_random_visitor()
 
 func _unhandled_input(event: InputEvent) -> void:
-	if threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible or potion_inventory_panel.visible or sigil_inventory_panel.visible or calendar_panel.visible or chest_panel.visible or grimoire_ui.visible:
+	if event.is_action_pressed(&"ui_cancel"):
+		_on_cancel_pressed()
+		return
+	if _any_overlay_open():
 		return
 	if event.is_action_pressed(&"ui_left"):
 		_go_left()
 	elif event.is_action_pressed(&"ui_right"):
 		_go_right()
+
+## Esc backs out one step at a time rather than always jumping to the
+## pause menu: close whatever lookup panel is open, and only pause once
+## the hut itself is what's on screen.
+##
+## The modal activities are deliberately excluded. ThresholdDialogue and
+## ReceptionUI are mid-decision — Esc there would be an invisible third
+## answer alongside invite/refuse — and BrewingUI/CarvingUI are
+## multi-step with their own in-progress state to unwind, so both keep
+## their own Back buttons as the only way out.
+func _on_cancel_pressed() -> void:
+	if threshold_dialogue.visible or reception_ui.visible or brewing_ui.visible or carving_ui.visible:
+		return
+	# Untyped on purpose: these are four unrelated classes that happen to
+	# share visible/close(), not a common base, so the call is dynamic.
+	for panel in [potion_detail_popup, ingredient_inventory_panel, potion_inventory_panel,
+			sigil_inventory_panel, chest_panel, calendar_panel, grimoire_ui]:
+		if panel.visible:
+			panel.close()
+			return
+	pause_menu.open()
+
+func _any_overlay_open() -> bool:
+	return threshold_dialogue.visible or brewing_ui.visible or potion_detail_popup.visible \
+		or carving_ui.visible or reception_ui.visible or ingredient_inventory_panel.visible \
+		or potion_inventory_panel.visible or sigil_inventory_panel.visible \
+		or calendar_panel.visible or chest_panel.visible or grimoire_ui.visible
 
 func _go_left() -> void:
 	if current_panel > 0:

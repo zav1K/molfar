@@ -70,6 +70,12 @@ func _build_day_cell(day_of_season: int, festival: GameCalendar.Festival, is_tod
 
 	return cell
 
-func _on_close_pressed() -> void:
+## Closes the overlay and reports it, so the hut can put the nav
+## arrows back. Public because Esc routes through here too (see
+## hut.gd's _unhandled_input), not just the on-screen button.
+func close() -> void:
 	visible = false
 	closed.emit()
+
+func _on_close_pressed() -> void:
+	close()
