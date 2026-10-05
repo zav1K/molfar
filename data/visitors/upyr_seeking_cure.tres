@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/upyr_seeking_cure_female.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_seeking_cure_female_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -13,7 +13,7 @@ satisfied_text = "\"...легше. Вперше за довгий час — л�
 unhelped_text = "\"Тоді хай буде, як має бути\" — і ніч ковтає її дослівно."
 night_visitor = true
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.275391, 0.070313, 0.462891, 0.858073)
+waiting_portrait_content_rect = Rect2(0.278592, 0.071289, 0.454545, 0.870117)
 payment_type = 3
 payment_flag_id = &"upyr_curse_origin_known"
 payment_flavor_text = "Особиста реліквія-спогад, натяк на походження прокляття"

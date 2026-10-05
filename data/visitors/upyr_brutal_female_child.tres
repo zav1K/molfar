@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_female.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_female_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,7 +12,7 @@ satisfied_text = "Вона заходить, схиляється над пор�
 unhelped_text = "\"Ну й Бог тобі суддя.\" Вона розводить руки — там справді нічого — і йде, не переставши всміхатися."
 night_visitor = true
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.267578, 0.023438, 0.496094, 0.90625)
+waiting_portrait_content_rect = Rect2(0.269002, 0.061709, 0.499406, 0.876187)
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_amount = 1

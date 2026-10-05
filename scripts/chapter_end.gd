@@ -26,8 +26,18 @@ extends Control
 
 const MENU_SCENE := "res://scenes/MainMenu.tscn"
 
-const LINE_FADE_SECONDS := 1.2
-const LINE_DELAY_SECONDS := 0.9
+## Paced so the whole chronicle is up in a handful of seconds. The first
+## version took 1.2s per block with 0.9s between, which on fourteen
+## blocks meant nearly half a minute of an almost-black screen with a
+## dead button — indistinguishable from the game having crashed, which
+## is exactly how it was read in testing.
+const LINE_FADE_SECONDS := 0.45
+const LINE_DELAY_SECONDS := 0.22
+## Grace period before the Back button accepts a click. A player who
+## clicks twice to hurry the reveal along would otherwise land the
+## second click on the button the first one just enabled, and be thrown
+## out to the menu without reading a word.
+const BUTTON_GRACE_SECONDS := 0.6
 
 const CHRONICLE_FONT_SIZE := 15
 const CHRONICLE_COLOR := Color(0.88, 0.83, 0.70)
@@ -43,6 +53,7 @@ const RULE_COLOR := Color(0.45, 0.40, 0.32, 0.7)
 
 @onready var chronicle: VBoxContainer = $Scroll/Chronicle
 @onready var menu_button: Button = $MenuButton
+@onready var skip_hint: Label = $SkipHint
 
 ## Every faded-in block, so a click can finish them all at once.
 var _blocks: Array[Control] = []
@@ -158,14 +169,21 @@ func _add_rule() -> void:
 
 ## Staggered fade rather than a typewriter: these are separate diary
 ## entries, not one speech, and a per-block fade is what lets the closing
-## block be visually a different hand (see FOUND_NOTE_COLOR). The button
-## only appears once everything's up, so the screen can't be dismissed
-## before the last line has been seen.
+## block be visually a different hand (see FOUND_NOTE_COLOR).
+##
+## The first block starts already visible: fading in from nothing, on a
+## backdrop this dark, means the screen is genuinely blank for the first
+## second of what is supposed to be the chapter's last beat.
 func _start_reveal() -> void:
+	if _blocks.is_empty():
+		_finish_reveal()
+		return
+	_blocks[0].modulate.a = 1.0
+	skip_hint.modulate.a = 1.0
 	_revealing = true
 	_reveal_tween = create_tween()
-	for block in _blocks:
-		_reveal_tween.tween_property(block, "modulate:a", 1.0, LINE_FADE_SECONDS)
+	for i in range(1, _blocks.size()):
+		_reveal_tween.tween_property(_blocks[i], "modulate:a", 1.0, LINE_FADE_SECONDS)
 		_reveal_tween.tween_interval(LINE_DELAY_SECONDS)
 	_reveal_tween.tween_property(menu_button, "modulate:a", 1.0, LINE_FADE_SECONDS)
 	_reveal_tween.finished.connect(_finish_reveal)
@@ -188,7 +206,10 @@ func _input(event: InputEvent) -> void:
 
 func _finish_reveal() -> void:
 	_revealing = false
+	skip_hint.visible = false
 	menu_button.modulate.a = 1.0
+	# Deliberately not enabled on the same frame — see BUTTON_GRACE_SECONDS.
+	await get_tree().create_timer(BUTTON_GRACE_SECONDS).timeout
 	menu_button.disabled = false
 
 func _on_menu_pressed() -> void:

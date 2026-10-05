@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/hail_elder.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/hail_elder_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -11,7 +11,7 @@ true_threat = 0
 satisfied_text = "Він киває, не чекаючи відповіді, і йде — ніби сам не вірить у те, що щойно сказав."
 unhelped_text = "Він киває, не чекаючи відповіді, і йде — ніби сам не вірить у те, що щойно сказав."
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.201172, 0.049479, 0.595703, 0.877604)
+waiting_portrait_content_rect = Rect2(0.206745, 0.043945, 0.593842, 0.885742)
 required_flag = &"lisnyk_found_dead"
 knocked_sets_flag = &"elder_hunt_warning"
 choice_prompt = "Що скажеш?"

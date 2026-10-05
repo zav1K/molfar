@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/upyr_hidden_female.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_hidden_female_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,7 +12,7 @@ satisfied_text = "\"...може, тепер вдасться просто жит
 unhelped_text = "\"Тоді я й далі буду тінню. Аби тільки не помітили раніше за тебе.\""
 night_visitor = true
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.287109, 0.063802, 0.458984, 0.855469)
+waiting_portrait_content_rect = Rect2(0.231332, 0.060547, 0.578331, 0.865234)
 payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Виглядає як звичайний дарунок..."

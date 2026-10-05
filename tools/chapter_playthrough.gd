@@ -27,11 +27,18 @@ var clicked: Visitor
 var knocks := 0
 var frames := 0
 var days_seen := {}
+var _ending_checked := false
 
 func _ready() -> void:
 	Engine.time_scale = TIME_SCALE
 	hut = load("res://scenes/Hut.tscn").instantiate()
-	add_child(hut)
+	# Parented to the root and made the current scene, rather than a
+	# child of this node: change_scene_to_file frees the current scene,
+	# so this way the harness survives the chapter ending and can report
+	# what actually loaded after it.
+	get_tree().root.add_child.call_deferred(hut)
+	await hut.ready
+	get_tree().current_scene = hut
 	# Ending the chapter frees this node along with the current scene, so
 	# nothing here can stop the run afterwards. ignore_time_scale, or the
 	# 60x would eat the deadline too.
@@ -47,6 +54,15 @@ func _process(_delta: float) -> void:
 		get_tree().quit()
 		return
 	if not is_instance_valid(hut) or hut.get_parent() == null:
+		# The hut is gone, so the chapter ended and something replaced
+		# it. Reporting WHAT replaced it is the whole point of outliving
+		# the scene change.
+		if not _ending_checked:
+			_ending_checked = true
+			var root := get_tree().current_scene
+			print("[playthrough] hut gone; current scene is now: ",
+				root.scene_file_path if root else "<null>")
+			get_tree().quit()
 		return
 	if not days_seen.has(hut._story_day):
 		days_seen[hut._story_day] = true

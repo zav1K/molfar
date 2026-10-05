@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/wandering_soldier.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/wandering_soldier_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -20,5 +20,5 @@ payment_type = 3
 payment_flag_id = &"soldier_stories_heard"
 payment_flavor_text = "Заморська дрібничка, історії з доріг"
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.238281, 0.0625, 0.550781, 0.847656)
+waiting_portrait_content_rect = Rect2(0.250733, 0.054688, 0.536657, 0.915039)
 knocked_sets_flag = &"met_wandering_soldier"

@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
-[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_male.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_male_1.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -12,7 +12,7 @@ satisfied_text = "\"Ох.\" Він притуляє долоні до черен
 unhelped_text = "\"Та я так і думав.\" Він відступає, і там, де він стояв, на дошках лишається смуга морозу. \"Але ти не кажи, що я не питав по-людськи.\""
 night_visitor = true
 portrait_door = ExtResource("2")
-waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
+waiting_portrait_content_rect = Rect2(0.232796, 0.052734, 0.527086, 0.873047)
 refusal_loot_chance = 0.3
 refusal_loot_item_id = &"looted_goods"
 recurring_group = &"upyr_brutal_male"
