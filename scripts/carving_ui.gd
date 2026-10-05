@@ -97,6 +97,7 @@ func _build_sigil_row(sigil: Sigil) -> HBoxContainer:
 	return row
 
 func _start_carving(sigil: Sigil) -> void:
+	AudioDirector.play(&"carve")
 	_current_sigil = sigil
 	status_label.text = ""
 	_show_carving_phase()

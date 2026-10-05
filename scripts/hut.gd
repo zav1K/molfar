@@ -194,6 +194,7 @@ func _ready() -> void:
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
 
+	AudioDirector.start_loop(&"fire_loop", -12.0)
 	var restored := _restore_from_save()
 	_update_calendar_label()
 	if restored:
@@ -296,6 +297,7 @@ func _go_right() -> void:
 		_move_camera()
 
 func _move_camera() -> void:
+	AudioDirector.play(&"floorboard")
 	create_tween().tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	_update_nav_buttons()
 
@@ -378,6 +380,7 @@ func _on_visitor_resolved(invited: bool) -> void:
 	tw.tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
 	var visitor := door.current_visitor
+	AudioDirector.play(&"door_open" if invited else &"door_close")
 	var consequence := _apply_threshold_consequences(visitor, invited)
 	if invited:
 		if not visitor.is_human():
@@ -630,6 +633,7 @@ func _knock_with_random_visitor() -> void:
 		_schedule_next_knock()
 		return
 	_pending_aside = _take_suspicion_remark(visitor)
+	AudioDirector.play(&"knock")
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
 ## Every forced story beat for this phase on today or any later day —

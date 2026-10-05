@@ -42,6 +42,7 @@ KeepsakeDatabase="*res://scripts/autoload/keepsake_database.gd"
 PathBalance="*res://scripts/autoload/path_balance.gd"
 VillageSuspicion="*res://scripts/autoload/village_suspicion.gd"
 SaveGame="*res://scripts/autoload/save_game.gd"
+AudioDirector="*res://scripts/autoload/audio_director.gd"
 
 [rendering]
 

@@ -47,6 +47,7 @@ func _ready() -> void:
 	stir_cauldron.ingredient_dropped.connect(_add_ingredient)
 
 func open() -> void:
+	AudioDirector.start_loop(&"cauldron_loop", -6.0)
 	_selected.clear()
 	status_label.text = ""
 	stir_cauldron.clear_tokens()
@@ -105,6 +106,7 @@ func _build_ingredient_row(ingredient: Ingredient, held: int) -> HBoxContainer:
 	return row
 
 func _add_ingredient(ingredient_id: StringName) -> void:
+	AudioDirector.play(&"ingredient_drop")
 	var held := PlayerInventory.get_count(ingredient_id)
 	var current: int = _selected.get(ingredient_id, 0)
 	if current >= held or _total_selected() >= MAX_INGREDIENTS:
@@ -180,6 +182,7 @@ func _resolve_quality(rotations: float, evenness: float) -> Quality:
 ## arrows back. Public because Esc routes through here too (see
 ## hut.gd's _unhandled_input), not just the on-screen button.
 func close() -> void:
+	AudioDirector.stop_loop(&"cauldron_loop")
 	visible = false
 	closed.emit()
 

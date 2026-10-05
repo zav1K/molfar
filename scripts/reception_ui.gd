@@ -205,6 +205,7 @@ func _build_give_tile(icon_node: Control, label_text: String, item_id: StringNam
 	return tile
 
 func _on_give_pressed(item_id: StringName) -> void:
+	AudioDirector.play(&"give_item")
 	var matches := item_id == _visitor.desired_result_id \
 		or (_visitor.alt_desired_result_id != &"" and item_id == _visitor.alt_desired_result_id)
 	if not matches:

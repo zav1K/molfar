@@ -1,6 +1,7 @@
-[gd_scene load_steps=3 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/pause_menu.gd" id="1"]
+[ext_resource type="PackedScene" path="res://scenes/SettingsPanel.tscn" id="2"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.08, 0.065, 0.05, 0.96)
@@ -44,6 +45,10 @@ text = "Пауза"
 custom_minimum_size = Vector2(0, 36)
 text = "Продовжити"
 
+[node name="Settings" type="Button" parent="Shade/Panel/Buttons"]
+custom_minimum_size = Vector2(0, 36)
+text = "Налаштування"
+
 [node name="ToMenu" type="Button" parent="Shade/Panel/Buttons"]
 custom_minimum_size = Vector2(0, 36)
 text = "У головне меню"
@@ -58,3 +63,5 @@ autowrap_mode = 3
 theme_override_font_sizes/font_size = 11
 theme_override_colors/font_color = Color(0.6, 0.54, 0.4, 1)
 text = "Гра зберігається сама на кожному переході день/ніч. Усе після останнього переходу буде втрачено."
+
+[node name="SettingsPanel" parent="." instance=ExtResource("2")]

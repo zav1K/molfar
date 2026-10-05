@@ -21,7 +21,9 @@ const MENU_SCENE := "res://scenes/MainMenu.tscn"
 
 @onready var resume_button: Button = $Shade/Panel/Buttons/Resume
 @onready var menu_button: Button = $Shade/Panel/Buttons/ToMenu
+@onready var settings_button: Button = $Shade/Panel/Buttons/Settings
 @onready var quit_button: Button = $Shade/Panel/Buttons/Quit
+@onready var settings_panel: SettingsPanel = $SettingsPanel
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
@@ -29,6 +31,7 @@ func _ready() -> void:
 	resume_button.pressed.connect(close)
 	menu_button.pressed.connect(_on_menu_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
+	settings_button.pressed.connect(settings_panel.open)
 
 func open() -> void:
 	visible = true
@@ -40,11 +43,13 @@ func close() -> void:
 	visible = false
 	resumed.emit()
 
-## Esc again backs out, same as the Resume button — the menu shouldn't be
+## Esc backs out again, same as the Resume button — the menu shouldn't be
 ## a one-way door. Handled here rather than in hut.gd because hut.gd
-## stops receiving input the moment the tree is paused.
+## stops receiving input the moment the tree is paused. Skipped while the
+## settings panel is up, so Esc closes that first and the player doesn't
+## get thrown two screens back in one press.
 func _unhandled_input(event: InputEvent) -> void:
-	if visible and event.is_action_pressed(&"ui_cancel"):
+	if visible and not settings_panel.visible and event.is_action_pressed(&"ui_cancel"):
 		close()
 		get_viewport().set_input_as_handled()
 

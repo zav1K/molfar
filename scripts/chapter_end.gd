@@ -73,6 +73,7 @@ func _build() -> void:
 	_add_rule()
 	for line in _footer_lines():
 		_add_text(line, FOOTER_FONT_SIZE, FOOTER_COLOR, HORIZONTAL_ALIGNMENT_CENTER)
+	AudioDirector.play_music(&"trembita")
 	_start_reveal()
 
 ## The molfar's own last entries. First line is unconditional — the

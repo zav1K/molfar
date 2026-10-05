@@ -11,10 +11,8 @@ extends Control
 ## a missing button is more confusing than a greyed-out one that says
 ## what it would do.
 ##
-## Налаштування is still disabled because there is nothing behind it yet
-## (no volume, no resolution, no language options exist to settle). A
-## button that looks live and does nothing is worse than one that plainly
-## says "not yet" — re-enable it in _ready() once that screen exists.
+## Налаштування opens SettingsPanel, which is shared with the in-game
+## pause menu so both show the same controls.
 
 const HUT_SCENE := "res://scenes/Hut.tscn"
 const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
@@ -23,13 +21,14 @@ const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
 @onready var new_game_button: Button = $Panel/Buttons/NewGame
 @onready var continue_hint: Label = $Panel/Buttons/ContinueHint
 @onready var settings_button: Button = $Panel/Buttons/Settings
+@onready var settings_panel: SettingsPanel = $SettingsPanel
 @onready var quit_button: Button = $Panel/Buttons/Quit
 
 func _ready() -> void:
 	continue_button.pressed.connect(_on_continue_pressed)
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
-	settings_button.disabled = true
+	settings_button.pressed.connect(settings_panel.open)
 
 	var has_save := SaveGame.has_save()
 	continue_button.disabled = not has_save
