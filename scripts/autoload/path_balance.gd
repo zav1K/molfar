@@ -17,3 +17,10 @@ var value: int = 0
 func shift(amount: int) -> void:
 	value += amount
 	changed.emit(value)
+
+func save_state() -> int:
+	return value
+
+func load_state(saved_value: int) -> void:
+	value = saved_value
+	changed.emit(value)

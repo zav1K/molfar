@@ -149,3 +149,27 @@ func _advance_group_cycle(visitor: Visitor) -> void:
 func reset_seen() -> void:
 	_seen.clear()
 	_seen_groups.clear()
+
+## Only the cross-playthrough part is worth saving: _seen/_seen_groups
+## are cleared on every phase flip anyway, and SaveGame only writes at a
+## phase flip, so they're empty at save time by construction. Visitor
+## objects themselves are saved as resource paths.
+func save_state() -> Dictionary:
+	var out := {}
+	for group in _group_pending:
+		var paths: Array = []
+		for visitor in _group_pending[group]:
+			paths.append(visitor.resource_path)
+		out[String(group)] = paths
+	return out
+
+func load_state(data: Dictionary) -> void:
+	_group_pending.clear()
+	for group in data:
+		var members: Array[Visitor] = []
+		for path in data[group]:
+			for visitor in _visitors:
+				if visitor.resource_path == path:
+					members.append(visitor)
+					break
+		_group_pending[StringName(group)] = members

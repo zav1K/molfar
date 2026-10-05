@@ -144,7 +144,15 @@ func _ready() -> void:
 	GameCalendar.season_changed.connect(_update_calendar_label)
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
+
+	var restored := _restore_from_save()
 	_update_calendar_label()
+	if restored:
+		# A loaded game already has whatever the player actually held —
+		# topping it back up would hand back exactly the potions they
+		# just spent, so the debug seeding below is for fresh games only.
+		_knock_with_random_visitor()
+		return
 
 	# DEBUG: seed the inventory so there's something to see in InventoryPanel
 	# and to brew/give until the garden/gathering loop actually grants
@@ -345,13 +353,12 @@ func _advance_visitor_slot() -> void:
 	if GameCalendar.phase == GameCalendar.Phase.DAY:
 		_day_visitor_count += 1
 		if _day_visitor_count >= _current_day_cap():
-			var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
-			_night_quota = script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") \
-				else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
+			_night_quota = _roll_night_quota()
 			_night_visitor_count = 0
 			_night_forced_used = false
 			GameCalendar.set_phase(GameCalendar.Phase.NIGHT)
 			day_night_toast.show_message("Ніч %d" % _story_day)
+			SaveGame.save(_story_day)
 	else:
 		_night_visitor_count += 1
 		if _night_visitor_count >= _night_quota:
@@ -362,14 +369,41 @@ func _advance_visitor_slot() -> void:
 			_story_day += 1
 			GameCalendar.set_phase(GameCalendar.Phase.DAY)
 			day_night_toast.show_message("День %d" % _story_day)
+			SaveGame.save(_story_day)
+
+## Pulls the autosave back in, if the menu asked for it. Only _story_day
+## and the calendar phase come from the file — every slot counter below
+## is rebuilt instead, since SaveGame only ever writes at a day/night
+## flip, which is exactly when they're all at their just-reset values.
+func _restore_from_save() -> bool:
+	if not SaveGame.pending_load:
+		return false
+	SaveGame.pending_load = false
+	var saved_day := SaveGame.load_game()
+	if saved_day <= 0:
+		return false
+	_story_day = saved_day
+	if GameCalendar.phase == GameCalendar.Phase.NIGHT:
+		_night_visitor_count = 0
+		_night_forced_used = false
+		_night_quota = _roll_night_quota()
+	else:
+		_day_visitor_count = 0
+		_day_forced_used = false
+	return true
 
 func _current_day_cap() -> int:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
 	return script.get("day_cap", DAY_VISITOR_CAP)
 
-func _current_night_cap() -> int:
+## How many visitors tonight gets. A scripted night is a fixed number
+## (the beat has to land on the last slot, so it can't be random); an
+## unscripted freeplay night rolls fresh, which is why this is a roll
+## stored in _night_quota rather than a cap recomputed on demand.
+func _roll_night_quota() -> int:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
-	return script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") else NIGHT_VISITOR_MAX
+	return script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") \
+		else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
 
 func _knock_with_random_visitor() -> void:
 	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
@@ -405,7 +439,7 @@ func _pop_forced_visitor(is_night: bool) -> Visitor:
 	if is_night:
 		if _night_forced_used or not script.has("night"):
 			return null
-		if _night_visitor_count != _current_night_cap() - 1:
+		if _night_visitor_count != _night_quota - 1:
 			return null
 		_night_forced_used = true
 		return _load_forced_visitor(script["night"])

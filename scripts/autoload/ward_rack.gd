@@ -46,3 +46,15 @@ func check_visitor(visitor: Visitor) -> Array[String]:
 		if ingredient.ward_threat == visitor.true_threat and randf() < SIGNAL_CHANCE:
 			hints.append(ingredient.ward_hint_text)
 	return hints
+
+func save_state() -> Array:
+	var out: Array = []
+	for ingredient_id in _slots:
+		out.append(String(ingredient_id))
+	return out
+
+func load_state(data: Array) -> void:
+	for i in SLOT_COUNT:
+		var ingredient_id: StringName = StringName(data[i]) if i < data.size() else &""
+		_slots[i] = ingredient_id
+		changed.emit(i)

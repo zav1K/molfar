@@ -40,6 +40,7 @@ CarvedSigilRegistry="*res://scripts/autoload/carved_sigil_registry.gd"
 GardenState="*res://scripts/autoload/garden_state.gd"
 KeepsakeDatabase="*res://scripts/autoload/keepsake_database.gd"
 PathBalance="*res://scripts/autoload/path_balance.gd"
+SaveGame="*res://scripts/autoload/save_game.gd"
 
 [rendering]
 

@@ -26,3 +26,17 @@ func has(ingredient_id: StringName) -> bool:
 
 func get_held_ids() -> Array:
 	return _counts.keys()
+
+## JSON-friendly snapshot for SaveGame (String keys, not StringName —
+## JSON has no StringName, and keys come back as plain String anyway).
+func save_state() -> Dictionary:
+	var out := {}
+	for id in _counts:
+		out[String(id)] = _counts[id]
+	return out
+
+func load_state(data: Dictionary) -> void:
+	_counts.clear()
+	for id in data:
+		_counts[StringName(id)] = int(data[id])
+		changed.emit(StringName(id))

@@ -125,3 +125,12 @@ func get_moon_phase() -> MoonPhase.Phase:
 	if d == 7:
 		return MoonPhase.Phase.FULL
 	return MoonPhase.Phase.WAXING if d < 7 else MoonPhase.Phase.WANING
+
+func save_state() -> Dictionary:
+	return {day = current_day, phase = int(phase)}
+
+func load_state(data: Dictionary) -> void:
+	current_day = int(data.get("day", 1))
+	phase = int(data.get("phase", Phase.DAY)) as Phase
+	day_changed.emit(current_day)
+	phase_changed.emit(phase)

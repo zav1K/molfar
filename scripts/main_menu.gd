@@ -4,29 +4,53 @@ extends Control
 ## darkened — rather than its own piece, so the menu looks like the game
 ## it opens instead of a flat placeholder colour, without needing new art.
 ##
-## Save/Load/Settings are deliberately disabled, not fake: there is no
-## save system yet (nothing in the game serializes PlayerInventory,
-## StoryFlags, hut.gd's _story_day...). A button that looks live and does
-## nothing is worse than one that plainly says "not yet" — re-enable each
-## in _ready() once the thing behind it exists.
+## There is no "Зберегти" button by design, and no save slots: saving is
+## automatic and single-slot (see SaveGame), written at every day/night
+## flip, so the only save-related thing a player ever needs here is
+## "Продовжити". It's disabled, not hidden, when no save file exists —
+## a missing button is more confusing than a greyed-out one that says
+## what it would do.
+##
+## Налаштування is still disabled because there is nothing behind it yet
+## (no volume, no resolution, no language options exist to settle). A
+## button that looks live and does nothing is worse than one that plainly
+## says "not yet" — re-enable it in _ready() once that screen exists.
 
 const HUT_SCENE := "res://scenes/Hut.tscn"
 
+@onready var continue_button: Button = $Panel/Buttons/Continue
 @onready var new_game_button: Button = $Panel/Buttons/NewGame
-@onready var save_button: Button = $Panel/Buttons/Save
-@onready var load_button: Button = $Panel/Buttons/Load
+@onready var continue_hint: Label = $Panel/Buttons/ContinueHint
 @onready var settings_button: Button = $Panel/Buttons/Settings
 @onready var quit_button: Button = $Panel/Buttons/Quit
 
 func _ready() -> void:
+	continue_button.pressed.connect(_on_continue_pressed)
 	new_game_button.pressed.connect(_on_new_game_pressed)
 	quit_button.pressed.connect(_on_quit_pressed)
-	save_button.disabled = true
-	load_button.disabled = true
 	settings_button.disabled = true
-	new_game_button.grab_focus()
+
+	var has_save := SaveGame.has_save()
+	continue_button.disabled = not has_save
+	continue_hint.visible = not has_save
+	if has_save:
+		continue_button.grab_focus()
+	else:
+		new_game_button.grab_focus()
+
+func _on_continue_pressed() -> void:
+	# hut.gd's _ready() reads this once and pulls the snapshot in itself —
+	# the actual load can't happen here, because half of what's restored
+	# (the visitor slot counters, the forced-beat bookkeeping) lives on
+	# the Hut scene that doesn't exist yet at this point.
+	SaveGame.pending_load = true
+	get_tree().change_scene_to_file(HUT_SCENE)
 
 func _on_new_game_pressed() -> void:
+	# Deliberately does NOT wipe the existing save: the next day/night
+	# flip overwrites it anyway, and a player who hits "Нова гра" by
+	# mistake can still back out to the menu before that first flip.
+	SaveGame.pending_load = false
 	get_tree().change_scene_to_file(HUT_SCENE)
 
 func _on_quit_pressed() -> void:

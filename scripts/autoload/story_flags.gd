@@ -14,3 +14,16 @@ func set_flag(id: StringName) -> void:
 
 func has_flag(id: StringName) -> bool:
 	return _flags.get(id, false)
+
+## Saved as a flat list — the dictionary's values are always `true`, so
+## only the keys carry information.
+func save_state() -> Array:
+	var out: Array = []
+	for id in _flags:
+		out.append(String(id))
+	return out
+
+func load_state(data: Array) -> void:
+	_flags.clear()
+	for id in data:
+		_flags[StringName(id)] = true

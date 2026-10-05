@@ -111,3 +111,27 @@ func harvest(index: int) -> StringName:
 	plot.days_to_mature = 0
 	plot.last_watered_day = -1
 	return id
+
+func save_state() -> Array:
+	var out: Array = []
+	for plot in _plots:
+		out.append({
+			stage = int(plot.stage),
+			ingredient_id = String(plot.ingredient_id),
+			days_grown = plot.days_grown,
+			days_to_growing = plot.days_to_growing,
+			days_to_mature = plot.days_to_mature,
+			last_watered_day = plot.last_watered_day,
+		})
+	return out
+
+func load_state(data: Array) -> void:
+	for i in mini(data.size(), _plots.size()):
+		var saved: Dictionary = data[i]
+		var plot := _plots[i]
+		plot.stage = int(saved.get("stage", Stage.EMPTY)) as Stage
+		plot.ingredient_id = StringName(saved.get("ingredient_id", ""))
+		plot.days_grown = int(saved.get("days_grown", 0))
+		plot.days_to_growing = int(saved.get("days_to_growing", 0))
+		plot.days_to_mature = int(saved.get("days_to_mature", 0))
+		plot.last_watered_day = int(saved.get("last_watered_day", -1))
