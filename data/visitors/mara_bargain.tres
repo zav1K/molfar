@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Мара"
+problem_text = "\"Я стомилася тиснути тобі груди щоночі даремно.\" Вона схиляє голову набік. \"Давай інакше: пусти мене, і я цієї ночі піду не до тебе, а до того, хто тобі муляє. Назви кого. Я не питаю, нащо.\"\n\nВона чекає, і в неї надто багато терпіння для істоти, яка нічого не втрачає."
+true_threat = 2
+night_visitor = true
+required_flag = &"met_mara"
+satisfied_text = "Ти не називаєш нікого — і вона все одно заходить, бо впустив.\n\n\"Нічого. Я почекаю, поки надумаєш. У тебе ще буде кого назвати, Онуфрію. У всіх буває.\""
+unhelped_text = "\"Розумно.\" Вона зникає з порога, не рушивши з місця. \"Хоч і не з доброти, а з обачності. Ну, хай.\""
+recurring_group = &"mara"
+choice_prompt = "Назвеш комусь ім'я?"
+choice_a_label = "Назвати священника"
+choice_a_response = "Ти вимовляєш це перш, ніж подумав. Вона всміхається вперше за всю ніч.\n\n\"Отож-бо. А казав — не маєш кого.\" І йде, задоволена, у бік села."
+choice_a_path_shift = -2
+choice_b_label = "Нікого"
+choice_b_response = "Ти мовчиш, аж поки вона не перестає чекати.\n\n\"Шкода. Було б цікаво.\" Вона лишається — на цю ніч тільки біля твоїх грудей."
+choice_b_path_shift = 1
+knocked_sets_flag = &"mara_offered_bargain"

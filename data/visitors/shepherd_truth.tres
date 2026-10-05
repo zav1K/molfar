@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Пастух"
+problem_text = "\"У селі кажуть — нечисть худобу гризе. Я мовчу, бо кому я що доведу.\" Він дивиться тобі в очі. \"Я ту вівцю сам зарізав, мольфаре. Вона ногу зламала в каменях, вона б до ранку не дожила, і я її дорізав, як годиться. А на другий день уже всі казали, що то упир. Я нікого не виправляв. Бо як виправиш — спитають, а чого ти знаєш.\" Він потирає обличчя. \"Отож я й не сплю.\""
+true_threat = 0
+desired_result_id = &"calming_remedy"
+satisfied_text = "\"Воно легше, як комусь сказав.\" Він випиває одразу, при тобі, і повертає пляшечку. \"Ви нікому, добре? Бо тепер уже й пізно казати правду — засміють, а то й гірше.\""
+unhelped_text = "\"Та я вже й сам не знаю, чого прийшов.\" Він стоїть ще трохи й іде, так і не сказавши більше."
+payment_type = 3
+payment_flag_id = &"livestock_death_was_ordinary"
+payment_flavor_text = "Ти знаєш тепер, що хоч одна зі \"злочинів нечисті\" була звичайною вівцею в каменях"
+recurring_group = &"shepherd"

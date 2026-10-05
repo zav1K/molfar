@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Упириця від облави"
+problem_text = "Вона не просить увійти. Вона стоїть збоку від дверей, притиснувшись до стіни, щоб не бути видною зі стежки.\n\n\"Там унизу з факелами. Вони вже в трьох хатах були.\" Вона говорить швидко й тихо. \"Я не до тебе прийшла — я прийшла сказати. Вони питають не про нечисть, мольфаре. Вони питають, хто з людей нечисть переховує. Різниця невелика, та вона є, і вона тепер твоя.\" Вона озирається вниз. \"Можеш гнати. Я вже сказала, що мала.\""
+true_threat = 2
+night_visitor = true
+required_flag = &"lisnyk_found_dead"
+knocked_sets_flag = &"warned_by_fleeing_upyr"
+desired_result_id = &"strong_ward_remedy"
+alt_desired_result_id = &"anti_curse_remedy"
+satisfied_text = "Вона бере й не дякує — у неї немає на це часу.\n\n\"Як прийдуть до тебе — не відчиняй одразу. Хто одразу відчиняє, той, кажуть, чекав.\" І вона зникає зі стіни, не відходячи від неї."
+unhelped_text = "\"Правильно.\" Вона вже не дивиться на тебе, вона дивиться вниз, на вогні. \"Ти хоч трохи поживеш.\""
+satisfied_sets_flag = &"helped_fleeing_upyr"
+satisfied_path_shift = 1

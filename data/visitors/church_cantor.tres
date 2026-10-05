@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Дяк"
+problem_text = "\"Я на хвильку, і я тут не був, добре?\" Він озирається на стежку. \"Горло зірвав — у неділю співати, а я й слова не витягну. Отець казав: хто горлом не вийшов, той і душею недбалий. Дай чогось, бо він з мене шкуру здере.\""
+true_threat = 0
+desired_result_id = &"cold_remedy"
+satisfied_text = "\"Дай Боже здоров'я.\" Він ховає пляшечку глибоко за пазуху й поправляє одежу, щоб не було видно горбика."
+unhelped_text = "\"Нема? Ну... буду шепотом співати, а він хай думає, що то побожність.\" Він іде, похиливши голову."
+payment_type = 1
+payment_item_id = &"groshi"
+payment_amount = 1
+payment_flavor_text = "Дрібна монета, видно що своя, не церковна"
+recurring_group = &"church_cantor"

@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_male.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Упир"
+problem_text = "\"Чуєш, хазяїне, у тебе з печі тягне.\" Він стоїть надто близько до дверей. \"Я вже третю зиму не можу нагрітися. Хоч біля чого стану, хоч у що вберуся — холод не зсередини й не знадвору, а наче замість мене. Пусти постояти коло вогню, я й не сяду навіть.\""
+true_threat = 2
+satisfied_text = "\"Ох.\" Він притуляє долоні до череня й тримає їх там довго, аж поки шкіра не починає шкварчати, і не відводить. \"Нічого. Не болить уже давно.\""
+unhelped_text = "\"Та я так і думав.\" Він відступає, і там, де він стояв, на дошках лишається смуга морозу. \"Але ти не кажи, що я не питав по-людськи.\""
+night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
+refusal_loot_chance = 0.3
+refusal_loot_item_id = &"looted_goods"
+recurring_group = &"upyr_brutal_male"

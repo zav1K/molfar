@@ -22,3 +22,4 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Скромні речі — і, здається, родинна реліквія на додачу"
 knocked_sets_flag = &"wake_guest_treated"
+recurring_group = &"wake_guest"

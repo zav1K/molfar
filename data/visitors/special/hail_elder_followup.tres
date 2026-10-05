@@ -21,3 +21,4 @@ choice_a_path_shift = 1
 choice_b_label = "Може, так і треба."
 choice_b_response = "Він довго мовчить, тоді киває й іде, не кажучи більше нічого."
 choice_b_path_shift = -1
+recurring_group = &"hail_elder"

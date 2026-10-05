@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Вовкулака"
+problem_text = "Цієї ночі він на двох ногах і майже одягнений. У нього розсічена брова й кров засохла до вуха.\n\n\"Ходять по хатах.\" Він говорить швидко, озираючись. \"Із собаками й з ломаками, і попереду дяк зі списком. Вони шукають, у кого на руках шерсть. Онуфрію, у мене на руках завжди шерсть, я таким родився, батько такий був.\" Він показує долоні. \"Дай мені чим зняти це хоч на тиждень. Хоч на тиждень.\""
+true_threat = 2
+night_visitor = true
+required_flag = &"met_vovkulaka"
+desired_result_id = &"anti_curse_remedy"
+alt_desired_result_id = &"cleansing_remedy"
+satisfied_text = "Він випиває все одним духом і витирає рот зап'ястком.\n\n\"Як не поможе — я на вас не скажу. Я нікого не назву, хоч би й били.\" Він іде в темряву, і хода в нього вперше за ніч рівна."
+unhelped_text = "\"Значить, так.\" Він опускає долоні. \"Тоді я до ранку в ліс піду й не буду вертатися. Так усім спокійніше.\""
+satisfied_sets_flag = &"hid_vovkulaka_from_hunt"
+satisfied_path_shift = 1
+recurring_group = &"vovkulaka"
+knocked_sets_flag = &"vovkulaka_hunted_asked"

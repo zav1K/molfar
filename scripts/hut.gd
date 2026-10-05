@@ -40,10 +40,25 @@ const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
 ## matters for a forced visitor reused from the ordinary pool, like the
 ## upyr_* ones below.
 ## "day_cap"/"night_cap": override DAY_VISITOR_CAP/SCRIPTED_NIGHT_CAP
-## for that day/night only. Day 7's night_cap is 1 (no random upyr
-## before the priest) — every other scripted night defaults to
-## SCRIPTED_NIGHT_CAP (a couple of ordinary нечисть before tonight's
-## scripted one, not night-then-immediately-morning).
+## for that day/night only. Most scripted nights use the default (a
+## couple of ordinary нечисть before tonight's scripted one, not
+## night-then-immediately-morning).
+##
+## "<phase>_opens": a list of beats filling the phase's FIRST slots, one
+## each from slot 0, where "day"/"night" above fill the LAST one. Only
+## Day 7 uses it, and it is what makes that day work at all.
+##
+## Everything that reacts to Лісник's death is gated behind the flag the
+## Вісник sets when he announces it — and he is Day 7's own beat, with no
+## day 8 after him. Left as a closing beat he arrived last, so the
+## elder's warning about the hunt, the widow with tar on her gate and the
+## upyr running from it could never appear at all: one of them
+## (hail_elder_followup) even feeds a diary entry that was therefore
+## unreachable. So Day 7 opens with the news and then spends three slots
+## on the village reacting to it, and its night fits one more нечусть
+## before the priest arrives to forbid helping exactly that kind of
+## visitor. Scripted rather than pooled because these are the story, and
+## the pool would only seat each of them some of the time.
 const CHAPTER1_SCRIPT := {
 	1: {"day": "res://data/visitors/special/forest_warden_day1.tres", "night": "res://data/visitors/special/mavka_night1.tres"},
 	2: {"day": "res://data/visitors/special/forest_warden_day2.tres", "night": "res://data/visitors/upyr_brutal_male.tres"},
@@ -51,7 +66,17 @@ const CHAPTER1_SCRIPT := {
 	4: {"day": "res://data/visitors/special/forest_warden_day4.tres", "night": "res://data/visitors/upyr_hidden_female.tres"},
 	5: {"day": "res://data/visitors/special/forest_warden_day5.tres", "night": "res://data/visitors/upyr_seeking_cure.tres"},
 	6: {"night": "res://data/visitors/special/upyr_night6_strange.tres"},
-	7: {"day": "res://data/visitors/special/visnyk_day7.tres", "day_cap": 1, "night": "res://data/visitors/special/priest_day7.tres", "night_cap": 1},
+	7: {
+		"day_opens": [
+			"res://data/visitors/special/visnyk_day7.tres",
+			"res://data/visitors/special/hail_elder_followup.tres",
+			"res://data/visitors/accused_widow.tres",
+		],
+		"day_cap": 4,
+		"night_opens": ["res://data/visitors/upyr_fleeing_hunt.tres"],
+		"night": "res://data/visitors/special/priest_day7.tres",
+		"night_cap": 2,
+	},
 }
 
 ## Zones that are portals to another scene, keyed by zone_id.
@@ -503,13 +528,19 @@ func _knock_with_random_visitor() -> void:
 	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
 	var visitor := _pop_forced_visitor(is_night)
 	if visitor == null:
-		# Exclude today's/tonight's own forced visitor (if any) from the
-		# ordinary random slots leading up to it — see CHAPTER1_SCRIPT's
-		# doc. A plain load(), not _load_forced_visitor(): just a peek
-		# for identity comparison, no knocked_sets_flag side effect yet.
+		# Keep the random slots off every story beat still to come, and
+		# off today's beat's whole recurring_group — see get_random's doc
+		# for why those two scopes differ. Plain load()s, not
+		# _load_forced_visitor(): just peeks for identity comparison, no
+		# knocked_sets_flag side effects yet.
+		var exclude := _forced_from_today_on(is_night)
+		var exclude_groups: Array[StringName] = []
 		var todays_forced := _peek_forced_path(is_night)
-		var exclude: Visitor = load(todays_forced) if todays_forced != "" else null
-		visitor = VisitorDatabase.get_random(is_night, exclude)
+		if todays_forced != "":
+			var todays: Visitor = load(todays_forced)
+			if todays.recurring_group != &"":
+				exclude_groups.append(todays.recurring_group)
+		visitor = VisitorDatabase.get_random(is_night, exclude, exclude_groups)
 	if visitor == null:
 		# Nobody eligible this slot — VisitorDatabase's own fallback tier
 		# should make this rare, but a silent door with nothing scheduled
@@ -521,6 +552,22 @@ func _knock_with_random_visitor() -> void:
 	_pending_aside = _take_suspicion_remark(visitor)
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
+## Every forced story beat for this phase on today or any later day —
+## the set the ordinary random rotation must not spoil. See get_random.
+func _forced_from_today_on(is_night: bool) -> Array[Visitor]:
+	var out: Array[Visitor] = []
+	var key := "night" if is_night else "day"
+	for day in CHAPTER1_SCRIPT:
+		if day < _story_day:
+			continue
+		var script: Dictionary = CHAPTER1_SCRIPT[day]
+		var path: String = script.get(key, "")
+		if path != "":
+			out.append(load(path))
+		for opening: String in script.get(key + "_opens", []):
+			out.append(load(opening))
+	return out
+
 func _peek_forced_path(is_night: bool) -> String:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
 	return script.get("night" if is_night else "day", "")
@@ -531,19 +578,27 @@ func _peek_forced_path(is_night: bool) -> String:
 ## or this isn't yet that phase's last slot (cap - 1).
 func _pop_forced_visitor(is_night: bool) -> Visitor:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
+	var key := "night" if is_night else "day"
+	# Opening beats first, one per slot from 0 — these are scripted
+	# rather than left to the pool because they are the chapter's story,
+	# and the pool would only give each one a slot some of the time.
+	var opens: Array = script.get(key + "_opens", [])
+	var opening_slot := _night_visitor_count if is_night else _day_visitor_count
+	if opening_slot < opens.size():
+		return _load_forced_visitor(opens[opening_slot])
+	if not script.has(key):
+		return null
+	if _night_forced_used if is_night else _day_forced_used:
+		return null
+	var slot := _night_visitor_count if is_night else _day_visitor_count
+	var quota := _night_quota if is_night else _current_day_cap()
+	if slot != quota - 1:
+		return null
 	if is_night:
-		if _night_forced_used or not script.has("night"):
-			return null
-		if _night_visitor_count != _night_quota - 1:
-			return null
 		_night_forced_used = true
-		return _load_forced_visitor(script["night"])
-	if _day_forced_used or not script.has("day"):
-		return null
-	if _day_visitor_count != _current_day_cap() - 1:
-		return null
-	_day_forced_used = true
-	return _load_forced_visitor(script["day"])
+	else:
+		_day_forced_used = true
+	return _load_forced_visitor(script[key])
 
 ## Loads a scripted visitor and replicates get_random()'s knocked_sets_flag
 ## side effect — forced visitors bypass VisitorDatabase entirely, so

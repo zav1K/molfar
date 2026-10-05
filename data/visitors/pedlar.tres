@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Крамар"
+problem_text = "\"Мені казали в долині: як підійматися, то до мольфара на горі, він і від дороги вилікує.\" Він скидає скриню з плечей і сідає на неї без запрошення. \"Ноги в мене побиті до кості, добрий чоловіче. Шість тижнів від Станіславова, а дороги цього року такі, що я волів би морем.\" Він усміхається. \"Є в тебе що на шкуру? Заплачу, і не вовною — монетою.\""
+true_threat = 0
+desired_result_id = &"skin_remedy"
+satisfied_text = "\"Оце діло.\" Він розв'язує калитку, не торгуючись. \"А знаєш, що я тобі скажу? На трьох селах звідси вже двох таких, як ти, нема. Одного прогнали, другий сам пішов. Ти тут останній на всю долину, хто ще при хаті.\""
+unhelped_text = "\"Нема — то й нема, я звик.\" Він закидає скриню на плечі. \"Бувай. Як буду через рік, то, може, й застану тебе.\""
+payment_type = 2
+payment_item_id = &"groshi"
+payment_amount = 3
+payment_flavor_text = "Три монети, відраховані без торгу"
+knocked_sets_flag = &"pedlar_came"
+payment_flag_id = &"other_molfars_gone"

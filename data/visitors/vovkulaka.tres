@@ -1,0 +1,18 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Вовкулака"
+problem_text = "Він навкарачки на порозі й не підводиться. Плечі голі, обмотані дертим сердаком, а по руках угору — вовча сіра шерсть, що вже рідшає.\n\n\"Не світи в очі.\" Голос людський, захриплий. \"Я щойно вернувся. Я не вкусив нікого, мольфаре, я три ночі в ямі лежав, щоб нікого. Але мене бачили, як я вертався, і тепер я до села не дійду.\" Він дивиться в землю. \"Я не прошу знімати. Я прошу перебути до світла.\""
+true_threat = 2
+night_visitor = true
+desired_result_id = &"strengthening_remedy"
+alt_desired_result_id = &"anti_curse_remedy"
+satisfied_text = "Він заповзає й лягає коло порога, не глибше. До ранку його тіпає, і ти чуєш, як тріщать кістки, що стають на місце.\n\nУранці на тому місці спить голий чоловік, і він людина цілком."
+unhelped_text = "\"Правильно.\" Він навіть не намагається просити вдруге. \"Я сам би себе не пустив.\" Він відповзає в темряву, тримаючись низько, і довго ще чути, як він дихає."
+knocked_sets_flag = &"met_vovkulaka"
+satisfied_sets_flag = &"sheltered_vovkulaka"
+satisfied_path_shift = 1
+recurring_group = &"vovkulaka"

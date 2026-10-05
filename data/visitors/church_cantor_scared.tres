@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Дяк"
+problem_text = "\"Я не спав три ночі.\" Він стоїть на порозі й не заходить. \"Отець звелів мені переписати, кого з села не причащали два роки. Два роки, мольфаре. Я питав, навіщо — він сказав не питати. Я переписав. Там двадцять шість імен, і я знаю кожного з них у лице.\" Він ковтає. \"Дай мені чим заснути.\""
+true_threat = 0
+desired_result_id = &"sleep_remedy"
+alt_desired_result_id = &"calming_remedy"
+satisfied_text = "\"Дякую.\" Він усе ще не заходить. \"Я вам одне скажу і піду. Того списку в нас ніколи не просили згори. Його отець сам почав.\""
+unhelped_text = "\"Та я й не думав, що допоможе.\" Він притискає згорток до грудей і йде швидко, не прощаючись."
+payment_type = 3
+payment_flag_id = &"priest_made_own_list"
+payment_flavor_text = "Він каже, що список ніхто не замовляв — священник склав його сам"
+recurring_group = &"church_cantor"
+choice_prompt = "Спитаєш, чи твоє ім'я там є?"
+choice_a_label = "Спитати"
+choice_a_response = "Він довго мовчить. \"Ви перший. Над усіма.\" І тільки тоді відходить від порога."
+choice_a_path_shift = -1
+choice_b_label = "Не питати"
+choice_b_response = "Ти не питаєш — бо й так знаєш. Він дивиться з полегкістю, що не довелося казати вголос."

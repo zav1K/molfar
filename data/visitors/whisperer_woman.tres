@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Баба-шептуха"
+problem_text = "\"Не до тебе я по пораду, Онуфрію — я тобі принесла. Дитина в Ковалихи горить третій день. Я шепчу, а не спадає: моє слово тут не бере. Дай, що маєш від вогню в крові, бо до вечора не дотягне.\""
+true_threat = 0
+desired_result_id = &"blood_cleansing_remedy"
+satisfied_text = "\"Отак. Я б і сама зварила, та в мене вже рук на два села не стає.\" Вона озирає твої полиці довгим оком знавця й нічого не питає."
+unhelped_text = "\"Шкода. Понесу, що є, і буду шептати далі.\" Вона не образилася — вона вже думає про наступну хату."
+payment_type = 3
+payment_flag_id = &"whisperer_knows_molfar"
+payment_flavor_text = "Вона переказує, у кого в селі що болить — сам би ти не дізнався"
+recurring_group = &"whisperer_woman"

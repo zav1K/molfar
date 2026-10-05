@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Вдова"
+problem_text = "\"У мене на воротях дьогтем мазано. Третій раз за тиждень.\" Вона каже це спокійно, як про погоду. \"Я живу сама, корова в мене доїть, а в сусідів ні — оце й уся моя вина. Торік була б і не вина, а тепер, як Лісника знайшли, усе стало виною.\" Вона кладе на поріг вузлик. \"Мені не треба зілля. Мені треба, щоб хтось у цьому селі сказав, що я людина. Тебе послухають.\""
+true_threat = 0
+required_flag = &"lisnyk_found_dead"
+desired_result_id = &"spiral_ward"
+alt_desired_result_id = &"zigzag_ward"
+satisfied_text = "Вона бере оберіг і дивиться на нього довго.\n\n\"Я його на воротях повішу, де дьоготь. Хай бачать, що мольфар дав.\" На порозі вона затримується. \"Тебе теж мазали, Онуфрію? Ще ні? То почекай.\""
+unhelped_text = "\"Я зрозуміла.\" Вона забирає вузлик із порога. \"Ти боїшся, щоб тебе зі мною не поставили в одну лаву. Правильно боїшся.\""
+knocked_sets_flag = &"met_accused_widow"
+satisfied_sets_flag = &"defended_accused_widow"
+satisfied_path_shift = 1
+unhelped_path_shift = -1
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_amount = 1
+payment_flavor_text = "Вузлик, який вона все-таки лишає: масло й сухі груші"

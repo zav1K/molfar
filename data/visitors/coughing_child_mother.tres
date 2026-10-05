@@ -17,3 +17,4 @@ payment_type = 1
 payment_item_id = &"mat_goods"
 payment_flavor_text = "Домашній хліб, вишитий рушник"
 knocked_sets_flag = &"child_cough_treated"
+recurring_group = &"coughing_child_mother"

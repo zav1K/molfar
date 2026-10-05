@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Потерчата"
+problem_text = "Цієї ночі їх двоє, і вони тримаються за руки міцніше, ніж минулого разу.\n\n\"Третього нема.\" Вогники в них обох тремтять. \"Він пішов за світлом на болото, бо думав, що то такий, як ми. А то не такий був.\" Менший хлипає без слів. \"Дядьку, у вас є щось, щоб не боятися? Нам іще цілу ніч іти.\""
+true_threat = 2
+night_visitor = true
+desired_result_id = &"calming_remedy"
+alt_desired_result_id = &"child_sleep_remedy"
+satisfied_text = "Вони випивають по черзі, обоє кривлячись від гіркоти, як звичайні діти.\n\n\"Тепер не страшно.\" І справді — вони відходять від хати вже не озираючись."
+unhelped_text = "\"Ну нічого.\" Вони беруться за руки ще міцніше й ідуть у темряву, двоє вогників, що гойдаються дуже низько над землею."
+required_flag = &"met_poterchata"
+recurring_group = &"poterchata"
+knocked_sets_flag = &"poterchata_lost_one"

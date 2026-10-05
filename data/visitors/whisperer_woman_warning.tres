@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Баба-шептуха"
+problem_text = "\"Сядь і послухай. Мене вчора питали, чи я тебе давно знаю. І не хто-будь питав — від церкви. Я сказала, що знаю тебе сорок років і що ти хрещений, як усі. Воно їм не сподобалося.\" Вона замовкає. \"Дай чим серце втихомирити, бо калатає відтоді.\""
+true_threat = 0
+desired_result_id = &"heart_remedy"
+alt_desired_result_id = &"calming_remedy"
+satisfied_text = "\"Дякую.\" Вона бере, але не йде. \"Онуфрію. Як питатимуть тебе — не кажи більше, ніж спитали. Ти звик людям усе з'ясовувати. Оце якраз не з'ясовуй.\""
+unhelped_text = "\"Та нічого, я й так доживу.\" Вона йде — і вперше за сорок років не обертається на порозі."
+payment_type = 3
+payment_flag_id = &"church_asking_about_molfar"
+payment_flavor_text = "Вона каже, хто саме питав і якими словами"
+recurring_group = &"whisperer_woman"
+choice_prompt = "Скажеш їй, що й до тебе приходили?"
+choice_a_label = "Сказати"
+choice_a_response = "Ти кажеш. Вона киває, наче й так знала. \"Значить, не випадково. Значить, складають список.\" І йде швидше, ніж прийшла."
+choice_b_label = "Змовчати"
+choice_b_response = "Ти кажеш, що в тебе тихо. Вона дивиться довго. \"Брехати ти так і не навчився за сорок років. Ну хай буде тихо.\""

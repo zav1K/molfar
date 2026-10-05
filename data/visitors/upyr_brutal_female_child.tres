@@ -1,0 +1,23 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_female.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Голодна упириця"
+problem_text = "\"У мене на руках дитина, чоловіче. Не чуєш? Спить.\" Руки в неї складені так, ніби щось тримають, і там нічого нема. \"Вона мала, їй холодно. Відчини, я її коло печі покладу й сама на порозі сяду, слово даю.\" Вона всміхається, і усмішка тримається надто довго на одному місці."
+true_threat = 2
+satisfied_text = "Вона заходить, схиляється над порожніми руками й починає колисати. До самого ранку в хаті чути тихе наспівування, а на ранок нема ні її, ні половини того, що лежало на столі."
+unhelped_text = "\"Ну й Бог тобі суддя.\" Вона розводить руки — там справді нічого — і йде, не переставши всміхатися."
+night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.267578, 0.023438, 0.496094, 0.90625)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_amount = 1
+payment_is_deceptive = true
+payment_flavor_text = "Вона лишає дитячу сорочечку, вишиту давно й не тут"
+refusal_loot_chance = 0.3
+refusal_loot_item_id = &"looted_goods"
+recurring_group = &"upyr_brutal_female"

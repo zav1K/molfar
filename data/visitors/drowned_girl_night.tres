@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Утоплениця"
+problem_text = "З неї тече на поріг, і калюжа не всихає.\n\n\"Я не до вас, дядьку. Я до мами хотіла, а мене до хати не пускає хрест на дверях — його батюшка малював, коли мене не дали ховати.\" Їй сімнадцять, і вона говорить, як сімнадцятилітня. \"Скажіть їй, що я не сама пішла у воду. Вона думає, що я сама. Вона через те не спить, я бачу у вікно.\""
+true_threat = 2
+night_visitor = true
+desired_result_id = &"calming_remedy"
+satisfied_text = "Вона дивиться на відвар і хитає головою.\n\n\"Це не мені — це їй однесіть. Я не п'ю вже.\" І додає тихіше: \"А ви мамі скажіть, добре? Бо я вже забуваю, як це — казати, щоб почули.\""
+unhelped_text = "\"Я зрозуміла.\" Вона відступає з порога, і калюжа йде за нею. \"Усі бояться. Мене за життя ніхто не боявся, дядьку. Оце найгірше.\""
+required_flag = &"met_drowned_girls_mother"
+knocked_sets_flag = &"met_drowned_girl"
+satisfied_sets_flag = &"carried_message_to_mother"
+satisfied_path_shift = 1

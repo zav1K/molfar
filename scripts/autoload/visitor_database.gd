@@ -60,17 +60,29 @@ func get_all() -> Array[Visitor]:
 ## same "seen at the door is enough" reasoning as problem_text playing
 ## regardless of invite/refuse.
 ##
-## `exclude`, if given, is left out even if otherwise eligible — hut.gd
-## passes today's/tonight's already-decided forced visitor (see
-## CHAPTER1_SCRIPT) so a random slot earlier in the same phase can't
-## accidentally hand out the exact same visitor a second time. If
-## `exclude` belongs to a recurring_group (e.g. a scripted Упир beat,
-## whose group also has ordinary variants in the ordinary pool), the
-## whole group is excluded too — otherwise an earlier random slot could
-## hand out upyr_brutal_male_lost, say, and the forced upyr_brutal_male
-## would still show up later that same night regardless, which is
-## exactly the "same person twice in one night" recurring_group exists
-## to prevent.
+## Two separate exclusion scopes, because they guard two different
+## things and conflating them breaks one or the other:
+##
+## `exclude` drops those exact Visitors. hut.gd passes every forced story
+## beat still scheduled for today OR LATER (see CHAPTER1_SCRIPT), not
+## just today's. Today's matters so a random slot earlier in the same
+## phase can't hand out the same person twice; the later ones matter
+## because a beat drawn early plays its whole dialogue as an ordinary
+## visitor, and then its scripted night repeats that dialogue verbatim as
+## the "first meeting" — which is what used to happen to both упириці
+## every single playthrough (the day-4 hidden upyr turning up on night 2,
+## the day-5 repentant one on night 1). Beats already past are NOT
+## excluded: once the scripted night has happened, those visitors are
+## ordinary recurring нечисть again and should rotate normally.
+##
+## `exclude_groups` drops whole recurring_groups, and hut.gd passes only
+## TODAY's forced visitor's group. That one is needed because a group's
+## other variants are the same person: without it an earlier random slot
+## could hand out upyr_brutal_male_lost and the forced upyr_brutal_male
+## would still arrive later the same night. It deliberately does NOT
+## extend to later days' beats — the variants are not the beat, so
+## blocking the whole group for days beforehand would strip three of the
+## night pool's six faces out of the earlier nights for nothing.
 ##
 ## A visitor with recurring_group set is additionally excluded unless
 ## it's still "pending" in that group's current cycle — see
@@ -95,13 +107,11 @@ func get_all() -> Array[Visitor]:
 ## So if the strict pass comes up empty, retry once ignoring the
 ## whole-group block (still never the exact same Visitor instance
 ## twice — _seen alone stays absolute) before actually giving up.
-func get_random(night: bool, exclude: Visitor = null) -> Visitor:
-	var exclude_group: StringName = exclude.recurring_group if exclude != null else &""
+func get_random(night: bool, exclude: Array[Visitor] = [], exclude_groups: Array[StringName] = []) -> Visitor:
 	var base_filter := func(v: Visitor) -> bool:
-		return v.night_visitor == night and v != exclude \
-			and (exclude_group == &"" or v.recurring_group != exclude_group) \
-			and (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
-			and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag)) \
+		return v.night_visitor == night and not exclude.has(v) \
+			and not (v.recurring_group != &"" and exclude_groups.has(v.recurring_group)) \
+			and _is_eligible(v) \
 			and (v.recurring_group == &"" or _group_pending.get(v.recurring_group, [v]).has(v))
 	var available := _visitors.filter(func(v: Visitor) -> bool:
 		return base_filter.call(v) and not _seen.has(v) and not _seen_groups.has(v.recurring_group))
@@ -109,7 +119,7 @@ func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 		available = _visitors.filter(func(v: Visitor) -> bool: return base_filter.call(v) and not _seen.has(v))
 	if available.is_empty():
 		return null
-	var visitor: Visitor = available[randi() % available.size()]
+	var visitor := _pick_fairly(available)
 	_seen.append(visitor)
 	if visitor.recurring_group != &"":
 		_seen_groups.append(visitor.recurring_group)
@@ -117,6 +127,31 @@ func get_random(night: bool, exclude: Visitor = null) -> Visitor:
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	return visitor
+
+## Picks uniformly over PEOPLE, then over that person's eligible
+## variants — not uniformly over resources, which is the obvious
+## implementation and is wrong here.
+##
+## A recurring_group is one person with several things to say, so a
+## flat pick made a 3-variant person three times likelier to knock than
+## a one-off. Simulating the whole chapter showed exactly that: Упир
+## came 4.2 times a playthrough against his 3 written variants, and
+## Мисливець/Коваль/Господиня crowded out the one-off clients the same
+## way — so the pool looked repetitive while half the cast sat unused.
+## Weighting by person instead spreads the slots over everyone and gets
+## more value out of the dialogue already written than adding more
+## would.
+func _pick_fairly(available: Array) -> Visitor:
+	var by_person := {}
+	for v: Visitor in available:
+		# One-offs have no group, so each is its own "person".
+		var key: String = String(v.recurring_group) if v.recurring_group != &"" else v.resource_path
+		if not by_person.has(key):
+			by_person[key] = []
+		by_person[key].append(v)
+	var keys := by_person.keys()
+	var variants: Array = by_person[keys[randi() % keys.size()]]
+	return variants[randi() % variants.size()]
 
 ## For a visitor shown through hut.gd's CHAPTER1_SCRIPT forced dispatch
 ## instead of get_random() (e.g. Day 2's scripted Упир, reused straight
@@ -135,14 +170,33 @@ func register_shown(visitor: Visitor) -> void:
 ## minus `visitor` itself, so the member that just finished one cycle
 ## can't also be the first pick of the next (no back-to-back repeat
 ## right at the seam between cycles either).
+## Could the rotation hand this visitor out at all right now — story gate
+## satisfied, and their one-time beat not already spent? Shared with
+## _advance_group_cycle so the cycle only ever tracks visitors that can
+## actually come up. Without that it stalls: a group holding one member
+## the pool can never draw (a sentinel-gated scripted beat, or a
+## two-visit chain's spent first half) never empties, so the reset below
+## never fires and every OTHER member of the group goes quiet too.
+func _is_eligible(v: Visitor) -> bool:
+	return (v.required_flag == &"" or StoryFlags.has_flag(v.required_flag)) \
+		and (v.knocked_sets_flag == &"" or not StoryFlags.has_flag(v.knocked_sets_flag))
+
 func _advance_group_cycle(visitor: Visitor) -> void:
 	var group := visitor.recurring_group
 	if not _group_pending.has(group):
-		_group_pending[group] = _visitors.filter(func(v: Visitor) -> bool: return v.recurring_group == group)
+		_group_pending[group] = _group_members(group, null)
 	_group_pending[group].erase(visitor)
 	if _group_pending[group].is_empty():
-		_group_pending[group] = _visitors.filter(func(v: Visitor) -> bool:
-			return v.recurring_group == group and v != visitor)
+		_group_pending[group] = _group_members(group, visitor)
+
+## A group's drawable members, minus `just_shown` (so the member that just
+## went can't also open the next cycle). An empty result means the group is
+## finished for good — right for a two-visit chain once both halves are
+## spent, and harmless for an ordinary group, whose members carry no
+## knocked_sets_flag and so stay drawable forever.
+func _group_members(group: StringName, just_shown: Visitor) -> Array:
+	return _visitors.filter(func(v: Visitor) -> bool:
+		return v.recurring_group == group and v != just_shown and _is_eligible(v))
 
 ## Clears the seen-list so everyone can knock again — called by hut.gd
 ## on every day/night phase flip.
