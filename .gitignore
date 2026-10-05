@@ -1,6 +1,18 @@
 # Godot 4+ specific ignores
 .godot/
 .import/
+# Godot 4 keeps per-asset import metadata next to the asset as
+# <asset>.import, where Godot 3 kept it all under .import/ (the line
+# above). Both are generated on first import and regenerate from the
+# asset itself, so neither is tracked here.
+#
+# Note this is the opposite of Godot's own recommendation, which is to
+# commit *.import so the uid:// each one carries stays stable across
+# machines. That matters when scenes reference assets by UID; everything
+# in this project references them by res:// path instead, so the only
+# effect of tracking them would be 89 generated files churning their
+# UIDs whenever someone reimports. Flip this if that ever changes.
+*.import
 export.cfg
 export_presets.cfg
 
