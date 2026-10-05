@@ -194,7 +194,7 @@ func _ready() -> void:
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
 
-	AudioDirector.start_loop(&"fire_loop", -12.0)
+	AudioDirector.start_loop(&"fire_loop")
 	var restored := _restore_from_save()
 	_update_calendar_label()
 	if restored:

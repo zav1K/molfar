@@ -22,28 +22,73 @@ extends Node
 const AUDIO_DIR := "res://assets/audio/"
 const SETTINGS_PATH := "user://settings.cfg"
 
+## Preference order when the same sound exists in more than one.
+const EXTENSIONS := [".ogg", ".wav", ".mp3"]
+
 const AMBIENCE_FADE := 2.5 ## seconds to cross between day and night beds
 const BUSES := [&"Master", &"Ambience", &"SFX", &"Music"]
 
-## Logical name -> file stem under assets/audio/. A stem ending in "_*"
-## is a numbered family (knock_1, knock_2, ...) picked from at random.
+## Logical name -> how to find it and how to play it.
+##
+## `prefixes` are matched against the real filenames found in
+## assets/audio/, so anything starting with one counts as a variant and
+## knock_1 … knock_5 all answer to &"knock" without being listed. Drop
+## in a sixth and it joins the rotation; no number sequence to keep
+## unbroken, no code change.
+##
+## `volume` is the sound's place in the mix. `pitch` is the half-width
+## of a random pitch shift applied per play, which matters more than it
+## sounds: most of these have only one or two variants, and a single
+## sample played back identically every time stops reading as a door and
+## starts reading as a sound effect by about the fifth knock. A few
+## percent of wobble, plus the volume jitter below, hides that almost
+## completely.
 const SOUNDS := {
-	&"knock": "sfx/knock_*",
-	&"door_open": "sfx/door_open",
-	&"door_close": "sfx/door_close",
-	&"floorboard": "sfx/floorboard_*",
-	&"ingredient_drop": "sfx/ingredient_drop_*",
-	&"stir": "sfx/stir",
-	&"carve": "sfx/carve_*",
-	&"give_item": "sfx/give_item",
-	&"day_ambience": "ambience/day",
-	&"night_ambience": "ambience/night",
-	&"cauldron_loop": "sfx/cauldron_loop",
-	&"fire_loop": "sfx/fire_loop",
-	&"trembita": "music/trembita",
+	&"knock": {prefixes = ["sfx/knock"], volume = 0.0, pitch = 0.07},
+	&"door_open": {prefixes = ["sfx/door_open"], volume = -2.0, pitch = 0.04},
+	&"door_close": {prefixes = ["sfx/door_close"], volume = -2.0, pitch = 0.04},
+	&"floorboard": {prefixes = ["sfx/floorboard"], volume = -8.0, pitch = 0.10},
+	&"ingredient_drop": {prefixes = ["sfx/ingredient_drop"], volume = -4.0, pitch = 0.12},
+	&"stir": {prefixes = ["sfx/stir"], volume = -4.0, pitch = 0.06},
+	&"carve_loop": {prefixes = ["sfx/carve"], volume = -6.0, pitch = 0.0},
+	&"give_item": {prefixes = ["sfx/give_item"], volume = -4.0, pitch = 0.06},
+	&"day_ambience": {prefixes = ["ambience/day"], volume = -6.0, pitch = 0.0},
+	&"night_ambience": {prefixes = ["ambience/night"], volume = -6.0, pitch = 0.0},
+	&"cauldron_loop": {prefixes = ["sfx/cauldron"], volume = -4.0, pitch = 0.0},
+	&"fire_loop": {prefixes = ["sfx/fire"], volume = -8.0, pitch = 0.0},
+	&"trembita": {prefixes = ["music/trembita"], volume = 0.0, pitch = 0.0},
 }
 
-var _streams: Dictionary = {} # StringName -> Array[AudioStream]
+## Per-file correction, measured offline from each file's RMS and peak.
+## The sources are found in different places by different people and
+## arrive up to 23 dB apart — knock_loud sits at -14.7 RMS against
+## knock_3's -37.6, so played flat one startles and the other is
+## inaudible. Each value brings the file toward the family's level
+## without pushing its peak past -0.5 dBFS.
+##
+## A stopgap, not a system: once the files are normalised on the way in,
+## these can all go to zero and this table can be deleted.
+const FILE_TRIM_DB := {
+	"sfx/knock_1": 0.0,
+	"sfx/knock_2": -2.0,
+	"sfx/knock_3": 11.0,
+	"sfx/knock_4": 8.5,
+	"sfx/knock_5": -9.0,
+	"sfx/door_open": 0.0,
+	"sfx/door_close": -3.0, ## peaks at 0.0 dBFS, so it needs the headroom
+	"sfx/floorboard_1": 6.0,
+	"sfx/ingredient_drop_1": 0.0,
+	"sfx/cauldron_loop": 6.0,
+	"sfx/fire_loop": 10.0,
+	"sfx/carve_loop": 4.0,
+}
+
+## Half-width of the random level wobble on every one-shot, in dB. Same
+## purpose as `pitch` above.
+const VOLUME_JITTER_DB := 1.5
+
+var _streams: Dictionary = {} # StringName -> Array of {stream, trim}
+var _last_variant: Dictionary = {} # StringName -> index last played
 var _sfx_players: Array[AudioStreamPlayer] = []
 var _ambience_a: AudioStreamPlayer
 var _ambience_b: AudioStreamPlayer
@@ -61,32 +106,54 @@ func _ready() -> void:
 	# rather than waiting for the first flip hours into the session.
 	_on_phase_changed(GameCalendar.phase)
 
-## Walks assets/audio/ once and remembers what is actually there. Doing
-## it by directory listing rather than by load()-and-catch keeps a fresh
+## Walks assets/audio/ once and remembers what is actually there,
+## matching real filenames against the prefixes above. Doing it by
+## directory listing rather than by load()-and-catch keeps a fresh
 ## checkout with no audio at all completely silent in the console.
 func _index_sounds() -> void:
+	var files := _list_audio_files()
 	for key: StringName in SOUNDS:
-		var stem: String = SOUNDS[key]
-		var found: Array[AudioStream] = []
-		if stem.ends_with("_*"):
-			var prefix := stem.trim_suffix("*")
-			for i in range(1, 10):
-				var stream := _try_load("%s%d" % [prefix, i])
-				if stream != null:
-					found.append(stream)
-		else:
-			var stream := _try_load(stem)
-			if stream != null:
-				found.append(stream)
+		var found: Array = []
+		for stem: String in files:
+			for prefix: String in SOUNDS[key].prefixes:
+				if stem.begins_with(prefix):
+					var stream := load(files[stem]) as AudioStream
+					if stream != null:
+						found.append({stream = stream, trim = float(FILE_TRIM_DB.get(stem, 0.0))})
+					break
 		if not found.is_empty():
+			found.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
+				return a.stream.resource_path < b.stream.resource_path)
 			_streams[key] = found
 
-func _try_load(stem: String) -> AudioStream:
-	for extension: String in [".ogg", ".wav", ".mp3"]:
-		var path := AUDIO_DIR + stem + extension
-		if ResourceLoader.exists(path):
-			return load(path) as AudioStream
-	return null
+## "sfx/knock_1" -> "res://assets/audio/sfx/knock_1.wav", for every
+## playable file in the tree.
+func _list_audio_files() -> Dictionary:
+	var out := {}
+	for folder: String in ["sfx", "ambience", "music"]:
+		var dir := DirAccess.open(AUDIO_DIR + folder)
+		if dir == null:
+			continue
+		for file_name: String in dir.get_files():
+			# In an exported build the listing hands back the .import
+			# stub rather than the source. Stripping it is not enough on
+			# its own: a stub whose source has been deleted still loads
+			# out of .godot/imported/, and silently shadowed the real
+			# ambience here until it was caught.
+			file_name = file_name.trim_suffix(".import")
+			var extension := "." + file_name.get_extension()
+			if extension not in EXTENSIONS:
+				continue
+			var path := "%s%s/%s" % [AUDIO_DIR, folder, file_name]
+			if not ResourceLoader.exists(path):
+				continue
+			# Same stem in two formats: pick by EXTENSIONS order rather
+			# than by whichever the directory happened to list last.
+			var stem := "%s/%s" % [folder, file_name.get_basename()]
+			if out.has(stem) and EXTENSIONS.find(extension) >= EXTENSIONS.find("." + String(out[stem]).get_extension()):
+				continue
+			out[stem] = path
+	return out
 
 func _build_players() -> void:
 	# A small pool, so two sounds landing together don't cut each other
@@ -111,13 +178,32 @@ func _new_player(bus: StringName) -> AudioStreamPlayer:
 ## One-shot. Unknown or not-yet-added names are silently ignored, which
 ## is the whole point — see the class doc.
 func play(name: StringName, volume_db: float = 0.0) -> void:
-	if not _streams.has(name):
+	var variant := _take_variant(name)
+	if variant.is_empty():
 		return
-	var variants: Array = _streams[name]
+	var config: Dictionary = SOUNDS[name]
 	var player := _free_player()
-	player.stream = variants[randi() % variants.size()]
-	player.volume_db = volume_db
+	player.stream = variant.stream
+	player.volume_db = volume_db + float(config.volume) + float(variant.trim) \
+		+ randf_range(-VOLUME_JITTER_DB, VOLUME_JITTER_DB)
+	player.pitch_scale = 1.0 + randf_range(-float(config.pitch), float(config.pitch))
 	player.play()
+
+## Picks a variant, avoiding the one played last whenever there is a
+## choice. Pure randomness hands out the same knock twice in a row often
+## enough to notice, and two identical knocks back to back is exactly
+## the moment the illusion breaks.
+func _take_variant(name: StringName) -> Dictionary:
+	if not _streams.has(name):
+		return {}
+	var variants: Array = _streams[name]
+	if variants.size() == 1:
+		return variants[0]
+	var index := randi() % variants.size()
+	if index == _last_variant.get(name, -1):
+		index = (index + 1) % variants.size()
+	_last_variant[name] = index
+	return variants[index]
 
 func _free_player() -> AudioStreamPlayer:
 	for player in _sfx_players:
@@ -133,8 +219,8 @@ func start_loop(name: StringName, volume_db: float = 0.0) -> void:
 	if not _streams.has(name) or _loops.has(name):
 		return
 	var player := _new_player(&"SFX")
-	player.stream = _looped(_streams[name][0])
-	player.volume_db = volume_db
+	player.stream = _looped(_streams[name][0].stream)
+	player.volume_db = volume_db + float(SOUNDS[name].volume) + float(_streams[name][0].trim)
 	player.play()
 	_loops[name] = player
 
@@ -151,7 +237,7 @@ func stop_loop(name: StringName) -> void:
 func play_music(name: StringName) -> void:
 	if not _streams.has(name):
 		return
-	_music.stream = _streams[name][0]
+	_music.stream = _streams[name][0].stream
 	_music.play()
 
 func stop_music() -> void:
@@ -190,11 +276,12 @@ func _crossfade_ambience(name: StringName) -> void:
 	var outgoing := _ambience_a if _ambience_on_a else _ambience_b
 	_ambience_on_a = not _ambience_on_a
 
-	incoming.stream = _looped(_streams[name][0])
+	incoming.stream = _looped(_streams[name][0].stream)
 	incoming.volume_db = -40.0
 	incoming.play()
 	var tween := create_tween().set_parallel(true)
-	tween.tween_property(incoming, "volume_db", 0.0, AMBIENCE_FADE)
+	var target: float = float(SOUNDS[name].volume) + float(_streams[name][0].trim)
+	tween.tween_property(incoming, "volume_db", target, AMBIENCE_FADE)
 	if outgoing.playing:
 		tween.tween_property(outgoing, "volume_db", -40.0, AMBIENCE_FADE)
 		tween.chain().tween_callback(outgoing.stop)

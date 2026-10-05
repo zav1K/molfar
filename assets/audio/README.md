@@ -8,6 +8,18 @@
 Формат: **`.ogg`** (бажано), також розуміє `.wav` і `.mp3`. Зациклення
 вмикається в коді, в імпорті Godot нічого виставляти не треба.
 
+✅ — уже залито. ❌ — ще бракує.
+
+**Нумеровані варіанти шукаються за префіксом**, а не за послідовністю:
+будь-який файл, що починається на `knock`, стає варіантом стукоту. Тобто
+`knock_6` чи `knock_whatever` підхопляться самі, і дірка в нумерації
+нічого не ламає.
+
+**Різниця в гучності між файлами вирівнюється в коді** —
+`FILE_TRIM_DB` в `audio_director.gd`. Нинішні джерела розійшлися на
+23 дБ, тож кожному виміряно поправку. Коли файли нормалізуються на
+вході, таблицю можна буде просто видалити.
+
 ---
 
 ## Список файлів
@@ -16,11 +28,11 @@
 
 | Файл | Що це | Як шукати |
 |---|---|---|
-| `sfx/knock_1.ogg` … `knock_5.ogg` | стукіт у двері, 4–5 варіантів | `knock on wooden door`, `door knock single`, `fist on wood` |
-| `sfx/door_open.ogg` | важкі дерев'яні двері відчиняються | `old wooden door open creak` |
-| `sfx/door_close.ogg` | і зачиняються | `wooden door close thud` |
-| `ambience/day.ogg` | день надворі: вітер, птахи, далека долина | `mountain forest ambience day`, `rural ambience birds wind` |
-| `ambience/night.ogg` | ніч: вітер, комахи, далекий пес | `night forest ambience crickets`, `distant dog bark night` |
+| `sfx/knock_1` … `knock_5` ✅ | стукіт у двері, 4–5 варіантів | `knock on wooden door`, `door knock single`, `fist on wood` |
+| `sfx/door_open` ✅ | важкі дерев'яні двері відчиняються | `old wooden door open creak` |
+| `sfx/door_close` ✅ | і зачиняються | `wooden door close thud` |
+| `ambience/day` ✅ | день надворі: вітер, птахи, далека долина | `mountain forest ambience day`, `rural ambience birds wind` |
+| `ambience/night` ✅ | ніч: вітер, комахи, далекий пес | `night forest ambience crickets`, `distant dog bark night` |
 
 **Про стукіт — єдине жорстке правило.** Варіанти мусять різнитися
 **настроєм**, а не породою гостя: невпевнений, поквапний, важкий, ледь
@@ -36,17 +48,17 @@
 
 | Файл | Що це | Як шукати |
 |---|---|---|
-| `sfx/cauldron_loop.ogg` | кипіння, петля (грає, поки відкрито казан) | `boiling pot loop`, `cauldron bubbling` |
-| `sfx/ingredient_drop_1.ogg` … | трава падає у воду, 2–3 варіанти | `water plop`, `drop into water small` |
-| `sfx/carve_1.ogg` … | ніж по дереву, 2–3 варіанти | `wood carving knife`, `whittling wood` |
-| `sfx/give_item.ogg` | річ переходить із рук у руки | `cloth rustle handover`, `small object pickup` |
+| `sfx/cauldron_loop` ✅ | кипіння, петля (грає, поки відкрито казан) | `boiling pot loop`, `cauldron bubbling` |
+| `sfx/ingredient_drop_1` ✅ | трава падає у воду, 2–3 варіанти | `water plop`, `drop into water small` |
+| `sfx/carve_loop` ✅ | ніж по дереву, **петля** — грає, поки гравець веде лінію | `wood carving knife`, `whittling wood` |
+| `sfx/give_item` ❌ | річ переходить із рук у руки | `cloth rustle handover`, `small object pickup` |
 
 ### Третій — атмосфера
 
 | Файл | Що це | Як шукати |
 |---|---|---|
-| `sfx/fire_loop.ogg` | вогонь у печі, тихо, під ембієнтом | `fireplace crackle loop` |
-| `sfx/floorboard_1.ogg` … | скрип мостини на перемиканні панелей | `wooden floor creak step` |
+| `sfx/fire_loop` ✅ | вогонь у печі, тихо, під ембієнтом | `fireplace crackle loop` |
+| `sfx/floorboard_1` ✅ | скрип мостини на перемиканні панелей | `wooden floor creak step` |
 
 Мостина навмисне замість звичайного UI-кліка: клік вибиває з хати,
 скрип — лишає в ній.
@@ -55,7 +67,7 @@
 
 | Файл | Що це | Як шукати |
 |---|---|---|
-| `music/trembita.ogg` | трембіта, соло | `trembita`, `Carpathian alphorn`, `Hutsul trembita` |
+| `music/trembita` ❌ | трембіта, соло | `trembita`, `Carpathian alphorn`, `Hutsul trembita` |
 
 За всю демку музики немає **жодної ноти** — вона вмикається один раз,
 на фінальному екрані-хроніці (`ChapterEnd`). Це не стилізація: у гуцулів

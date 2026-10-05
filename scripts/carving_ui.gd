@@ -97,13 +97,14 @@ func _build_sigil_row(sigil: Sigil) -> HBoxContainer:
 	return row
 
 func _start_carving(sigil: Sigil) -> void:
-	AudioDirector.play(&"carve")
+	AudioDirector.start_loop(&"carve_loop")
 	_current_sigil = sigil
 	status_label.text = ""
 	_show_carving_phase()
 	carving_canvas.start(sigil)
 
 func _on_carving_finished(avg_error: float, _coverage: float, stroke: PackedVector2Array) -> void:
+	AudioDirector.stop_loop(&"carve_loop")
 	if avg_error >= PASS_ERROR:
 		status_label.text = "Рука зірвалась — знак не вийшов, спробуй ще."
 	else:
@@ -129,6 +130,7 @@ func _show_carving_phase() -> void:
 ## arrows back. Public because Esc routes through here too (see
 ## hut.gd's _unhandled_input), not just the on-screen button.
 func close() -> void:
+	AudioDirector.stop_loop(&"carve_loop")
 	visible = false
 	closed.emit()
 

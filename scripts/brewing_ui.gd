@@ -47,7 +47,7 @@ func _ready() -> void:
 	stir_cauldron.ingredient_dropped.connect(_add_ingredient)
 
 func open() -> void:
-	AudioDirector.start_loop(&"cauldron_loop", -6.0)
+	AudioDirector.start_loop(&"cauldron_loop")
 	_selected.clear()
 	status_label.text = ""
 	stir_cauldron.clear_tokens()
