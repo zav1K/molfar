@@ -150,3 +150,38 @@ func is_human() -> bool:
 
 func get_waiting_portrait() -> Texture2D:
 	return portrait_waiting if portrait_waiting != null else portrait_door
+
+## --- What happens the moment they cross the threshold ---------------
+##
+## Everything above resolves in ReceptionUI, after the player has decided
+## what to hand over. These fire earlier, at the invite/refuse choice
+## itself (see hut.gd's _on_visitor_resolved) — because for some visitors
+## crossing the threshold IS the whole transaction. A нечисть with no
+## desired_result_id can never be "satisfied", so without these the only
+## thing letting one in could ever do is nothing.
+
+## Set when invited in — what you get purely for opening the door. The
+## sheltered нечисть talking while it warms itself is the chapter's main
+## source of things nobody in the village knows, so a player who turns
+## everyone away genuinely ends up less informed. See STORY.md.
+@export var invited_sets_flag: StringName = &""
+## One line describing what they let slip, shown once they're inside.
+@export var invited_flavor_text: String = ""
+
+## The cost of having opened the door, for the things that cannot be
+## reasoned with. Deliberately paid in this game's own currency —
+## supplies, wards and time — rather than in a health bar it doesn't
+## have. None of it threatens the molfar's life: the чудовисько is
+## dangerous to the hut and to whoever is outside it, which is what
+## keeps the chapter's "нечисть is no personal danger to you" premise
+## intact while still making the choice cost something.
+@export var invited_steals_count: int = 0
+## Burns whichever hung ward counters this visitor's true_threat — so the
+## protection that would have warned you is gone for next time.
+@export var invited_destroys_ward: bool = false
+## Shrinks tomorrow's visitor count: ransacked stores, a day spent
+## putting the hut back together.
+@export var invited_shortens_next_day: int = 0
+## The price of the other answer — a night spent listening to it try the
+## door and the shutters, and a next day you are no use for.
+@export var refused_shortens_next_day: int = 0

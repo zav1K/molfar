@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Голос Лісника"
+problem_text = "\"Онуфрію, та відчини вже. Холодно.\"\n\nЦе його голос. Не схожий — його. Той самий, що п'ять днів поспіль сидів у тебе за столом і скаржився на коліно.\n\n\"Та що ти став? Я ж казав, що прийду. Я ж тобі ще не все розповів.\"\n\nУранці ти сам чув від вісника, що його поховають завтра."
+true_threat = 2
+night_visitor = true
+required_flag = &"__chapter1_scripted_only__"
+knocked_sets_flag = &"vurdalak_wore_lisnyk"
+satisfied_text = "Воно заходить його ходою. Сідає на його місце за столом. І мовчить — бо того, що він тобі не доказав, воно не знає.\n\nПотім підводиться й починає ходити по хаті, і це вже нічия хода."
+unhelped_text = "\"Онуфрію. Я ж тобі ще не все розповів.\"\n\nВоно каже це ще тричі, тими самими словами, з тією самою інтонацією. Саме по тому ти й розумієш остаточно.\n\nПід ранок стихає. На порозі лишається слід босої ноги, завеликої для людської."
+invited_steals_count = 4
+invited_destroys_ward = true
+invited_shortens_next_day = 2
+refused_shortens_next_day = 1
+satisfied_sets_flag = &"let_vurdalak_in"
+satisfied_path_shift = -2

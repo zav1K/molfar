@@ -58,3 +58,21 @@ func load_state(data: Array) -> void:
 		var ingredient_id: StringName = StringName(data[i]) if i < data.size() else &""
 		_slots[i] = ingredient_id
 		changed.emit(i)
+
+## Burns the first hung ward that counters this visitor, returning the
+## ingredient id that was lost (or &"" if nothing on the rack matched).
+## For the visitors that destroy the protection on their way in — the
+## ward did its job and was spent doing it, which also means the next
+## one of these gets no warning. See Visitor.invited_destroys_ward.
+func consume_against(visitor: Visitor) -> StringName:
+	if visitor.true_threat == Threat.Type.NONE:
+		return &""
+	for i in SLOT_COUNT:
+		var ingredient_id := _slots[i]
+		if ingredient_id == &"":
+			continue
+		var ingredient := IngredientDatabase.get_ingredient(ingredient_id)
+		if ingredient != null and ingredient.ward_threat == visitor.true_threat:
+			clear_slot(i)
+			return ingredient_id
+	return &""

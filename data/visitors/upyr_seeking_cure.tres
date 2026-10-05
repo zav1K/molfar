@@ -18,3 +18,5 @@ payment_type = 3
 payment_flag_id = &"upyr_curse_origin_known"
 payment_flavor_text = "Особиста реліквія-спогад, натяк на походження прокляття"
 knocked_sets_flag = &"met_repentant_upyr"
+invited_sets_flag = &"knows_vurdalak_mimicry"
+invited_flavor_text = "Вона зізнається, чого боїться найбільше: стати такою, що ходить попід чужими дверима чужим голосом і сама вже не тямить чиїм."

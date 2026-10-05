@@ -16,3 +16,5 @@ waiting_portrait_content_rect = Rect2(0.267578, 0.023438, 0.496094, 0.90625)
 refusal_loot_chance = 0.35
 refusal_loot_item_id = &"looted_goods"
 recurring_group = &"upyr_brutal_female"
+invited_sets_flag = &"knows_vurdalak_mimicry"
+invited_flavor_text = "Перед тим як піти, вона каже тихо: "Як почуєш під дверима знайомого — слухай, чи він дихає між словами. Ті, що вже обернулися, дихати забувають.""

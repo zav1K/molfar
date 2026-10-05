@@ -16,3 +16,5 @@ waiting_portrait_content_rect = Rect2(0.203125, 0.057292, 0.636719, 0.860677)
 refusal_loot_chance = 0.3
 refusal_loot_item_id = &"looted_goods"
 recurring_group = &"upyr_brutal_male"
+invited_sets_flag = &"knows_vurdalak_mimicry"
+invited_flavor_text = "Гріючись коло печі, воно між іншим радить: не відчиняй на голос, навіть на знайомий. Є такі, що вивчають голос і стукають ним."

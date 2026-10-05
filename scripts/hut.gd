@@ -65,7 +65,12 @@ const CHAPTER1_SCRIPT := {
 	3: {"day": "res://data/visitors/special/forest_warden_day3.tres", "night": "res://data/visitors/special/nichnytsia_night3.tres"},
 	4: {"day": "res://data/visitors/special/forest_warden_day4.tres", "night": "res://data/visitors/upyr_hidden_female.tres"},
 	5: {"day": "res://data/visitors/special/forest_warden_day5.tres", "night": "res://data/visitors/upyr_seeking_cure.tres"},
-	6: {"night": "res://data/visitors/special/upyr_night6_strange.tres"},
+	# night_cap 2, not the usual 3: tonight's beat is the same упир the
+	# player knows, so his whole group is blocked for the phase, and the
+	# leftover pool this late could not fill two random slots without
+	# handing out the same woman twice. A quiet night also reads right
+	# for the one before Лісник is found dead.
+	6: {"night": "res://data/visitors/special/upyr_night6_strange.tres", "night_cap": 2},
 	7: {
 		"day_opens": [
 			"res://data/visitors/special/visnyk_day7.tres",
@@ -73,9 +78,12 @@ const CHAPTER1_SCRIPT := {
 			"res://data/visitors/accused_widow.tres",
 		],
 		"day_cap": 4,
-		"night_opens": ["res://data/visitors/upyr_fleeing_hunt.tres"],
+		"night_opens": [
+			"res://data/visitors/upyr_fleeing_hunt.tres",
+			"res://data/visitors/vurdalak_lisnyk.tres",
+		],
 		"night": "res://data/visitors/special/priest_day7.tres",
-		"night_cap": 2,
+		"night_cap": 3,
 	},
 }
 
@@ -139,6 +147,10 @@ var _night_quota: int = NIGHT_VISITOR_MIN
 ## show it — see _take_suspicion_remark and ThresholdDialogue.
 var _pending_aside: String = ""
 var _suspicion_remark_day: int = 0 ## _story_day that already spent its one remark.
+## Cost of the night just passed, charged against tomorrow — see
+## _current_day_cap for why it only moves across at dawn.
+var _pending_day_penalty: int = 0
+var _day_penalty: int = 0
 
 ## DEBUG: bump _story_day to jump straight into a later day of Розділ 1
 ## instead of playing days 1..N for real — see CHAPTER1_SCRIPT. Each
@@ -365,8 +377,9 @@ func _on_visitor_resolved(invited: bool) -> void:
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
+	var visitor := door.current_visitor
+	var consequence := _apply_threshold_consequences(visitor, invited)
 	if invited:
-		var visitor := door.current_visitor
 		if not visitor.is_human():
 			# Counted on crossing the threshold, not on being served:
 			# what the village would notice is someone being let in at
@@ -376,12 +389,64 @@ func _on_visitor_resolved(invited: bool) -> void:
 			# specifically after dark.
 			VillageSuspicion.record_sheltered()
 		door.clear()
-		reception_ui.show_visitor(visitor, _pending_aside)
+		# The consequence replaces the suspicion aside rather than
+		# stacking with it: what just happened in the hut outranks what
+		# a neighbour was muttering about on the doorstep.
+		reception_ui.show_visitor(visitor, consequence if consequence != "" else _pending_aside)
 		return
 	door.clear()
+	if consequence != "":
+		# Refusing opens no ReceptionUI, so the toast is the only place
+		# left to say why tomorrow is going to be a short day.
+		day_night_toast.show_message(consequence)
 	nav_left.visible = true
 	nav_right.visible = true
 	_schedule_next_knock()
+
+## Resolves everything a Visitor does at the invite/refuse choice itself
+## rather than in ReceptionUI — see the threshold block in visitor.gd.
+## Returns a line describing what happened, for whichever channel the
+## caller has available, or "" when this visitor does nothing special.
+func _apply_threshold_consequences(visitor: Visitor, invited: bool) -> String:
+	if not invited:
+		if visitor.refused_shortens_next_day > 0:
+			_pending_day_penalty += visitor.refused_shortens_next_day
+			return "Воно шкреблося до світанку. Ти не спав."
+		return ""
+
+	var lines: Array[String] = []
+	if visitor.invited_sets_flag != &"":
+		StoryFlags.set_flag(visitor.invited_sets_flag)
+		if visitor.invited_flavor_text != "":
+			lines.append(visitor.invited_flavor_text)
+	if visitor.invited_destroys_ward:
+		var burnt := WardRack.consume_against(visitor)
+		if burnt != &"":
+			var ingredient := IngredientDatabase.get_ingredient(burnt)
+			var what: String = ingredient.display_name if ingredient != null else String(burnt)
+			lines.append("Оберіг над дверима (%s) почорнів і розсипався." % what)
+	if visitor.invited_steals_count > 0:
+		var taken := _ransack(visitor.invited_steals_count)
+		if taken > 0:
+			lines.append("Поки воно було в хаті, зі скрині зникло: %d." % taken)
+	if visitor.invited_shortens_next_day > 0:
+		_pending_day_penalty += visitor.invited_shortens_next_day
+		lines.append("Завтра піде на те, щоб скласти хату докупи.")
+	return "\n".join(lines)
+
+## Takes up to `count` items from whatever the player actually holds,
+## never more than one of each, so a single stack can't be wiped out.
+## Returns how many were taken.
+func _ransack(count: int) -> int:
+	var held := PlayerInventory.get_held_ids()
+	held.shuffle()
+	var taken := 0
+	for item_id in held:
+		if taken >= count:
+			break
+		PlayerInventory.remove(item_id, 1)
+		taken += 1
+	return taken
 
 func _on_reception_closed() -> void:
 	nav_left.visible = true
@@ -450,6 +515,8 @@ func _advance_visitor_slot() -> void:
 			VisitorDatabase.reset_seen()
 			_day_visitor_count = 0
 			_day_forced_used = false
+			_day_penalty = _pending_day_penalty
+			_pending_day_penalty = 0
 			_story_day += 1
 			GameCalendar.set_phase(GameCalendar.Phase.DAY)
 			day_night_toast.show_message("День %d" % _story_day)
@@ -475,6 +542,8 @@ func _restore_from_save() -> bool:
 	if saved_day <= 0:
 		return false
 	_story_day = saved_day
+	_day_penalty = 0
+	_pending_day_penalty = 0
 	if GameCalendar.phase == GameCalendar.Phase.NIGHT:
 		_night_visitor_count = 0
 		_night_forced_used = false
@@ -484,9 +553,20 @@ func _restore_from_save() -> bool:
 		_day_forced_used = false
 	return true
 
+## Today's cap, already reduced by whatever last night cost (see
+## _apply_threshold_consequences). The penalty is only ever moved in at
+## dawn, never mid-phase: _pop_forced_visitor positions the day's beat
+## against this number, so changing it under a running day would move
+## the beat's slot out from under it.
+##
+## The floor keeps a punished day from eating the chapter: never below
+## one ordinary caller after however many scripted beats open the day,
+## or Day 7's widow and elder would simply be cut.
 func _current_day_cap() -> int:
 	var script: Dictionary = CHAPTER1_SCRIPT.get(_story_day, {})
-	return script.get("day_cap", DAY_VISITOR_CAP)
+	var cap: int = script.get("day_cap", DAY_VISITOR_CAP)
+	var opens: Array = script.get("day_opens", [])
+	return maxi(opens.size() + 1, cap - _day_penalty)
 
 ## How many visitors tonight gets. A scripted night is a fixed number
 ## (the beat has to land on the last slot, so it can't be random); an

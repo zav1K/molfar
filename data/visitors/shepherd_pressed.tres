@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/shepherd.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Пастух"
+problem_text = "\"До мене вчора прийшли втрьох і питали, чи я бачив щось при отарі.\" Він стоїть, не знімаючи шапки. \"Я сказав — не бачив. Вони перепитали так, наче я не те відповів. Тоді ще раз. На третій раз я сказав, що, може, щось і майнуло.\"\n\nВін дивиться вбік. \"Я збрехав, мольфаре. Не тому, що хотів. Тому, що вони не відходили.\""
+true_threat = 0
+desired_result_id = &"calming_remedy"
+alt_desired_result_id = &"sleep_remedy"
+satisfied_text = "\"Воно ж як: раз сказав — уже не забереш.\" Він ховає пляшечку за пазуху. \"Тепер по селу ходить, що пастух щось бачив. А пастух нічого не бачив.\""
+unhelped_text = "\"Та я й не питав поради. Я просто комусь мусив сказати, що збрехав.\" Він киває й виходить."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.183406, 0.046875, 0.639010, 0.915039)
+payment_type = 3
+payment_flag_id = &"testimony_was_pressured"
+payment_flavor_text = "Ти знаєш тепер, як саме збираються свідчення проти нечисті"
+recurring_group = &"shepherd"
