@@ -31,15 +31,28 @@ func _ready() -> void:
 	invite_button.pressed.connect(func() -> void: _resolve(true))
 	refuse_button.pressed.connect(func() -> void: _resolve(false))
 
-func show_visitor(visitor: Visitor) -> void:
+## `aside`, when given, is an extra paragraph after what they came about
+## — currently the village's growing unease about who the molfar lets in
+## after dark (see VillageSuspicion). Passed in rather than written into
+## the Visitor, because Visitor resources are shared and cached: editing
+## problem_text on one would stick for the rest of the playthrough.
+func show_visitor(visitor: Visitor, aside: String = "") -> void:
 	var tex := visitor.portrait_door
 	portrait_icon.visible = tex != null
 	if tex != null:
 		portrait_icon.texture = tex
 		_fit_portrait(visitor, tex)
 	name_label.text = visitor.display_name
-	problem_label.show_text(visitor.problem_text)
+	problem_label.show_text(compose_problem_text(visitor, aside))
 	visible = true
+
+## Shared with ReceptionUI so the door and the table show the same words
+## — the aside has to survive being invited in, or the text visibly
+## changes under the player between one screen and the next.
+static func compose_problem_text(visitor: Visitor, aside: String) -> String:
+	if aside == "":
+		return visitor.problem_text
+	return "%s\n\n%s" % [visitor.problem_text, aside]
 
 ## Scales the measured content rect to fill portrait_box's height — the
 ## doorway is tall and narrow, so a "fit entirely inside" scale is always

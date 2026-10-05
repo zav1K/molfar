@@ -110,6 +110,10 @@ var _wait_token: int = 0
 var _day_visitor_count: int = 0
 var _night_visitor_count: int = 0
 var _night_quota: int = NIGHT_VISITOR_MIN
+## Today's suspicion aside, held between the knock and both screens that
+## show it — see _take_suspicion_remark and ThresholdDialogue.
+var _pending_aside: String = ""
+var _suspicion_remark_day: int = 0 ## _story_day that already spent its one remark.
 
 ## DEBUG: bump _story_day to jump straight into a later day of Розділ 1
 ## instead of playing days 1..N for real — see CHAPTER1_SCRIPT. Each
@@ -130,6 +134,7 @@ func _ready() -> void:
 	$PanelCenter/Zones/Calendar.visible = false
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
+	VillageSuspicion.level_changed.connect(_on_suspicion_level_changed)
 	reception_ui.closed.connect(_on_reception_closed)
 	reception_ui.wait_requested.connect(_on_visitor_wait_requested)
 	waiting_indicator.pressed.connect(_on_waiting_indicator_pressed)
@@ -323,7 +328,7 @@ func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(camera, "position", engaged_door.global_position, TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2(DOOR_ZOOM, DOOR_ZOOM), TWEEN_TIME)
-	tw.finished.connect(func() -> void: threshold_dialogue.show_visitor(visitor), CONNECT_ONE_SHOT)
+	tw.finished.connect(func() -> void: threshold_dialogue.show_visitor(visitor, _pending_aside), CONNECT_ONE_SHOT)
 
 func _on_visitor_resolved(invited: bool) -> void:
 	var tw := create_tween().set_parallel(true)
@@ -340,7 +345,7 @@ func _on_visitor_resolved(invited: bool) -> void:
 			# specifically after dark.
 			VillageSuspicion.record_sheltered()
 		door.clear()
-		reception_ui.show_visitor(visitor)
+		reception_ui.show_visitor(visitor, _pending_aside)
 		return
 	door.clear()
 	nav_left.visible = true
@@ -374,7 +379,7 @@ func _on_waiting_indicator_pressed() -> void:
 	nav_left.visible = false
 	nav_right.visible = false
 	_wait_token += 1 # invalidate the running patience timer while they're served again
-	reception_ui.show_visitor(_waiting_visitor)
+	reception_ui.show_visitor(_waiting_visitor, _pending_aside)
 
 func _run_patience_timer(token: int) -> void:
 	await get_tree().create_timer(PATIENCE_SECONDS).timeout
@@ -461,6 +466,33 @@ func _roll_night_quota() -> int:
 	return script.get("night_cap", SCRIPTED_NIGHT_CAP) if script.has("night") \
 		else randi_range(NIGHT_VISITOR_MIN, NIGHT_VISITOR_MAX)
 
+## At most one suspicion aside per day, and only from an ordinary human
+## client in daylight: нечисть has no reason to gossip about the molfar
+## sheltering нечисть, and a remark on every visitor stops reading as
+## pointed and starts reading as filler. Empty string means "nothing to
+## say" — either the village hasn't noticed yet, or today's remark is
+## already spent.
+func _take_suspicion_remark(visitor: Visitor) -> String:
+	if GameCalendar.phase == GameCalendar.Phase.NIGHT or not visitor.is_human():
+		return ""
+	if _suspicion_remark_day == _story_day:
+		return ""
+	var remark := VillageSuspicion.random_remark()
+	if remark != "":
+		_suspicion_remark_day = _story_day
+	return remark
+
+## The village crossing into talking about him, or into having made up
+## its mind. Toast + diary entry rather than a number on screen: the
+## player should feel the room cool, not read a counter.
+func _on_suspicion_level_changed(level: VillageSuspicion.Level) -> void:
+	if level == VillageSuspicion.Level.NOTICED:
+		StoryFlags.set_flag(&"village_noticed_nechyst")
+		day_night_toast.show_message("У селі почали говорити")
+	elif level == VillageSuspicion.Level.MARKED:
+		StoryFlags.set_flag(&"village_marked_nechyst")
+		day_night_toast.show_message("Село вирішило, хто ти")
+
 func _knock_with_random_visitor() -> void:
 	var is_night := GameCalendar.phase == GameCalendar.Phase.NIGHT
 	var visitor := _pop_forced_visitor(is_night)
@@ -480,6 +512,7 @@ func _knock_with_random_visitor() -> void:
 		# keep the day/night moving instead of just stopping dead here.
 		_schedule_next_knock()
 		return
+	_pending_aside = _take_suspicion_remark(visitor)
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
 func _peek_forced_path(is_night: bool) -> String:
@@ -512,18 +545,43 @@ func _pop_forced_visitor(is_night: bool) -> Visitor:
 ## how the Day 4 упириця encounter went, which satisfied_sets_flag already
 ## recorded regardless of how this visitor is reached — so that part needs
 ## no special-casing here, just a duplicate + append once it's loaded.
+const PRIEST_DAY7_PATH := "res://data/visitors/special/priest_day7.tres"
+
 func _load_forced_visitor(path: String) -> Visitor:
 	var visitor: Visitor = load(path)
-	if path == "res://data/visitors/special/priest_day7.tres" and StoryFlags.has_flag(&"helped_hidden_upyr"):
-		visitor = visitor.duplicate()
-		# problem_text ends with a closing quote mark (speech-styled, like
-		# every other visitor's) — trim it, append the extra sentence, and
-		# re-close, rather than just tacking text on after the quote.
-		visitor.problem_text = visitor.problem_text.trim_suffix("\"") \
-			+ " Хтось у селі вже казав, що бачив тебе з нею. Подумай, на чиєму ти боці, мольфаре.\""
+	if path == PRIEST_DAY7_PATH:
+		visitor = _tailor_priest(visitor)
 	if visitor.knocked_sets_flag != &"":
 		StoryFlags.set_flag(visitor.knocked_sets_flag)
 	VisitorDatabase.register_shown(visitor)
+	return visitor
+
+## The chapter's last scene, rewritten to match how the player actually
+## played it. The base resource is the general warning — what the priest
+## says to a molfar he has nothing on. The more нечисть the player
+## sheltered, the less it is a warning and the more it is a move against
+## him specifically, which is what should make the player doubt the man
+## without a word of the real twist being spoken.
+##
+## Always on a duplicate: Visitor resources are cached and shared, so
+## editing the loaded one would leave the tailored text in place for the
+## rest of the session.
+func _tailor_priest(base: Visitor) -> Visitor:
+	var extra: Array[String] = []
+	if StoryFlags.has_flag(&"helped_hidden_upyr"):
+		extra.append("Хтось у селі вже казав, що бачив тебе з нею.")
+	var suspicion := VillageSuspicion.level()
+	if suspicion == VillageSuspicion.Level.MARKED:
+		extra.append("І не думай, що я не знаю, скільком ти відчиняв. Поки що я говорю з тобою без людей. Поки що.")
+	elif suspicion == VillageSuspicion.Level.NOTICED:
+		extra.append("Про тебе теж уже говорять. Не давай людям більше причин.")
+	if extra.is_empty():
+		return base
+	var visitor: Visitor = base.duplicate()
+	# problem_text ends with a closing quote mark (speech-styled, like
+	# every other visitor's) — trim it, append inside the speech, and
+	# re-close, rather than tacking text on after the quote.
+	visitor.problem_text = "%s %s\"" % [visitor.problem_text.trim_suffix("\""), " ".join(extra)]
 	return visitor
 
 ## Розділ 1 is a fixed 7-day span, not tied to any real festival date, so

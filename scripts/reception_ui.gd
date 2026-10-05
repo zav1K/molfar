@@ -74,7 +74,10 @@ func _ready() -> void:
 	choice_a_button.pressed.connect(_on_choice_a_pressed)
 	choice_b_button.pressed.connect(_on_choice_b_pressed)
 
-func show_visitor(visitor: Visitor) -> void:
+## `aside` is whatever extra paragraph the door already showed (see
+## ThresholdDialogue.show_visitor) — repeated here so the text doesn't
+## visibly change under the player between the threshold and the table.
+func show_visitor(visitor: Visitor, aside: String = "") -> void:
 	_visitor = visitor
 	_resolved = false
 	_satisfied = false
@@ -87,7 +90,7 @@ func show_visitor(visitor: Visitor) -> void:
 	# Instant, not typed — this is the exact same problem_text
 	# ThresholdDialogue just finished animating at the door a moment
 	# ago; re-typing it again here reads as stalling, not drama.
-	problem_label.show_instant(visitor.problem_text)
+	problem_label.show_instant(ThresholdDialogue.compose_problem_text(visitor, aside))
 	result_label.show_text("")
 	_rebuild_item_list()
 	visible = true
@@ -268,13 +271,26 @@ func _grant_natural_payment() -> void:
 	match _visitor.payment_type:
 		Visitor.PaymentType.MATERIAL, Visitor.PaymentType.MONEY:
 			if _visitor.payment_item_id != &"":
-				PlayerInventory.add(_visitor.payment_item_id, _visitor.payment_amount)
+				PlayerInventory.add(_visitor.payment_item_id, _shortchanged_amount())
 			if _visitor.payment_is_deceptive:
 				_steal_random_item()
 		Visitor.PaymentType.INFORMATION:
 			StoryFlags.set_flag(_visitor.payment_flag_id)
 		Visitor.PaymentType.NOTHING:
 			pass
+
+## Once the village has made up its mind about who the molfar lets in
+## after dark (see VillageSuspicion), ordinary human clients hold a
+## little back — they came because they had nowhere else to go, not
+## because they trust him. Never down to nothing: a zero payment reads
+## as a bug rather than as a slight, so the last unit always gets paid.
+func _shortchanged_amount() -> int:
+	if _visitor.payment_amount <= 1 or not _visitor.is_human():
+		return _visitor.payment_amount
+	if VillageSuspicion.level() != VillageSuspicion.Level.MARKED:
+		return _visitor.payment_amount
+	result_label.append_instant("\n(Відраховує плату й лишає частину собі. Не дивиться в очі.)")
+	return _visitor.payment_amount - 1
 
 ## Looks like ordinary barter, but something else quietly disappears too
 ## — never what was just handed over, and only from what the player

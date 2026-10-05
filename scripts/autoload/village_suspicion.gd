@@ -37,7 +37,41 @@ enum Level {
 	MARKED,  ## the village has made up its mind about him
 }
 
+## What an ordinary human client lets slip, on top of whatever they came
+## about. Deliberately NOT "fewer clients knock": starving the player of
+## visitors would punish them with less game — fewer dialogues, less
+## money, emptier days. Same number of knocks, worse footing.
+##
+## At NOTICED they're still on his side and uneasy about the talk; at
+## MARKED they came anyway, but they want an answer. hut.gd hands out at
+## most one of these per day (see _take_suspicion_remark) — one pointed
+## aside lands, a remark on every single client is just noise.
+const NOTICED_REMARKS: Array[String] = [
+	"\"...І ще одне, не моє діло. У тебе вночі світло горіло. Я казала чоловікові, що то ти варив. Він змовчав.\"",
+	"\"Питали мене, чи я до тебе ще ходжу. Я сказала, що ходжу. А чого б то не ходити?\"",
+	"\"Ти не спиш ночами, видно по тобі. Люди всяке кажуть. Я не слухаю, але кажуть.\"",
+]
+
+const MARKED_REMARKS: Array[String] = [
+	"\"Я прийшов, бо більше нікуди йти. Але довго не стоятиму. Бачили, хто до тебе ходить, як стемніє.\"",
+	"\"Казали мені до тебе не йти. Я прийшла. Але ти мені скажи прямо: то правда, що ти їх впускаєш?\"",
+	"\"Чоловік сказав би мені вертатися з півдороги. Я йому не скажу, що була тут.\"",
+]
+
 var sheltered: int = 0
+
+## A remark for one of today's human clients, or "" while nobody's
+## talking yet. The caller decides who gets it and how often.
+func random_remark() -> String:
+	var pool: Array[String] = []
+	match level():
+		Level.MARKED:
+			pool = MARKED_REMARKS
+		Level.NOTICED:
+			pool = NOTICED_REMARKS
+		_:
+			return ""
+	return pool[randi() % pool.size()]
 
 ## Called from hut.gd the moment a non-human visitor is invited in —
 ## invited, not served: crossing the threshold is the part the village
