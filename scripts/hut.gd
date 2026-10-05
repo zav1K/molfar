@@ -151,6 +151,9 @@ var _suspicion_remark_day: int = 0 ## _story_day that already spent its one rema
 ## _current_day_cap for why it only moves across at dawn.
 var _pending_day_penalty: int = 0
 var _day_penalty: int = 0
+## Set by _end_chapter; see _schedule_next_knock for why a flag and not
+## just an is_inside_tree() check.
+var _chapter_over: bool = false
 
 ## DEBUG: bump _story_day to jump straight into a later day of Розділ 1
 ## instead of playing days 1..N for real — see CHAPTER1_SCRIPT. Each
@@ -492,7 +495,16 @@ func _run_patience_timer(token: int) -> void:
 
 func _schedule_next_knock() -> void:
 	_advance_visitor_slot()
+	# _advance_visitor_slot may have just ended the chapter, which swaps
+	# ChapterEnd in and frees this node. Both checks are needed: the
+	# scene change is deferred, so right here the tree is still valid and
+	# only the flag knows, while after the await the node itself is gone
+	# and get_tree() would return null.
+	if _chapter_over:
+		return
 	await get_tree().create_timer(2.0).timeout
+	if _chapter_over or not is_inside_tree():
+		return
 	_knock_with_random_visitor()
 
 ## Called once per resolved visitor (refused, served, or given up on) —
@@ -530,6 +542,7 @@ func _advance_visitor_slot() -> void:
 ## rather than to a hut with nothing left to happen in it) and hands over
 ## to ChapterEnd, which reads the live autoload state directly.
 func _end_chapter() -> void:
+	_chapter_over = true
 	SaveGame.save(_story_day, true)
 	get_tree().change_scene_to_file(CHAPTER_END_SCENE)
 
