@@ -81,6 +81,11 @@ func _process(_delta: float) -> void:
 		knocks += 1
 		hut.threshold_dialogue._resolve(randf() < INVITE_CHANCE)
 		return
+	# Being let in no longer opens the conversation: the visitor stands
+	# in the hut until clicked. Stands in for that click.
+	if hut._waiting_visitor != null and not hut.reception_ui.visible:
+		hut._on_waiting_indicator_pressed()
+		return
 	if hut.reception_ui.visible:
 		if hut.reception_ui._resolved:
 			hut.reception_ui._on_finish_pressed()

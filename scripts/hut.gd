@@ -418,8 +418,17 @@ func _on_visitor_resolved(invited: bool) -> void:
 		door.clear()
 		# The consequence replaces the suspicion aside rather than
 		# stacking with it: what just happened in the hut outranks what
-		# a neighbour was muttering about on the doorstep.
-		reception_ui.show_visitor(visitor, consequence if consequence != "" else _pending_aside)
+		# a neighbour was muttering about on the doorstep. Stored rather
+		# than passed, because the reception screen no longer opens here.
+		if consequence != "":
+			_pending_aside = consequence
+		# Inviting someone in does NOT start the conversation. The
+		# dialogue closes, the camera pulls back, and they are simply
+		# standing in the hut — the player gets a beat to look at who
+		# they just let in before any business starts. Click them to
+		# talk. It matters most for the вурдалаки, whose whole scene is
+		# the gap between the thing at the door and the thing inside.
+		_show_visitor_inside(visitor, false)
 		return
 	door.clear()
 	if consequence != "":
@@ -485,14 +494,27 @@ func _on_reception_closed() -> void:
 	_schedule_next_knock()
 
 func _on_visitor_wait_requested(visitor: Visitor) -> void:
+	_show_visitor_inside(visitor, true)
+
+## Puts a visitor on their feet in the hut and hands the player back
+## control, for the two moments that look identical on screen: just
+## invited in, and asked to wait while something gets brewed.
+##
+## `impatient` is the only difference, and it is the honest one. The
+## patience timer exists because the player walked off to do something
+## else — so being asked to wait starts it, and simply being let in does
+## not. Otherwise a player taking a moment to look at who they opened
+## the door to would watch them give up and leave.
+func _show_visitor_inside(visitor: Visitor, impatient: bool) -> void:
 	nav_left.visible = true
 	nav_right.visible = true
 	_waiting_visitor = visitor
-	waiting_indicator.text = "Клієнт чекає: %s" % visitor.display_name
+	waiting_indicator.text = ("Клієнт чекає: %s" if impatient else "У хаті: %s") % visitor.display_name
 	waiting_indicator.visible = true
 	waiting_visitor_display.show_visitor(visitor)
 	_wait_token += 1
-	_run_patience_timer(_wait_token)
+	if impatient:
+		_run_patience_timer(_wait_token)
 
 func _on_waiting_indicator_pressed() -> void:
 	if _waiting_visitor == null:
