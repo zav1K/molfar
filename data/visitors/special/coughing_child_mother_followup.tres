@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Молода жінка"
+display_name = "Василина, молода мати"
 problem_text = "\"Дитина вже здорова, дякувати Богу і тобі, мольфаре. А от я сама вночі заснути не можу — все чутки ці... Може, і мені щось даси, для спокою?\""
 true_threat = 0
 desired_result_id = &"calming_remedy"

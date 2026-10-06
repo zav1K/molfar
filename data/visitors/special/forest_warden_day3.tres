@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Лісник"
+display_name = "Микола, лісник"
 problem_text = "\"Вночі не сплю навіть із твоїм зіллям. Весь час здається, ніби хтось стоїть за деревом і чекає, щоб я пішов звідти. Дурне, знаю. Дай ще зілля, як є.\""
 desired_result_id = &"calming_remedy"
 satisfied_text = "\"Дякую. Може, це й справді просто нерви.\""

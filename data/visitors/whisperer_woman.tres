@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Баба-шептуха"
+display_name = "Явдоха, шептуха"
 problem_text = "\"Не до тебе я по пораду, Онуфрію — я тобі принесла. Дитина в Ковалихи горить третій день. Я шепчу, а не спадає: моє слово тут не бере. Дай, що маєш від вогню в крові, бо до вечора не дотягне.\""
 true_threat = 0
 desired_result_id = &"blood_cleansing_remedy"

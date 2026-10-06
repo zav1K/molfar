@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Мисливець"
+display_name = "Гриць, мисливець"
 problem_text = "\"Вночі вже сплю, дякувати тобі. Та в ліс більше не піду — не туди, де те бачив. Дай мені який оберіг на дорогу, щоб хоч удень не так лячно було ходити коло того місця.\""
 true_threat = 0
 desired_result_id = &"spiral_ward"

@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Коваль"
+display_name = "Штефан, коваль"
 problem_text = "\"Торгівля йде кепсько, відколи ці чутки по селу — люди бояться й коло кузні затримуватись. Звари мені щось на силу та відвагу, бо так і прогорю зі страху людського.\""
 true_threat = 0
 desired_result_id = &"strengthening_remedy"

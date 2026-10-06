@@ -5,7 +5,7 @@
 
 [resource]
 script = ExtResource("1")
-display_name = "Мисливець"
+display_name = "Гриць, мисливець"
 problem_text = "\"Пси мої вити стали вночі, хоч нікого чужого не бачу. Може, чують те, чого я не бачу. Звари мені щось на очі та вуха — хочу сам упевнитись, чи бачу, що є, чи те, що видається.\""
 true_threat = 0
 desired_result_id = &"eyes_hearing_remedy"

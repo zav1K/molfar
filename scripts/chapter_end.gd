@@ -93,7 +93,7 @@ func _build() -> void:
 ## as a stats screen, and each line stops landing.
 func _chronicle_lines() -> Array[String]:
 	var lines: Array[String] = []
-	lines.append("Лісника поховали на третій день по тому, як знайшли. Гріб несли четверо, п'ятого не знайшлося.")
+	lines.append("Миколу поховали на третій день по тому, як знайшли. Гріб несли четверо, п'ятого не знайшлося.")
 
 	# The hidden upyr — the one visitor the chapter actually asks the
 	# player to decide about. Silence if they never met her at all.
