@@ -52,10 +52,10 @@ const SOUNDS := {
 	&"stir": {prefixes = ["sfx/stir"], volume = -4.0, pitch = 0.06},
 	&"carve_loop": {prefixes = ["sfx/carve"], volume = -6.0, pitch = 0.0},
 	&"give_item": {prefixes = ["sfx/give_item"], volume = -4.0, pitch = 0.06},
-	&"day_ambience": {prefixes = ["ambience/day"], volume = -6.0, pitch = 0.0},
-	&"night_ambience": {prefixes = ["ambience/night"], volume = -6.0, pitch = 0.0},
+	&"day_ambience": {prefixes = ["ambience/day"], volume = -1.0, pitch = 0.0},
+	&"night_ambience": {prefixes = ["ambience/night"], volume = 2.0, pitch = 0.0},
 	&"cauldron_loop": {prefixes = ["sfx/cauldron"], volume = -4.0, pitch = 0.0},
-	&"fire_loop": {prefixes = ["sfx/fire"], volume = -8.0, pitch = 0.0},
+	&"fire_loop": {prefixes = ["sfx/fire"], volume = -17.0, pitch = 0.0},
 	&"trembita": {prefixes = ["music/trembita"], volume = 0.0, pitch = 0.0},
 }
 
@@ -177,10 +177,13 @@ func _new_player(bus: StringName) -> AudioStreamPlayer:
 
 ## One-shot. Unknown or not-yet-added names are silently ignored, which
 ## is the whole point — see the class doc.
-func play(name: StringName, volume_db: float = 0.0) -> void:
+## Returns how long the sound will take, so a caller can wait it out —
+## the door does, since answering a knock before the knocking has
+## finished reads as the hut opening itself. 0.0 when nothing played.
+func play(name: StringName, volume_db: float = 0.0) -> float:
 	var variant := _take_variant(name)
 	if variant.is_empty():
-		return
+		return 0.0
 	var config: Dictionary = SOUNDS[name]
 	var player := _free_player()
 	player.stream = variant.stream
@@ -188,6 +191,7 @@ func play(name: StringName, volume_db: float = 0.0) -> void:
 		+ randf_range(-VOLUME_JITTER_DB, VOLUME_JITTER_DB)
 	player.pitch_scale = 1.0 + randf_range(-float(config.pitch), float(config.pitch))
 	player.play()
+	return player.stream.get_length() / player.pitch_scale
 
 ## Picks a variant, avoiding the one played last whenever there is a
 ## choice. Pure randomness hands out the same knock twice in a row often

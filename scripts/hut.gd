@@ -373,6 +373,7 @@ func _on_inventory_panel_closed() -> void:
 func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
 	nav_left.visible = false
 	nav_right.visible = false
+	AudioDirector.play(&"door_open")
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(camera, "position", engaged_door.global_position, TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2(DOOR_ZOOM, DOOR_ZOOM), TWEEN_TIME)
@@ -383,7 +384,10 @@ func _on_visitor_resolved(invited: bool) -> void:
 	tw.tween_property(camera, "position", _panel_center(current_panel), TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2.ONE, TWEEN_TIME)
 	var visitor := door.current_visitor
-	AudioDirector.play(&"door_open" if invited else &"door_close")
+	# Either answer ends with the door shutting — behind them if they
+	# were let in, in their face if they were not. Opening already played
+	# when the player engaged the door (see _on_visitor_engaged).
+	AudioDirector.play(&"door_close")
 	var consequence := _apply_threshold_consequences(visitor, invited)
 	if invited:
 		if not visitor.is_human():
@@ -646,7 +650,15 @@ func _knock_with_random_visitor() -> void:
 		_schedule_next_knock()
 		return
 	_pending_aside = _take_suspicion_remark(visitor)
-	AudioDirector.play(&"knock")
+	# The door is only announced once the knocking has finished: with
+	# samples up to 3.6s long, offering the door on the first thump let
+	# the player answer a knock still in progress, which read as the hut
+	# opening itself.
+	var knock_seconds := AudioDirector.play(&"knock")
+	if knock_seconds > 0.0:
+		await get_tree().create_timer(knock_seconds).timeout
+		if _chapter_over or not is_inside_tree():
+			return
 	door.knock(visitor, WardRack.check_visitor(visitor))
 
 ## Every forced story beat for this phase on today or any later day —
