@@ -54,10 +54,13 @@ func _on_continue_pressed() -> void:
 	get_tree().change_scene_to_file(target)
 
 func _on_new_game_pressed() -> void:
-	# Deliberately does NOT wipe the existing save: the next day/night
-	# flip overwrites it anyway, and a player who hits "Нова гра" by
-	# mistake can still back out to the menu before that first flip.
+	# Deliberately does NOT wipe the existing save file: the next
+	# day/night flip overwrites it anyway, and a player who hits "Нова
+	# гра" by mistake can still back out to the menu before that first
+	# flip. The autoloads, though, must go back to zero — they outlive
+	# the scene change and would otherwise carry the last playthrough in.
 	SaveGame.pending_load = false
+	SaveGame.reset_for_new_game()
 	get_tree().change_scene_to_file(HUT_SCENE)
 
 func _on_quit_pressed() -> void:

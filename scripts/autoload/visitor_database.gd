@@ -204,6 +204,13 @@ func reset_seen() -> void:
 	_seen.clear()
 	_seen_groups.clear()
 
+## Forgets everything, including the cross-playthrough group cycle that
+## reset_seen deliberately keeps — a new game has met nobody.
+func reset() -> void:
+	_seen.clear()
+	_seen_groups.clear()
+	_group_pending.clear()
+
 ## Only the cross-playthrough part is worth saving: _seen/_seen_groups
 ## are cleared on every phase flip anyway, and SaveGame only writes at a
 ## phase flip, so they're empty at save time by construction. Visitor

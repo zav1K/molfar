@@ -112,6 +112,17 @@ func harvest(index: int) -> StringName:
 	plot.last_watered_day = -1
 	return id
 
+## Back to bare plots. load_state can't do this: it walks the SAVED
+## array, so an empty one leaves every plot exactly as it was.
+func reset() -> void:
+	for plot in _plots:
+		plot.stage = Stage.EMPTY
+		plot.ingredient_id = &""
+		plot.days_grown = 0
+		plot.days_to_growing = 0
+		plot.days_to_mature = 0
+		plot.last_watered_day = -1
+
 func save_state() -> Array:
 	var out: Array = []
 	for plot in _plots:

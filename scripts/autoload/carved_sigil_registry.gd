@@ -185,6 +185,11 @@ func _measure_grain_body(image: Image) -> Rect2:
 	var shrunk_size := raw_rect.size * GRAIN_SAFETY_SHRINK
 	return Rect2(raw_rect.position + (raw_rect.size - shrunk_size) / 2.0, shrunk_size)
 
+## Drops every carved stroke. The counts live in PlayerInventory and are
+## cleared with it; this is the hand-drawn art attached to each one.
+func reset() -> void:
+	_instances.clear()
+
 func add_instance(sigil_id: StringName, stroke_points: PackedVector2Array) -> void:
 	if not _instances.has(sigil_id):
 		_instances[sigil_id] = []

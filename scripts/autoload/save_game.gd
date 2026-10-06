@@ -96,6 +96,27 @@ func _read_raw() -> Dictionary:
 		return {}
 	return data
 
+## Wipes every autoload back to its starting state. Autoloads outlive
+## scene changes, so without this "Нова гра" after a session in the hut
+## inherited the lot: the calendar still said night, the chest still
+## held what the last playthrough earned, and — worst of it — every
+## story flag was still set, which silently removed all the one-time
+## visitors that gate on their own knocked_sets_flag from the pool.
+##
+## Mirrors load_game field for field on purpose: the two have to stay in
+## step, and a state that is saved but never reset is the kind of bug
+## that only shows up on someone's second game.
+func reset_for_new_game() -> void:
+	GameCalendar.load_state({})       # day 1, phase DAY
+	PlayerInventory.load_state({})
+	StoryFlags.load_state([])
+	PathBalance.load_state(0)
+	VillageSuspicion.load_state(0)
+	WardRack.load_state([])
+	GardenState.reset()               # load_state([]) walks the saved array, so it can't
+	VisitorDatabase.reset()
+	CarvedSigilRegistry.reset()
+
 func delete_save() -> void:
 	if has_save():
 		DirAccess.remove_absolute(ProjectSettings.globalize_path(SAVE_PATH))
