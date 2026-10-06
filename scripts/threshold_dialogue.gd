@@ -6,7 +6,8 @@ extends CanvasLayer
 ##
 ## Portrait is scaled to fill PortraitBox's height (the doorway is tall
 ## and narrow, so height is the meaningful constraint) using the visitor's
-## own measured waiting_portrait_content_rect — same underlying data as
+## own measured content rect (its own when the door portrait is a
+## separate image, otherwise the waiting one) — same underlying data as
 ## WaitingVisitorDisplay. Width is allowed to modestly overflow into the
 ## door frame on either side, which reads naturally for a figure standing
 ## in a narrow doorway; portrait_box clips it so wide portraits (e.g. two
@@ -62,7 +63,7 @@ static func compose_problem_text(visitor: Visitor, aside: String) -> String:
 ## portrait_box (clip_contents = true), which reads naturally as the
 ## frame cropping a person standing in a narrow opening.
 func _fit_portrait(visitor: Visitor, tex: Texture2D) -> void:
-	var rect := visitor.waiting_portrait_content_rect
+	var rect := visitor.get_door_content_rect()
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
 	var content_size := Vector2(rect.size.x * tex_size.x, rect.size.y * tex_size.y)
 	var box_size := portrait_box.size * MAX_FIT_FRACTION

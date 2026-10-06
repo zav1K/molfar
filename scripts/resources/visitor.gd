@@ -145,6 +145,22 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## Defaults to the full canvas (no cropping) until measured.
 @export var waiting_portrait_content_rect: Rect2 = Rect2(0, 0, 1, 1)
 
+## The same measurement for portrait_door, when that is a different
+## image from portrait_waiting. One rect served both while every visitor
+## had a single picture; the вурдалаки broke that, since the thing at
+## the door stands like a man and the thing that comes inside does not,
+## so a shared bounding box mis-frames one of them.
+##
+## Left at its default, ThresholdDialogue falls back to the rect above —
+## which is correct for everyone with one portrait.
+@export var door_portrait_content_rect: Rect2 = Rect2(0, 0, 1, 1)
+
+## The rect to crop portrait_door by: its own when measured, otherwise
+## the waiting one.
+func get_door_content_rect() -> Rect2:
+	return door_portrait_content_rect if door_portrait_content_rect != Rect2(0, 0, 1, 1) \
+		else waiting_portrait_content_rect
+
 func is_human() -> bool:
 	return true_threat == Threat.Type.NONE
 
