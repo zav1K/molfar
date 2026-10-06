@@ -1,21 +1,39 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=6 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_protect"]
+script = ExtResource("3")
+label = "Він тепер під моїм захистом."
+response = "Лихо не сперечається. Дивиться довго, байдуже — як вода дивиться на камінь, що на мить перегородив їй шлях.\n\nТоді йде, ніби нічого й не було. Камінь річку не спиняє. Але той, хто стояв за каменем, цю ніч переживе."
+satisfies = true
+sets_flag = &"shielded_from_likho"
+path_shift = 1
+
+[sub_resource type="Resource" id="Reply_threaten"]
+script = ExtResource("3")
+label = "Не доводь, щоб я зцілив і тебе."
+response = "Щось схоже на сміх — сухе, без тепла.\n\n\"Цікаво було б побачити.\"\n\nЛихо зникає, та відчуття, що воно тепер пам'ятає твоє ім'я, не минає ще довго."
+satisfies = true
+path_shift = -1
+
+[sub_resource type="Resource" id="Reply_honest"]
+script = ExtResource("3")
+label = "Ні. Не варте."
+response = "Вперше воно ніби слухає по-справжньому.\n\n\"От бачиш.\" Без зловтіхи — радше як той, кому нарешті відповіли чесно. \"Я ж нікому не роблю лиха. Я просто сідаю поруч і сиджу. Усе решта люди роблять собі самі.\"\n\nВоно йде, і ти цілу ніч не можеш позбутися думки, що воно сказало правду."
+satisfies = true
+sets_flag = &"admitted_doubt_to_likho"
+path_shift = 0
 
 [resource]
 script = ExtResource("1")
 display_name = "Лихо"
-problem_text = "\"Мольфаре... чуже ти в мою справу поліз. Було моє — тепер не моє. Не питаю, чого ти так учинив. Питаю: думаєш, воно того варте було?\""
+problem_text = "\"Мольфаре... чуже ти в мою справу поліз. Було моє — тепер не моє. Не питаю, чого ти так учинив. Питаю: думаєш, воно того варте було?\"\n\nВоно чекає відповіді, не моргаючи."
 true_threat = 3
-satisfied_text = "Лихо чекає відповіді, не моргаючи."
+satisfied_text = "Воно зникає."
 unhelped_text = "Воно зникає, так і не дочекавшись відповіді."
 night_visitor = true
 required_flag = &"likho_driven_off"
 knocked_sets_flag = &"likho_confronted"
-choice_prompt = "Що відповіси?"
-choice_a_label = "Він тепер під моїм захистом."
-choice_a_response = "Лихо не сперечається. Дивиться довго, байдуже — як вода дивиться на камінь, що на мить перегородив їй шлях. Тоді йде, ніби нічого й не було."
-choice_a_path_shift = 1
-choice_b_label = "Не доводь, щоб я зцілив і тебе."
-choice_b_response = "Щось схоже на сміх — сухе, без тепла. \"Цікаво було б побачити.\" Лихо зникає, та відчуття, що воно тепер пам'ятає твоє ім'я, не минає ще довго."
-choice_b_path_shift = -1
+replies = Array[Resource]([SubResource("Reply_protect"), SubResource("Reply_honest"), SubResource("Reply_threaten")])

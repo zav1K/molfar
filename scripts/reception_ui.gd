@@ -15,9 +15,17 @@ extends CanvasLayer
 ## play different flavor text.
 ##
 ## A visitor with neither desired_result_id nor offers_item_id (e.g.
-## mavka_night1, forest_warden_day5) isn't asking for anything material
-## at all — being invited in and heard out is the whole interaction, so
-## the give-list is replaced with a single "Вислухати" button instead.
+## forest_warden_day5) isn't asking for anything material at all — being
+## invited in and heard out is the whole interaction, so the give-list is
+## replaced with a single "Вислухати" button instead.
+##
+## Unless they came with a question, which most of the night callers did.
+## Those carry `replies` (see VisitorReply): the molfar's own lines, one
+## per button, and picking one resolves the visit the way handing over a
+## potion resolves a day client's. Before that existed they all shared
+## the "Вислухати" button, which made the player's half of every night
+## conversation a single word that meant nothing — the upyr who asks to
+## be taught to pass as human was thanking them for pressing it.
 ##
 ## Once satisfied, whatever the visitor was already offering (payment_type)
 ## is granted automatically — voluntary thanks, not a price (see
@@ -54,6 +62,8 @@ const TILE_WIDTH := 130.0
 @onready var demand_money_button: Button = $Panel/DemandMoneyButton
 @onready var finish_button: Button = $Panel/FinishButton
 @onready var listen_button: Button = $Panel/ListenButton
+@onready var reply_scroll: ScrollContainer = $Panel/ReplyScroll
+@onready var reply_list: VBoxContainer = $Panel/ReplyScroll/ReplyList
 @onready var choice_prompt_label: Label = $Panel/ChoicePromptLabel
 @onready var choice_a_button: Button = $Panel/ChoiceAButton
 @onready var choice_b_button: Button = $Panel/ChoiceBButton
@@ -99,6 +109,12 @@ func show_visitor(visitor: Visitor, aside: String = "") -> void:
 func _rebuild_item_list() -> void:
 	for child in item_list.get_children():
 		child.queue_free()
+	# Detached before freeing, not just queued: queue_free() lands at the
+	# end of the frame, so a rebuild in the same frame would otherwise
+	# stack the new buttons under the old ones.
+	for child in reply_list.get_children():
+		reply_list.remove_child(child)
+		child.queue_free()
 	# Awaiting a post-resolution choice takes over the Finish/DemandMoney
 	# row entirely until it's answered — see class doc.
 	var awaiting_choice := _resolved and _satisfied and _visitor.choice_prompt != "" and not _choice_made
@@ -106,7 +122,10 @@ func _rebuild_item_list() -> void:
 	wait_button.visible = not _resolved
 	finish_button.visible = _resolved and not awaiting_choice
 	take_button.visible = not _resolved and _visitor.offers_item_id != &""
-	listen_button.visible = not _resolved and _visitor.offers_item_id == &"" and _visitor.desired_result_id == &""
+	var offered_replies := _available_replies()
+	reply_scroll.visible = not _resolved and not offered_replies.is_empty()
+	listen_button.visible = not _resolved and _visitor.offers_item_id == &"" \
+		and _visitor.desired_result_id == &"" and offered_replies.is_empty()
 	demand_money_button.visible = _resolved and _satisfied and not _payment_settled and _visitor.payment_type != Visitor.PaymentType.MONEY and not awaiting_choice
 	choice_prompt_label.visible = awaiting_choice
 	choice_a_button.visible = awaiting_choice
@@ -116,6 +135,12 @@ func _rebuild_item_list() -> void:
 		choice_a_button.text = _visitor.choice_a_label
 		choice_b_button.text = _visitor.choice_b_label
 	if _resolved:
+		return
+	for reply in offered_replies:
+		reply_list.add_child(_build_reply_button(reply))
+	if not offered_replies.is_empty():
+		# The replies stand in for the give-list, so there is nothing else
+		# on this screen to build.
 		return
 	if _visitor.offers_item_id != &"":
 		# Reversed direction — they're handing something to the player, not
@@ -223,6 +248,34 @@ func _on_take_pressed() -> void:
 	PlayerInventory.add(_visitor.offers_item_id, 1)
 	_resolve(true)
 
+## The replies this visitor is willing to hear right now — a line the
+## molfar hasn't learned yet simply isn't on the list, rather than being
+## shown greyed out, since the player has no way to know what he'd have
+## had to learn and a dead button only advertises content they can't reach.
+func _available_replies() -> Array[VisitorReply]:
+	var out: Array[VisitorReply] = []
+	for reply in _visitor.replies:
+		if reply == null:
+			continue
+		if reply.required_flag == &"" or StoryFlags.has_flag(reply.required_flag):
+			out.append(reply)
+	return out
+
+## Full spoken lines, so they wrap instead of being cut off mid-word, and
+## left-aligned because a sentence centred on a button reads as a label.
+func _build_reply_button(reply: VisitorReply) -> Button:
+	var button := Button.new()
+	button.text = reply.label
+	button.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	button.clip_text = false
+	button.alignment = HORIZONTAL_ALIGNMENT_LEFT
+	button.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	button.pressed.connect(_on_reply_pressed.bind(reply))
+	return button
+
+func _on_reply_pressed(reply: VisitorReply) -> void:
+	_resolve(reply.satisfies, reply)
+
 func _on_listen_pressed() -> void:
 	_resolve(true)
 
@@ -233,10 +286,18 @@ func _on_wait_pressed() -> void:
 	visible = false
 	wait_requested.emit(_visitor)
 
-func _resolve(satisfied: bool) -> void:
+## `reply` is set when the visit was resolved by something the molfar
+## said rather than by an item (see VisitorReply). Its response replaces
+## satisfied_text/unhelped_text instead of stacking with it — the same
+## reasoning as _apply_choice below — and its flag and path weight
+## replace the visitor's, so two answers to one question can land in
+## different places.
+func _resolve(satisfied: bool, reply: VisitorReply = null) -> void:
 	_resolved = true
 	_satisfied = satisfied
 	var full_text := _visitor.satisfied_text if satisfied else _visitor.unhelped_text
+	if reply != null and reply.response != "":
+		full_text = reply.response
 	if satisfied and _visitor.payment_flavor_text != "":
 		full_text += "\n(%s)" % _visitor.payment_flavor_text
 	if not satisfied and _visitor.refusal_loot_chance > 0.0 and randf() < _visitor.refusal_loot_chance:
@@ -244,9 +305,13 @@ func _resolve(satisfied: bool) -> void:
 		full_text += "\n(Відходячи, лишає по собі щось із награбованого.)"
 	result_label.show_text(full_text)
 	var shift := _visitor.satisfied_path_shift if satisfied else _visitor.unhelped_path_shift
+	if reply != null:
+		shift = reply.path_shift
 	if shift != 0:
 		PathBalance.shift(shift)
-	if satisfied:
+	if reply != null:
+		StoryFlags.set_flag(reply.sets_flag)
+	elif satisfied:
 		StoryFlags.set_flag(_visitor.satisfied_sets_flag)
 	_rebuild_item_list()
 

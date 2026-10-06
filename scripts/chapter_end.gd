@@ -99,6 +99,8 @@ func _chronicle_lines() -> Array[String]:
 	# player to decide about. Silence if they never met her at all.
 	if StoryFlags.has_flag(&"helped_hidden_upyr"):
 		lines.append("Та, що просила навчити її здаватися людиною, навчилася. Прийшла востаннє в ніч перед обходами — не ховатися, а попередити мене. Більше я її не бачив, і добре, що не бачив.")
+	elif StoryFlags.has_flag(&"misled_hidden_upyr"):
+		lines.append("Я навчив її виходити на люди й знав, що роблю. На Стрітення в церкві був крик, а потім довго не було нічого. Я не питав. Мені й не казали — знали, що не питатиму.")
 	elif StoryFlags.has_flag(&"met_hidden_upyr"):
 		lines.append("Я не впустив її. Уранці під вікном лежав пучок барвінку, перев'язаний ниткою. Не мій.")
 
@@ -124,6 +126,12 @@ func _chronicle_lines() -> Array[String]:
 		lines.append("Я брав плату з тих, кому платити було нічим. Казав собі, що ремесло теж їсти хоче. Це теж пам'ятають.")
 	elif leaning == PathBalance.Leaning.LIGHT:
 		lines.append("Я не взяв нічого з тих, хто не мав. Скриня від того не повнішає, зате й дивитися людям в очі легше.")
+
+	if StoryFlags.has_flag(&"let_lisovyk_mislead"):
+		lines.append("Я дозволив лісовикові поводити їх стежками. Вони вернулися вранці й розказали всім, що в лісі щось є. Тепер уже не поодинці ходять.")
+
+	if StoryFlags.has_flag(&"named_name_to_mara"):
+		lines.append("Я назвав мару ім'я. Своє не назвав — назвав чуже, і то за одну ніч без задухи. Дешево ж воно вийшло.")
 
 	if StoryFlags.has_flag(&"likho_confronted"):
 		lines.append("Лихо так і не відчепилося остаточно. Воно вміє чекати довше за людину.")

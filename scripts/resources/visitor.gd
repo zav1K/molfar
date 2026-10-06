@@ -120,6 +120,15 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 @export var satisfied_path_shift: int = 0
 @export var unhelped_path_shift: int = 0
 
+## What the molfar can say back, for a visitor who isn't asking for an
+## object (see VisitorReply). Non-empty replaces the generic "Вислухати"
+## button with these lines, and whichever is picked resolves the visit.
+##
+## Empty for every visitor who wants a potion or a ward: there, handing
+## one over is already the molfar's answer, and a line on top of it would
+## only say twice what the item said once.
+@export var replies: Array[VisitorReply] = []
+
 ## Optional post-resolution moral beat, shown instead of the plain Finish
 ## button once satisfied — for the rare "thank you" that deserves an
 ## actual response from the player rather than just closing the window

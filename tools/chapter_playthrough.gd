@@ -90,7 +90,15 @@ func _process(_delta: float) -> void:
 		if hut.reception_ui._resolved:
 			hut.reception_ui._on_finish_pressed()
 		else:
-			hut.reception_ui._on_send_away_pressed()
+			# A visitor who came with a question has no give-list to send
+			# away from, so take one of the molfar's own lines at random —
+			# otherwise this harness would never once walk the reply
+			# branch, which is most of what the night cast does.
+			var replies: Array = hut.reception_ui._available_replies()
+			if replies.is_empty():
+				hut.reception_ui._on_send_away_pressed()
+			else:
+				hut.reception_ui._on_reply_pressed(replies[randi() % replies.size()])
 		return
 	if hut._story_day > 7:
 		push_error("[playthrough] reached day 8 — the chapter never ended")
