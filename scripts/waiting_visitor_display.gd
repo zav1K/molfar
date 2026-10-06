@@ -63,9 +63,15 @@ func show_visitor(visitor: Visitor) -> void:
 	var min_height_scale := (size.y * MIN_HEIGHT_OVERFLOW) / (rect.size.y * tex_size.y)
 	var max_safe_scale := (size.x * MAX_WIDTH_FRACTION) / content_width
 	var content_scale: float = minf(maxf(width_scale, min_height_scale), max_safe_scale)
+	content_scale *= visitor.figure_height_scale
 	icon.size = tex_size * content_scale
 	var side_margin := (size.x - rect.size.x * tex_size.x * content_scale) / 2.0
-	icon.position = Vector2(side_margin, 0.0) - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
+	# A short figure sits DOWN to the table line instead of being clipped
+	# by it, so children stand behind the table like everyone else rather
+	# than hovering with their legs cut off at the waist.
+	var drop := size.y - rect.size.y * tex_size.y * content_scale
+	icon.position = Vector2(side_margin, maxf(0.0, drop)) \
+		- Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
 
 func hide_visitor() -> void:
 	visible = false

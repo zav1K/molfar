@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/nichnytsia.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -17,3 +18,5 @@ choice_b_label = "Промовчати."
 choice_b_response = "Вона схиляє голову, ніби оцінює, і йде сама, нічого не сказавши більше."
 
 required_flag = &"__chapter1_scripted_only__"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.086675, 0.097310, 0.800708, 0.839794)

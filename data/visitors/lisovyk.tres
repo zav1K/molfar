@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/lisovyk.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -14,3 +15,5 @@ unhelped_text = "\"Ну то й нічого.\" Він стоїть ще дов�
 recurring_group = &"lisovyk"
 knocked_sets_flag = &"met_lisovyk"
 satisfied_sets_flag = &"squared_with_lisovyk"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.211063, 0.036133, 0.529840, 0.902344)

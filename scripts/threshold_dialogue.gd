@@ -67,10 +67,14 @@ func _fit_portrait(visitor: Visitor, tex: Texture2D) -> void:
 	var tex_size := Vector2(tex.get_width(), tex.get_height())
 	var content_size := Vector2(rect.size.x * tex_size.x, rect.size.y * tex_size.y)
 	var box_size := portrait_box.size * MAX_FIT_FRACTION
-	var content_scale: float = box_size.y / content_size.y
+	var content_scale: float = (box_size.y * visitor.figure_height_scale) / content_size.y
 	portrait_icon.size = tex_size * content_scale
-	var centering := (portrait_box.size - content_size * content_scale) / 2.0
-	portrait_icon.position = centering - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
+	# Centred across, but standing ON the floor rather than floating in
+	# the middle of it — which only shows once someone is shorter than
+	# the doorway (see Visitor.figure_height_scale).
+	var scaled := content_size * content_scale
+	var offset := Vector2((portrait_box.size.x - scaled.x) / 2.0, portrait_box.size.y - scaled.y)
+	portrait_icon.position = offset - Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
 
 func _resolve(invited: bool) -> void:
 	visible = false

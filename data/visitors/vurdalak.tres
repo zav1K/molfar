@@ -1,6 +1,8 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/fake_semen.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/vurdalak_female.png" id="3"]
 
 [resource]
 script = ExtResource("1")
@@ -18,3 +20,7 @@ invited_shortens_next_day = 2
 refused_shortens_next_day = 1
 satisfied_sets_flag = &"let_vurdalak_in"
 satisfied_path_shift = -1
+portrait_door = ExtResource("2")
+portrait_waiting = ExtResource("3")
+door_portrait_content_rect = Rect2(0.183406, 0.046875, 0.636099, 0.917969)
+waiting_portrait_content_rect = Rect2(0.189229, 0.073242, 0.676856, 0.861328)

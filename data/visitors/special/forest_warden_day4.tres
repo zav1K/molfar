@@ -7,7 +7,8 @@
 script = ExtResource("1")
 display_name = "Микола, лісник"
 problem_text = "\"Вчора вночі... бачив вогник там, де вогню бути не мало. За старою стежкою, де хрестів не ставлять. Хтось копав, мольфаре. Не звір то копав. Я... я мав би комусь про це сказати, правда ж?\""
-desired_result_id = &"calming_remedy"
+desired_result_id = &"anti_curse_remedy"
+alt_desired_result_id = &"cleansing_remedy"
 satisfied_text = "\"Дякую. Може, це й справді просто нерви.\""
 unhelped_text = "\"Ну, піду тоді так. Може, само минеться.\""
 portrait_door = ExtResource("2")

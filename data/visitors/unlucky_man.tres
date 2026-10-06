@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/unlucky_man.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -15,3 +16,5 @@ payment_item_id = &"mat_goods"
 payment_flavor_text = "Останнє, що лишилось — та від щирого серця"
 knocked_sets_flag = &"met_unlucky_man"
 satisfied_sets_flag = &"likho_driven_off"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.257642, 0.045898, 0.500728, 0.926758)

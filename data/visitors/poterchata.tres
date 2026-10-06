@@ -24,3 +24,4 @@ choice_b_label = "Не брати цього на себе"
 choice_b_response = "Ти молчиш. Називати — то не твоє право, і вони, здається, це розуміють краще за тебе. Найстарший киває: \"Нам і так казали, що ніхто не візьме.\""
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.110626, 0.108398, 0.793304, 0.842773)
+figure_height_scale = 0.5

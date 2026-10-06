@@ -155,6 +155,15 @@ enum PaymentType { NOTHING, MATERIAL, MONEY, INFORMATION }
 ## which is correct for everyone with one portrait.
 @export var door_portrait_content_rect: Rect2 = Rect2(0, 0, 1, 1)
 
+## How tall this visitor stands, as a fraction of the doorway. Every
+## portrait is otherwise scaled to fill it, which is right for adults
+## and wrong for anyone who is not one: the потерчата are small children
+## and were coming to the door the same height as the blacksmith.
+##
+## Applies to the figure standing in the hut as well, so they stay the
+## same size on both screens.
+@export_range(0.3, 1.0, 0.05) var figure_height_scale: float = 1.0
+
 ## The rect to crop portrait_door by: its own when measured, otherwise
 ## the waiting one.
 func get_door_content_rect() -> Rect2:

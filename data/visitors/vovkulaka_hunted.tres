@@ -1,6 +1,7 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=2 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/vovkulaka.png" id="2"]
 
 [resource]
 script = ExtResource("1")
@@ -17,3 +18,5 @@ satisfied_sets_flag = &"hid_vovkulaka_from_hunt"
 satisfied_path_shift = 1
 recurring_group = &"vovkulaka"
 knocked_sets_flag = &"vovkulaka_hunted_asked"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.223467, 0.120649, 0.584316, 0.786392)
