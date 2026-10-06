@@ -98,7 +98,7 @@ func _chronicle_lines() -> Array[String]:
 	# The hidden upyr — the one visitor the chapter actually asks the
 	# player to decide about. Silence if they never met her at all.
 	if StoryFlags.has_flag(&"helped_hidden_upyr"):
-		lines.append("Та, що приходила вночі й просила не виганяти, більше не прийшла. Чи жива вона — я не знаю. Сподіваюся, що пішла далеко.")
+		lines.append("Та, що просила навчити її здаватися людиною, навчилася. Прийшла востаннє в ніч перед обходами — не ховатися, а попередити мене. Більше я її не бачив, і добре, що не бачив.")
 	elif StoryFlags.has_flag(&"met_hidden_upyr"):
 		lines.append("Я не впустив її. Уранці під вікном лежав пучок барвінку, перев'язаний ниткою. Не мій.")
 

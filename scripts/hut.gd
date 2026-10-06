@@ -712,7 +712,14 @@ func _pop_forced_visitor(is_night: bool) -> Visitor:
 	var opens: Array = script.get(key + "_opens", [])
 	var opening_slot := _night_visitor_count if is_night else _day_visitor_count
 	if opening_slot < opens.size():
-		return _load_forced_visitor(opens[opening_slot])
+		var opening: Visitor = load(opens[opening_slot])
+		# An opening beat can be conditional: the hidden upyr comes back
+		# on the last night to warn the molfar only if he sheltered her
+		# in the first place. An unmet condition falls through to the
+		# ordinary pool rather than leaving the slot empty.
+		if opening.required_flag == &"" or StoryFlags.has_flag(opening.required_flag):
+			return _load_forced_visitor(opens[opening_slot])
+		return null
 	if not script.has(key):
 		return null
 	if _night_forced_used if is_night else _day_forced_used:
