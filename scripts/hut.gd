@@ -17,6 +17,18 @@ const SCRIPTED_NIGHT_CAP := 3 ## default night_cap for a scripted night — see 
 const CHAPTER1_LAST_DAY := 7 ## after this night the chapter ends — see _end_chapter().
 const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
 
+## Day and night were visually identical — the only cue was a toast that
+## had already faded by the time the first night visitor knocked. The
+## tint is a CanvasModulate on the root Node2D, so it colours the hut
+## and everything in it while leaving the UI alone: CanvasLayers each
+## have their own canvas and are not touched, which is exactly what we
+## want, since dialogue has to stay readable at midnight.
+const DAY_TINT := Color(1.0, 0.98, 0.94)
+const NIGHT_TINT := Color(0.52, 0.60, 0.80)
+## Long enough to feel like dusk rather than a light switch. It runs
+## alongside the ambience crossfade, which is the same length.
+const TINT_FADE_SECONDS := 2.5
+
 ## Розділ 1 ("Поріг") — deterministic day-by-day script, see STORY.md.
 ## Keyed by _story_day (1-based, counting from a fresh playthrough — see
 ## _story_day below). Every day of the chapter is listed; there is no day
@@ -121,6 +133,7 @@ const NEW_TEST_HERBS: Array[StringName] = [
 @onready var calendar_label: Label = $UI/CalendarLabel
 @onready var day_night_toast: DayNightToast = $DayNightToast
 @onready var pause_menu: PauseMenu = $PauseMenu
+@onready var day_night_tint: CanvasModulate = $DayNightTint
 
 ## Calendar deliberately excluded — see _update_calendar_label. The zone
 ## node itself is also hidden in _ready() rather than deleted from the
@@ -175,6 +188,7 @@ func _ready() -> void:
 	door.visitor_engaged.connect(_on_visitor_engaged)
 	threshold_dialogue.resolved.connect(_on_visitor_resolved)
 	VillageSuspicion.level_changed.connect(_on_suspicion_level_changed)
+	GameCalendar.phase_changed.connect(_on_phase_changed_tint)
 	reception_ui.closed.connect(_on_reception_closed)
 	reception_ui.wait_requested.connect(_on_visitor_wait_requested)
 	waiting_indicator.pressed.connect(_on_waiting_indicator_pressed)
@@ -199,6 +213,9 @@ func _ready() -> void:
 
 	AudioDirector.start_loop(&"fire_loop")
 	var restored := _restore_from_save()
+	# Straight to the right colour, no fade: a restored night should
+	# already be night on the first frame, not dawn turning into it.
+	day_night_tint.color = _tint_for(GameCalendar.phase)
 	_update_calendar_label()
 	if restored:
 		# A loaded game already has whatever the player actually held —
@@ -612,6 +629,12 @@ func _take_suspicion_remark(visitor: Visitor) -> String:
 	if remark != "":
 		_suspicion_remark_day = _story_day
 	return remark
+
+func _tint_for(phase: int) -> Color:
+	return NIGHT_TINT if phase == GameCalendar.Phase.NIGHT else DAY_TINT
+
+func _on_phase_changed_tint(phase: int) -> void:
+	create_tween().tween_property(day_night_tint, "color", _tint_for(phase), TINT_FADE_SECONDS)
 
 ## The village crossing into talking about him, or into having made up
 ## its mind. Toast + diary entry rather than a number on screen: the
