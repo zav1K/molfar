@@ -1,7 +1,32 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/hut/forest_warden_1.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_wait"]
+script = ExtResource("3")
+label = "Зачекай до завтра. Не поспішай із цим."
+response = "\"Зачекаю, добре.\" Він мне шапку в руках. \"Але піду. Воно ж мені не насниться назад, як я мовчатиму.\"\n\nБіля дверей спиняється. \"Та й що мені зробиться, мольфаре. Я ж не дитина, щоб боятися дороги до церкви.\""
+satisfies = true
+sets_flag = &"asked_lisnyk_to_wait"
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_urge"]
+script = ExtResource("3")
+label = "Правильно надумав. Так і зроби."
+response = "\"Легше, коли хтось каже, що я не з глузду з'їхав.\"\n\nВін випростується вперше за всі ці дні — і йде звідси майже бадьорий. Коліно, на яке він скаржився щоразу, сьогодні його не турбує."
+satisfies = true
+sets_flag = &"urged_lisnyk_to_tell"
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_cover"]
+script = ExtResource("3")
+label = "Тільки не кажи йому, що ти був у мене."
+response = "\"А... та добре.\"\n\nВін погоджується одразу, без тіні докору — йому навіть не спадає на думку, що просити про таке було чого соромитися.\n\n\"Воно й правда, нащо тебе вплутувати. Ти ж мені помагав.\"\n\nІ дякує ще раз, уже на порозі."
+satisfies = true
+sets_flag = &"hid_behind_lisnyk"
+path_shift = -1
 
 [resource]
 script = ExtResource("1")
@@ -12,10 +37,5 @@ unhelped_text = "\"Ну, піду тоді так.\""
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.203812, 0.056641, 0.636364, 0.861328)
 knocked_sets_flag = &"lisnyk_decided_to_tell"
-choice_prompt = "Що питаєш?"
-choice_a_label = "Зачекай, не поспішай."
-choice_a_response = "\"Зачекаю до завтра, добре. Але піду.\""
-choice_b_label = "Правильно. Так і зроби."
-choice_b_response = "\"Легше, коли хтось каже, що я не з глузду з'їхав.\""
-
 required_flag = &"__chapter1_scripted_only__"
+replies = Array[Resource]([SubResource("Reply_wait"), SubResource("Reply_urge"), SubResource("Reply_cover")])

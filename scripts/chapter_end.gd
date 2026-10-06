@@ -95,6 +95,12 @@ func _chronicle_lines() -> Array[String]:
 	var lines: Array[String] = []
 	lines.append("Миколу поховали на третій день по тому, як знайшли. Гріб несли четверо, п'ятого не знайшлося.")
 
+	# The last thing the molfar said to him, read back after he is dead —
+	# the one line here that can make an ordinary sentence retroactively
+	# shameful without the player having done anything forbidden.
+	if StoryFlags.has_flag(&"hid_behind_lisnyk"):
+		lines.append("Останнє, що я йому сказав, було не \"бережи себе\". Останнє, що я йому сказав, було не казати отцю, що він ходив до мене. Він погодився одразу. Йому й на думку не спало образитись.")
+
 	# The hidden upyr — the one visitor the chapter actually asks the
 	# player to decide about. Silence if they never met her at all.
 	if StoryFlags.has_flag(&"helped_hidden_upyr"):
@@ -106,8 +112,10 @@ func _chronicle_lines() -> Array[String]:
 
 	# Whether the player ends the chapter able to doubt the priest, or
 	# with nothing to set against him. The heart of the whole thing.
-	if StoryFlags.has_flag(&"upyr_curse_origin_known"):
-		lines.append("Я знаю, звідки взялося їхнє прокляття. З тим, що казав священник, це не збігається ніяк, і він знає, що не збігається.")
+	if StoryFlags.has_flag(&"challenged_priest"):
+		lines.append("Я знаю, звідки взялося їхнє прокляття, і сказав йому це в очі. Він не спитав, від кого я чув. Невинний спитав би першим ділом — а він спитав, чи я повірив.")
+	elif StoryFlags.has_flag(&"upyr_curse_origin_known"):
+		lines.append("Я знаю, звідки взялося їхнє прокляття. З тим, що казав священник, це не збігається ніяк. Я змовчав — і досі не знаю, чи з обачності, чи з боягузтва.")
 	else:
 		lines.append("Я так і не дізнався, за що його вбили. Лишилося тільки те, що сказав священник, і перевірити це нічим.")
 

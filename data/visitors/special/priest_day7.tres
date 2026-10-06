@@ -1,23 +1,42 @@
-[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
 
 [ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
 [ext_resource type="Texture2D" path="res://assets/hut/priest_secret_visit_1.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_believe"]
+script = ExtResource("3")
+label = "Добре, отче. Буду начуватися."
+response = "Ти киваєш, не питаючи зайвого.\n\nВін ніби й сам полегшено зітхає, хоч і намагається цього не показати. На порозі ще раз обертається — переконатися, що ти справді кивнув, — і аж тоді йде."
+satisfies = true
+sets_flag = &"believed_priest"
+path_shift = 1
+
+[sub_resource type="Resource" id="Reply_doubt"]
+script = ExtResource("3")
+label = "А чому ти не просиш захисту для себе, отче?"
+response = "Він відповідає не одразу.\n\n\"Мені боятися нічого.\" Сказано твердо — і це єдине за всю розмову, що він сказав твердо.\n\nТи не допитуєшся. Ти просто дивишся довше, ніж годиться, і він перший відводить очі."
+satisfies = true
+sets_flag = &"doubted_priest"
+path_shift = -1
+
+[sub_resource type="Resource" id="Reply_know"]
+script = ExtResource("3")
+label = "Те, що ти кажеш, не збігається з тим, що я чув від них."
+response = "Невинна людина спитала б одне: від кого ти це чув?\n\nВін питає інше.\n\n\"І ти їм повірив?\" — тихо, без обурення, так, ніби вже знає, що саме вони могли тобі сказати.\n\nДалі він говорить рівно й правильно, аж до самих дверей, і прощається, як належить. Та ти вже почув те, що почув."
+satisfies = true
+sets_flag = &"challenged_priest"
+required_flag = &"upyr_curse_origin_known"
+path_shift = 0
 
 [resource]
 script = ExtResource("1")
 display_name = "Священник"
 problem_text = "\"Не допомагай тим, кого бачив коло хати ночами, мольфаре. Нечисть забрала Миколу — і тих, хто її переховує, тримає на совісті те саме. Начувайся й ти.\""
-satisfied_text = "Він чекає відповіді, не сідаючи."
+satisfied_text = "Він іде, не чекаючи відповіді."
 unhelped_text = "Він іде, не чекаючи відповіді."
 knocked_sets_flag = &"priest_forbade_nechyst"
-choice_prompt = "Повіриш йому?"
-choice_a_label = "Повірити"
-choice_a_response = "Ти киваєш, не питаючи зайвого... Він ніби й сам полегшено зітхає, хоч і намагається цього не показати."
-choice_a_path_shift = 1
-choice_b_label = "Засумніватись"
-choice_b_response = "Чому він не просить захисту для себе, а одразу велить, кого цуратись? Ти не кажеш цього вголос — лише дивишся довше, ніж годиться."
-choice_b_path_shift = -1
-
 portrait_door = ExtResource("2")
 waiting_portrait_content_rect = Rect2(0.236070, 0.073242, 0.514663, 0.862305)
 required_flag = &"__chapter1_scripted_only__"
+replies = Array[Resource]([SubResource("Reply_believe"), SubResource("Reply_doubt"), SubResource("Reply_know")])
