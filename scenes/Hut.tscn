@@ -1053,6 +1053,8 @@ horizontal_scroll_mode = 0
 [node name="Label" type="RichTextLabel" parent="ReceptionUI/Panel/ResultLabel"]
 layout_mode = 2
 size_flags_horizontal = 3
+bbcode_enabled = true
+fit_content = true
 
 [node name="ChoicePromptLabel" type="Label" parent="ReceptionUI/Panel"]
 visible = false

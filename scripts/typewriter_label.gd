@@ -44,6 +44,12 @@ var _revealing: bool = false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_STOP
+	# Hidden characters keep their space instead of being dropped before
+	# the line is shaped. Without this the block is only as tall as the
+	# part already typed, so with fit_content on it grows line by line as
+	# it reveals — the text reflows under itself while the player reads
+	# it, and get_content_height() reads 0 on the first frame.
+	label.visible_characters_behavior = TextServer.VC_CHARS_AFTER_SHAPING
 	set_process(false)
 
 func show_text(new_text: String) -> void:
