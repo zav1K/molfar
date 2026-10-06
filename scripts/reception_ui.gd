@@ -6,7 +6,8 @@ extends CanvasLayer
 ## yet (see CONCEPT.md) — this just checks the given item's id against
 ## the visitor's hidden desired_result_id. Giving nothing is a valid
 ## choice too, always available — but so is asking them to wait instead
-## of turning them away outright (see hut.gd's patience timer).
+## of turning them away outright — they wait in the hut indefinitely
+## (see hut.gd's _show_visitor_inside).
 ##
 ## A visitor with offers_item_id set runs the reverse: they're handing
 ## something to the player (e.g. found_doll's straw doll), a small

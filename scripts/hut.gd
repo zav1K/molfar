@@ -8,7 +8,6 @@ const PANEL_HEIGHT := 540.0
 const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
-const PATIENCE_SECONDS := 60.0 ## how long a waiting visitor sticks around before giving up.
 const STARTING_STOCK := 10 ## the old molfar's standing stock — see the seeding block in _ready().
 const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
@@ -152,7 +151,6 @@ const NEW_TEST_HERBS: Array[StringName] = [
 
 var current_panel: int = 1 # start centered on the desk
 var _waiting_visitor: Visitor
-var _wait_token: int = 0
 var _day_visitor_count: int = 0
 var _night_visitor_count: int = 0
 var _night_quota: int = NIGHT_VISITOR_MIN
@@ -488,7 +486,6 @@ func _on_reception_closed() -> void:
 	nav_left.visible = true
 	nav_right.visible = true
 	_waiting_visitor = null
-	_wait_token += 1
 	waiting_indicator.visible = false
 	waiting_visitor_display.hide_visitor()
 	_schedule_next_knock()
@@ -497,24 +494,23 @@ func _on_visitor_wait_requested(visitor: Visitor) -> void:
 	_show_visitor_inside(visitor, true)
 
 ## Puts a visitor on their feet in the hut and hands the player back
-## control, for the two moments that look identical on screen: just
+## control, for the two moments that look the same on screen: just
 ## invited in, and asked to wait while something gets brewed.
 ##
-## `impatient` is the only difference, and it is the honest one. The
-## patience timer exists because the player walked off to do something
-## else — so being asked to wait starts it, and simply being let in does
-## not. Otherwise a player taking a moment to look at who they opened
-## the door to would watch them give up and leave.
-func _show_visitor_inside(visitor: Visitor, impatient: bool) -> void:
+## Nobody ever leaves on their own. A visitor used to give up after a
+## minute, which quietly pushed the player to hurry — wrong for a game
+## whose whole appetite is standing still and reading a face. They stay
+## until they are dealt with, however long that takes.
+##
+## `asked_to_wait` only changes the label, so the player can tell a
+## request they have already heard from one they have not.
+func _show_visitor_inside(visitor: Visitor, asked_to_wait: bool) -> void:
 	nav_left.visible = true
 	nav_right.visible = true
 	_waiting_visitor = visitor
-	waiting_indicator.text = ("Клієнт чекає: %s" if impatient else "У хаті: %s") % visitor.display_name
+	waiting_indicator.text = ("Клієнт чекає: %s" if asked_to_wait else "У хаті: %s") % visitor.display_name
 	waiting_indicator.visible = true
 	waiting_visitor_display.show_visitor(visitor)
-	_wait_token += 1
-	if impatient:
-		_run_patience_timer(_wait_token)
 
 func _on_waiting_indicator_pressed() -> void:
 	if _waiting_visitor == null:
@@ -523,18 +519,7 @@ func _on_waiting_indicator_pressed() -> void:
 	waiting_visitor_display.hide_visitor()
 	nav_left.visible = false
 	nav_right.visible = false
-	_wait_token += 1 # invalidate the running patience timer while they're served again
 	reception_ui.show_visitor(_waiting_visitor, _pending_aside)
-
-func _run_patience_timer(token: int) -> void:
-	await get_tree().create_timer(PATIENCE_SECONDS).timeout
-	if token != _wait_token:
-		return
-	# Gave up waiting — leaves unhelped, same as an explicit refusal.
-	_waiting_visitor = null
-	waiting_indicator.visible = false
-	waiting_visitor_display.hide_visitor()
-	_schedule_next_knock()
 
 func _schedule_next_knock() -> void:
 	_advance_visitor_slot()

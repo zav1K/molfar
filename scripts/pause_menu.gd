@@ -4,9 +4,9 @@ extends CanvasLayer
 ## game at all short of killing the window — see TODO_DEMO.md.
 ##
 ## Actually pauses the tree, which is what makes leaving safe: the
-## visitor patience timer and the pending-knock timer both hang off
-## get_tree().create_timer, so they stop with everything else instead of
-## quietly expiring behind the menu while the player reads it. This node
+## pending-knock timer hangs off get_tree().create_timer, so it stops
+## with everything else instead of firing behind the menu and bringing
+## someone to the door while the player is reading this. The node itself
 ## runs with PROCESS_MODE_ALWAYS so it stays interactive on both sides
 ## of that pause.
 ##
