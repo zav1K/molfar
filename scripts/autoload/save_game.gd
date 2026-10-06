@@ -78,6 +78,18 @@ func peek_chapter_complete() -> bool:
 	return bool(data.get("chapter_complete", false))
 
 ## Empty dictionary for every unusable case — see load_game's comment.
+## The phase the last save was written in, without restoring anything —
+## the menu picks its backdrop from this before any scene exists. -1
+## when there is no usable save, which the caller reads as "a fresh
+## game starts in daylight".
+func peek_phase() -> int:
+	var data := _read_raw()
+	if data.is_empty():
+		return -1
+	var calendar: Dictionary = data.get("calendar", {})
+	return int(calendar.get("phase", GameCalendar.Phase.DAY))
+
+## Empty dictionary for every unusable case — see load_game's comment.
 func _read_raw() -> Dictionary:
 	if not has_save():
 		return {}
