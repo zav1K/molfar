@@ -8,7 +8,14 @@ const PANEL_HEIGHT := 540.0
 const PANEL_COUNT := 3
 const TWEEN_TIME := 0.45
 const DOOR_ZOOM := 1.6
-const STARTING_STOCK := 10 ## the old molfar's standing stock — see the seeding block in _ready().
+## The old molfar's standing stock. Low on purpose: the point is that it
+## runs out. At ten of every brew and every sigil the whole chapter could
+## be played without lighting the cauldron once, which is half the game
+## skipped. Three covers the opening days and then the player has to
+## make things. See the seeding block in _ready().
+## Enough of every herb to keep brewing; see the seeding block.
+const STARTING_HERBS := 10
+const STARTING_STOCK := 3
 const DAY_VISITOR_CAP := 5 ## how many day clients knock before night falls.
 const NIGHT_VISITOR_MIN := 3 ## night нечисть quota is rolled fresh each night, in this range —
 const NIGHT_VISITOR_MAX := 5 ## only outside the Розділ 1 script below (freeplay after it ends).
@@ -103,14 +110,7 @@ const ZONE_SCENES := {
 	&"garden_window": "res://scenes/Garden.tscn",
 }
 
-## The 16 herbs added for the newer recipe batch. There is no gathering
-## mechanic in this chapter by design (see the seeding block in _ready),
-## so these are simply part of what he already has hanging up.
-const NEW_TEST_HERBS: Array[StringName] = [
-	&"calendula", &"chamomile", &"deadnettle", &"dill", &"elderberry",
-	&"hawthorn", &"lovage", &"marigold",
-	&"nettle", &"oregano", &"parsley", &"rosehip", &"st_johns_wort", &"thyme",
-]
+
 
 @onready var camera: Camera2D = $Camera2D
 @onready var nav_left: Button = $UI/NavLeft
@@ -222,47 +222,35 @@ func _ready() -> void:
 		_knock_with_random_visitor()
 		return
 
-	# A well-stocked hut is characterisation, not a debug leftover: the
-	# player is the OLD molfar, forty years into the trade, so of course
-	# the drying beam is full (see Molfar, and CONCEPT.md's "Демка — це
-	# приквел"). Gathering herbs is the HEIR's problem and belongs to the
-	# full game, where the hut starts bare. So this stays — it just isn't
-	# a shortcut any more.
+	# What forty years in the trade leaves on the shelves. The player is
+	# the OLD molfar, so a full drying beam is characterisation, not a
+	# debug shortcut — gathering herbs is the HEIR's problem and belongs
+	# to the full game, where the hut starts bare (see Molfar and
+	# CONCEPT.md's "Демка — це приквел").
 	#
-	# Still worth tuning rather than leaving alone: the amounts below are
-	# generous enough that nothing ever runs low, which means the cauldron
-	# is optional for a whole playthrough. See TODO_DEMO.md.
-	if not PlayerInventory.has(&"garlic"):
-		PlayerInventory.add(&"garlic", 3)
-	if not PlayerInventory.has(&"wormwood"):
-		PlayerInventory.add(&"wormwood", 3)
-	if not PlayerInventory.has(&"mint"):
-		PlayerInventory.add(&"mint", 2)
-	if not PlayerInventory.has(&"dream_grass"):
-		PlayerInventory.add(&"dream_grass", 3)
-
-	# Same reasoning as the block above, for the newer recipe batch.
-	for herb_id in NEW_TEST_HERBS:
-		if not PlayerInventory.has(herb_id):
-			PlayerInventory.add(herb_id, 10)
-
-	# A garlic ward is already hanging: a man who has worked nights for
-	# decades would not leave the door bare. Also what makes the door
-	# hint visible from the first knock.
-	if WardRack.get_slot(0) == &"":
-		WardRack.hang(0, &"garlic")
-
-	# A shelf of ready brews and a drawer of cut sigils, for the same
-	# reason: several recipes (calming_remedy, cleansing_remedy,
-	# zigzag_ward...) are asked for more than once across the seven days,
-	# by both the scripted beats and the background rotation, and the
-	# chapter assumes he can meet those without a trip to the forest.
+	# Herbs are plentiful and finished work is not, which is the whole
+	# shape of it: having herbs is what makes the player brew, having
+	# brews is what stops them. At ten of every remedy the chapter could
+	# be played start to finish without lighting the cauldron once.
+	# Measured against one playthrough's actual demand, three leaves the
+	# cleansing remedy four short, the calming one three short and the
+	# spiral ward one short — so the cauldron and the knife both become
+	# necessary somewhere around the third day.
+	for ingredient in IngredientDatabase.get_all():
+		if not PlayerInventory.has(ingredient.id):
+			PlayerInventory.add(ingredient.id, STARTING_HERBS)
 	for potion in PotionDatabase.get_all():
 		if not PlayerInventory.has(potion.id):
 			PlayerInventory.add(potion.id, STARTING_STOCK)
 	for sigil in SigilDatabase.get_all():
 		if not PlayerInventory.has(sigil.id):
 			PlayerInventory.add(sigil.id, STARTING_STOCK)
+
+	# A garlic ward is already hanging: a man who has worked nights for
+	# decades would not leave the door bare. Also what makes the door
+	# hint visible from the first knock.
+	if WardRack.get_slot(0) == &"":
+		WardRack.hang(0, &"garlic")
 
 	_knock_with_random_visitor()
 
