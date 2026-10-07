@@ -52,17 +52,63 @@ const HEADER := """# Репліки «Молфара» — усі тексти �
 # Розкласти назад:                   DIALOGUE_MODE=import
 """
 
+@onready var buttons: VBoxContainer = $Panel/Margin/Rows/Buttons
+@onready var log_label: RichTextLabel = $Panel/Margin/Rows/Log
+
+var _log: String = ""
+
+## Two ways in. Opened in the Godot editor and run (F6), it shows its
+## own buttons — no command line, which matters because the person who
+## edits these texts works on Windows. Run headless with DIALOGUE_MODE
+## set, it does that one job and quits, for scripting and for the checks
+## in this repo.
 func _ready() -> void:
 	var mode := OS.get_environment("DIALOGUE_MODE")
-	if mode == "":
-		mode = "export"
+	var headless := DisplayServer.get_name() == "headless"
+	if headless or mode != "":
+		if mode == "":
+			mode = "export"
+		_run(mode)
+		get_tree().quit()
+		return
+	for row in [["Зібрати тексти у файл", "export"],
+			["Розкласти файл назад у гру", "import"],
+			["Перевірити тексти", "audit"],
+			["Перевірити сам інструмент", "verify"]]:
+		var button := Button.new()
+		button.text = row[0]
+		button.custom_minimum_size = Vector2(0, 38)
+		button.pressed.connect(_on_pressed.bind(row[1]))
+		buttons.add_child(button)
+	_say("Файл: %s" % ProjectSettings.globalize_path(OUT_PATH))
+	_say("«Зібрати» перезапише його тим, що зараз у грі.")
+
+func _on_pressed(mode: String) -> void:
+	_log = ""
+	_run(mode)
+	log_label.text = _log
+
+## print() goes to the editor's Output panel, which is where a headless
+## run is read from; the on-screen log is for the windowed one, so both
+## get the same words.
+func _say(line: String) -> void:
+	print(line)
+	_log += line + "\n"
+
+## Loud in both places: push_error so a headless run fails visibly, and
+## the same line in the on-screen log so a windowed run is readable.
+func _warn(line: String) -> void:
+	push_error(line)
+	_log += line + "\n"
+
+func _run(mode: String) -> void:
 	match mode:
 		"export": _export()
 		"import": _import()
 		"verify": _verify()
+		"audit": _audit()
 		_:
-			push_error("[dialogue] невідомий DIALOGUE_MODE: %s" % mode)
-	get_tree().quit()
+			_say("невідомий режим: %s" % mode)
 
 # --- export ---------------------------------------------------------
 
@@ -71,17 +117,17 @@ func _export() -> void:
 	var unreadable := _collisions(text)
 	if not unreadable.is_empty():
 		for line in unreadable:
-			push_error("[dialogue] текст починається зі службового символу: %s" % line)
-		push_error("[dialogue] експорт скасовано — такий файл не прочитається назад")
+			_warn("[dialogue] текст починається зі службового символу: %s" % line)
+		_warn("[dialogue] експорт скасовано — такий файл не прочитається назад")
 		return
 	var file := FileAccess.open(OUT_PATH, FileAccess.WRITE)
 	if file == null:
-		push_error("[dialogue] не вдалося записати %s" % OUT_PATH)
+		_warn("[dialogue] не вдалося записати %s" % OUT_PATH)
 		return
 	file.store_string(text)
 	file.close()
-	print("записано %s" % ProjectSettings.globalize_path(OUT_PATH))
-	print("відвідувачів: %d, полів: %d" % [_paths().size(), _count_fields(text)])
+	_say("записано %s" % ProjectSettings.globalize_path(OUT_PATH))
+	_say("відвідувачів: %d, полів: %d" % [_paths().size(), _count_fields(text)])
 
 func _compose() -> String:
 	var out := HEADER
@@ -108,11 +154,11 @@ func _compose() -> String:
 
 func _import() -> void:
 	if not FileAccess.file_exists(OUT_PATH):
-		push_error("[dialogue] нема %s — спершу зроби export" % OUT_PATH)
+		_warn("[dialogue] нема %s — спершу зроби export" % OUT_PATH)
 		return
 	var blocks := _parse(FileAccess.get_file_as_string(OUT_PATH))
 	if blocks.is_empty():
-		push_error("[dialogue] у файлі не знайдено жодного блоку «=== шлях»")
+		_warn("[dialogue] у файлі не знайдено жодного блоку «=== шлях»")
 		return
 	var changed := 0
 	var untouched := 0
@@ -124,10 +170,14 @@ func _import() -> void:
 			"same": untouched += 1
 			_:
 				failed += 1
-				push_error("[dialogue] %s: %s" % [path, result])
-	print("змінено: %d   без змін: %d   помилок: %d" % [changed, untouched, failed])
+				_warn("[dialogue] %s: %s" % [path, result])
+	_say("змінено: %d   без змін: %d   помилок: %d" % [changed, untouched, failed])
 	if failed == 0:
-		print("перевір `git diff data/visitors` — має бути видно тільки правлені рядки")
+		_say("перевір `git diff data/visitors` — має бути видно тільки правлені рядки")
+	# Run straight after writing, because a rewrite pass is exactly when
+	# a stray quote gets introduced and nothing else would notice.
+	_say("")
+	_audit()
 
 ## path -> {field -> text}
 func _parse(text: String) -> Dictionary:
@@ -278,7 +328,7 @@ func _verify() -> void:
 			continue
 		if not blocks.has(path):
 			lost += 1
-			push_error("[dialogue] блок зник: %s" % path)
+			_warn("[dialogue] блок зник: %s" % path)
 			continue
 		var fields: Dictionary = blocks[path]
 		for field in FIELDS:
@@ -288,7 +338,7 @@ func _verify() -> void:
 			checked += 1
 			if String(fields.get(field, "")) != want:
 				lost += 1
-				print("РОЗБІЖНІСТЬ %s %s\n  було:  %s\n  стало: %s" % [
+				_say("РОЗБІЖНІСТЬ %s %s\n  було:  %s\n  стало: %s" % [
 					v.display_name, field, JSON.stringify(want.substr(0, 60)),
 					JSON.stringify(String(fields.get(field, "")).substr(0, 60))])
 		for i in v.replies.size():
@@ -300,10 +350,62 @@ func _verify() -> void:
 				var key := "reply%d.%s" % [i, part[0]]
 				if String(fields.get(key, "")) != String(part[1]):
 					lost += 1
-					print("РОЗБІЖНІСТЬ %s %s" % [v.display_name, key])
-	print("перевірено полів: %d   втрачено: %d" % [checked, lost])
+					_say("РОЗБІЖНІСТЬ %s %s" % [v.display_name, key])
+	_say("перевірено полів: %d   втрачено: %d" % [checked, lost])
 	if lost > 0:
-		push_error("[dialogue] круговий обхід втрачає дані")
+		_warn("[dialogue] круговий обхід втрачає дані")
+
+# --- audit ----------------------------------------------------------
+
+## Reads the loaded text rather than the file syntax, looking for the two
+## ways a line can be broken without anything failing.
+##
+## A stray quote is the dangerous one. The .tres format ends a string at
+## the first unescaped quote, so a speech mark typed inside a speech
+## silently truncates the rest — which is how the упириця's warning about
+## вурдалаки shipped as "Перед тим як піти, вона каже тихо: " and
+## nothing else, while the flag it set and the grimoire entry behind it
+## both worked. Caught here by the tail: a line that ends on a colon,
+## comma or dash was cut off mid-sentence.
+##
+## An odd number of quotes is the other. TypewriterLabel._format splits
+## on them to typeset speech larger than the prose around it, and assumes
+## they come in pairs — one unmatched quote mis-sets everything after it.
+const CUT_OFF := [":", ",", "—", "-", "(", "«"]
+
+func _audit() -> void:
+	var odd := 0
+	var cut := 0
+	var checked := 0
+	for path in _paths():
+		var v = load(path)
+		if v == null or not (v is Visitor):
+			continue
+		var items: Array = []
+		for field in FIELDS:
+			items.append([field, String(v.get(field))])
+		items.append(["payment_flavor_text", v.payment_flavor_text])
+		for i in v.replies.size():
+			if v.replies[i] != null:
+				items.append(["reply%d.label" % i, v.replies[i].label])
+				items.append(["reply%d.response" % i, v.replies[i].response])
+		for item in items:
+			var text: String = String(item[1]).strip_edges()
+			if text.is_empty():
+				continue
+			checked += 1
+			if text.count("\"") % 2 != 0:
+				odd += 1
+				_say("НЕПАРНА ЛАПКА  %s  %s\n   %s" % [
+					path.get_file(), item[0], JSON.stringify(text.substr(0, 70))])
+			if text.substr(text.length() - 1) in CUT_OFF:
+				cut += 1
+				_say("ОБІРВАНО  %s  %s\n   ...%s" % [
+					path.get_file(), item[0],
+					JSON.stringify(text.substr(maxi(0, text.length() - 60)))])
+	_say("перевірено текстів: %d   непарних лапок: %d   обірваних: %d" % [checked, odd, cut])
+	if odd + cut > 0:
+		_warn("[dialogue] %d підозрілих текстів — див. вище" % (odd + cut))
 
 # --- shared ---------------------------------------------------------
 
