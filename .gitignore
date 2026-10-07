@@ -25,3 +25,7 @@ data_*/
 
 # Personal Claude Code settings (not shared)
 .claude/settings.local.json
+
+# Згенерований зведений файл реплік — джерело правди лишається в data/visitors/*.tres
+# (tools/DialogueIO.tscn, DIALOGUE_MODE=export)
+dialogue.md
