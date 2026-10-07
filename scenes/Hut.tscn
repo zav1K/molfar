@@ -1,7 +1,8 @@
-[gd_scene load_steps=54 format=3]
+[gd_scene load_steps=55 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
 [ext_resource type="Script" path="res://scripts/threshold_portrait_box.gd" id="34"]
+[ext_resource type="Script" path="res://scripts/tutorial_hints.gd" id="35"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
 [ext_resource type="Texture2D" path="res://assets/hut/shelfs.PNG" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="5"]
@@ -1394,5 +1395,27 @@ vertical_alignment = 1
 theme_override_font_sizes/font_size = 22
 theme_override_colors/font_color = Color(0.95, 0.85, 0.55, 1)
 text = "День 1"
+
+[node name="TutorialHints" type="CanvasLayer" parent="."]
+layer = 11
+script = ExtResource("35")
+
+[node name="Panel" type="PanelContainer" parent="TutorialHints"]
+mouse_filter = 2
+offset_left = 140.0
+offset_top = 476.0
+offset_right = 820.0
+offset_bottom = 514.0
+theme_override_styles/panel = SubResource("StyleBoxFlat_toast")
+
+[node name="Label" type="Label" parent="TutorialHints/Panel"]
+mouse_filter = 2
+custom_minimum_size = Vector2(0, 38)
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 2
+theme_override_font_sizes/font_size = 13
+theme_override_colors/font_color = Color(0.88, 0.84, 0.74, 1)
+text = "підказка"
 
 [node name="PauseMenu" parent="." instance=ExtResource("32")]

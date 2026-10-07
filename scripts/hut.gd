@@ -131,6 +131,7 @@ const ZONE_SCENES := {
 @onready var waiting_visitor_display: WaitingVisitorDisplay = $PanelCenter/WaitingVisitorDisplay
 @onready var calendar_label: Label = $UI/CalendarLabel
 @onready var day_night_toast: DayNightToast = $DayNightToast
+@onready var tutorial_hints: TutorialHints = $TutorialHints
 @onready var pause_menu: PauseMenu = $PauseMenu
 @onready var day_night_tint: CanvasModulate = $DayNightTint
 
@@ -208,6 +209,11 @@ func _ready() -> void:
 	GameCalendar.season_changed.connect(_update_calendar_label)
 	camera.position = _panel_center(current_panel)
 	_update_nav_buttons()
+	# The hut is three screens wide and starts on the middle one, with
+	# nothing but two small arrows to say so — the cauldron and the
+	# grimoire are both off-screen at this point.
+	tutorial_hints.show_once(&"panels",
+		"Хата ширша за екран. Стрілки з боків ведуть до печі та до полиць.")
 
 	AudioDirector.start_loop(&"fire_loop")
 	var restored := _restore_from_save()
@@ -380,7 +386,12 @@ func _on_visitor_engaged(engaged_door: Door, visitor: Visitor) -> void:
 	var tw := create_tween().set_parallel(true)
 	tw.tween_property(camera, "position", engaged_door.global_position, TWEEN_TIME)
 	tw.tween_property(camera, "zoom", Vector2(DOOR_ZOOM, DOOR_ZOOM), TWEEN_TIME)
-	tw.finished.connect(func() -> void: threshold_dialogue.show_visitor(visitor, _pending_aside), CONNECT_ONE_SHOT)
+	tw.finished.connect(func() -> void:
+		threshold_dialogue.show_visitor(visitor, _pending_aside)
+		# Fired here rather than on the knock: at the door is where the
+		# two buttons are actually in front of the player.
+		tutorial_hints.show_once(&"refusing",
+			"Відмовити — теж відповідь. Двері відчиняти не обов'язково."), CONNECT_ONE_SHOT)
 
 func _on_visitor_resolved(invited: bool) -> void:
 	var tw := create_tween().set_parallel(true)
@@ -499,6 +510,8 @@ func _show_visitor_inside(visitor: Visitor, asked_to_wait: bool) -> void:
 	waiting_indicator.text = ("Клієнт чекає: %s" if asked_to_wait else "У хаті: %s") % visitor.display_name
 	waiting_indicator.visible = true
 	waiting_visitor_display.show_visitor(visitor)
+	tutorial_hints.show_once(&"waiting",
+		"Гість чекає. Натисни на нього, коли будеш готовий говорити.")
 
 func _on_waiting_indicator_pressed() -> void:
 	if _waiting_visitor == null:
@@ -508,6 +521,12 @@ func _on_waiting_indicator_pressed() -> void:
 	nav_left.visible = false
 	nav_right.visible = false
 	reception_ui.show_visitor(_waiting_visitor, _pending_aside)
+	# Only for someone who actually wants an object: the ones who came
+	# with a question have their answers on screen already, and pointing
+	# at the cauldron there would be pointing at the wrong thing.
+	if _waiting_visitor.desired_result_id != &"":
+		tutorial_hints.show_once(&"making",
+			"Даєш зі своїх запасів. Чого нема — вариться в казані або ріжеться на знаку.")
 
 func _schedule_next_knock() -> void:
 	_advance_visitor_slot()
