@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/noon_spirit.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Полудениця"
+problem_text = "Вона стоїть на самому сонці, і сонце їй нічого не робить. Тінь від неї падає не туди, куди мусила б.\n\n\"Твоя сусідка нині жала до полудня й по полудні. Я її попередила, як годиться — тричі. Вона не чула.\" Голос рівний, без злості. \"Тепер вона лежить межи снопів і не встає. Я прийшла сказати тобі, бо ти єдиний тут, хто знає, що з таким робити. Я не винна: правило старе, і я його не складала.\""
+true_threat = 2
+desired_result_id = &"strengthening_remedy"
+alt_desired_result_id = &"cleansing_remedy"
+satisfied_text = "Вона дивиться на відвар у твоїй руці й уперше кліпає.\n\n\"Віднеси сам, бо мене вона не побачить удруге. І скажи їй про полудень. Люди забули, а я лишилася.\" Коли ти підводиш очі, на стежці нікого, і тінь на подвір'ї знову лежить правильно."
+unhelped_text = "\"Ну то й не неси.\" Вона не сердиться. \"Мені однаково, а їй до вечора.\" Вона відходить у полудневе марево й зникає, не дійшовши до повороту."
+knocked_sets_flag = &"met_noon_spirit"
+satisfied_sets_flag = &"saved_reaper_woman"
+satisfied_path_shift = 1
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.195051, 0.060547, 0.703057, 0.898438)

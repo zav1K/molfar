@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/mara.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_priest"]
+script = ExtResource("3")
+label = "Священника."
+response = "Ти вимовляєш це перш, ніж подумав. Вона всміхається вперше за всю ніч.\n\n\"Отож-бо. А казав — не маєш кого.\"\n\nІ йде в бік села, задоволена. Уранці в церкві не дзвонять до утрені, і ніхто в селі не питає чому — бо всі чомусь і так знають, що батюшка сю ніч не спав."
+satisfies = true
+sets_flag = &"named_name_to_mara"
+path_shift = -2
+
+[sub_resource type="Resource" id="Reply_nobody"]
+script = ExtResource("3")
+label = "Нікого."
+response = "Ти мовчиш, аж поки вона не перестає чекати.\n\n\"Шкода. Було б цікаво.\"\n\nВона лишається — на цю ніч тільки біля твоїх грудей, як і щоночі досі. Уранці ти встаєш розбитий і живеш далі, як жив."
+satisfies = false
+path_shift = 1
+
+[sub_resource type="Resource" id="Reply_mine"]
+script = ExtResource("3")
+label = "Назву своє."
+response = "Тиша робиться така, що чути, як осідає попіл.\n\n\"Своє,\" — повторює вона. \"Онуфрію, я й так ходжу до тебе щоночі. Ти пропонуєш мені те, що в мене вже є.\"\n\nВона дивиться на тебе довго, і вперше в цьому погляді нема терпіння — є щось ближче до поваги.\n\n\"Ти не торгуєшся. Ти просто не хочеш, щоб я пішла до когось іншого.\" Вона зникає з порога, не рушивши з місця. \"Ну, хай.\""
+satisfies = false
+sets_flag = &"offered_self_to_mara"
+path_shift = 2
+
+[resource]
+script = ExtResource("1")
+display_name = "Мара"
+problem_text = "\"Я стомилася тиснути тобі груди щоночі даремно.\" Вона схиляє голову набік. \"Давай інакше: пусти мене, і я цієї ночі піду не до тебе, а до того, хто тобі муляє. Назви кого. Я не питаю, нащо.\"\n\nВона чекає, і в неї надто багато терпіння для істоти, яка нічого не втрачає."
+true_threat = 2
+night_visitor = true
+required_flag = &"met_mara"
+satisfied_text = "Вона заходить, бо впустив."
+unhelped_text = "\"Розумно.\" Вона зникає з порога, не рушивши з місця. \"Хоч і не з доброти, а з обачності. Ну, хай.\""
+recurring_group = &"mara"
+knocked_sets_flag = &"mara_offered_bargain"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.285505, 0.061523, 0.469985, 0.867188)
+replies = Array[Resource]([SubResource("Reply_priest"), SubResource("Reply_nobody"), SubResource("Reply_mine")])

@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/shepherd.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Семен, вівчар"
+problem_text = "\"Четверту ніч вівці не лягають. Стоять до ранку і дивляться в один бік — усі в один, мольфаре, я таке раз у житті бачив.\" Він розгортає брудну ганчірку: клапоть вовни, темний від засохлої крові. \"Оце я знайшов. Сліду нема, крові на траві нема. Дай мені оберіг на кошару, бо я більше туди сам не піду.\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+alt_desired_result_id = &"spiral_ward"
+satisfied_text = "\"Дай Бог, щоб узяло.\" Він загортає оберіг у ту саму ганчірку, де була вовна, і аж тоді помічає це й перекладає в кишеню."
+unhelped_text = "\"Значить, і ти не знаєш, що то.\" Він згортає ганчірку. \"Це гірше, ніж я думав.\""
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_amount = 2
+payment_flavor_text = "Голова овечого сиру і моток немитої вовни"
+recurring_group = &"shepherd"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.183406, 0.046875, 0.639010, 0.915039)

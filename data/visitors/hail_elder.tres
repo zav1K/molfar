@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/hail_elder_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Прокіп, староста"
+problem_text = "\"Чорні чутки по селу, мольфаре. Кажуть, щось чіпляється до людей ночами. Люди лякаються, хочуть вартувати коло церкви. Виріж хоч кривульку на одвірок громаді — щоб лихе не переступило поріг, раз уже такий переступає будь-де.\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+satisfied_text = "\"Громада не забуде цього, мольфаре.\""
+unhelped_text = "\"Що ж... якщо не можеш — не можеш. Хай буде, як буде.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.206745, 0.043945, 0.593842, 0.885742)
+payment_type = 2
+payment_item_id = &"groshi"
+payment_amount = 2
+payment_flavor_text = "Гроші, а то й цінна худоба"
+knocked_sets_flag = &"kryvulka_given_to_village"
+recurring_group = &"hail_elder"

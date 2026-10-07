@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/anxious_neighbor_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Паранька з-за потоку"
+problem_text = "\"Серце як не своє, тривога заїдає, спокою собі не найду відколи чоловік поїхав на полонину. Кожен стук у двері думаю — то звістка якась лиха. А вчора ще й сон бачила недобрий, про воду чорну... Чи є в тебе щось, щоб хоч трохи втишити це?\""
+true_threat = 0
+desired_result_id = &"heart_remedy"
+alt_desired_result_id = &"calming_remedy"
+satisfied_text = "\"Ох, полегшало... дякую, мольфаре. Може, тепер і спати зможу, не прокидаючись щоразу від шереху.\""
+unhelped_text = "\"Не те... тривога й досі точить. Піду, спробую сама якось.\""
+choice_prompt = "Що питаєш?"
+choice_a_label = "Про сон цей — пам'ятаєш деталі?"
+choice_a_response = "\"Та... вода, темна, і ніби кликала когось. Дурне, напевно.\""
+choice_b_label = "Головне, що тобі легше."
+choice_b_response = "\"Твоя правда. Менше думати — довше жити.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.226841, 0.055775, 0.569477, 0.879351)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Яйця, сир, вовняна пряжа"
+recurring_group = &"anxious_neighbor"

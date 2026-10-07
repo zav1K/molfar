@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/poterchata.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Потерчата"
+problem_text = "Їх троє, і вони такі малі, що ледве видно над порогом. Мокрі сорочечки, босі по холодній землі, і в кожного в долонях блідий вогник, що не гріє.\n\n\"Нас не донесли до церкви.\" Говорить найстарший, і йому років шість. \"Нам не дали імен, і тому нас ніде не пускають. Ми не їсти просимо, дядьку. Ми просимо постояти коло вогню, поки не почне світати.\""
+true_threat = 2
+night_visitor = true
+desired_result_id = &"spiral_ward"
+satisfied_text = "Вони заходять і сідають просто на долівку коло печі, троє в один рядок, і простягають до жару долоні, яких жар не торкається.\n\nУранці на долівці три мокрі плями. Більше нічого."
+unhelped_text = "Вони не плачуть і не просять удруге. Вони просто стоять, аж поки ти не зачиниш, і крізь шпарину ще довго видно три вогники, що не відходять від порога."
+knocked_sets_flag = &"met_poterchata"
+satisfied_sets_flag = &"sheltered_poterchata"
+satisfied_path_shift = 1
+recurring_group = &"poterchata"
+choice_prompt = "Даси їм імена?"
+choice_a_label = "Дати імена"
+choice_a_response = "Ти називаєш трьох — перші, що спадають на думку. Вони повторюють за тобою, по складах, обережно, наче те можна розбити. Вогники в долонях стають трохи рівніші."
+choice_a_path_shift = 1
+choice_b_label = "Не брати цього на себе"
+choice_b_response = "Ти молчиш. Називати — то не твоє право, і вони, здається, це розуміють краще за тебе. Найстарший киває: \"Нам і так казали, що ніхто не візьме.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.110626, 0.108398, 0.793304, 0.842773)
+figure_height_scale = 0.5

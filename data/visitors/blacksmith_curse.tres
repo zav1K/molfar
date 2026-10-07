@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/blacksmith_curse_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Штефан, коваль"
+problem_text = "\"Ковальство моє, кажуть, робить мене вразливим до наврочень — залізо-бо саме і оберіг, і слабкість. Останнім часом руки тремтять коло горна, наче хтось дивиться з-за плеча. Може, то просто втома, а може й ні — тобі видніше, мольфаре.\""
+true_threat = 0
+desired_result_id = &"anti_curse_remedy"
+alt_desired_result_id = &"cleansing_remedy"
+satisfied_text = "\"Хм. Може, і справді полегшало. Дякую. Хоч тепер знатиму, кому йти, якщо ще раз накотить.\""
+unhelped_text = "\"Так і знав, що все це забобони пусті. Піду кувати далі, раз нема з того користі.\""
+payment_type = 1
+payment_item_id = &"mat_metal"
+payment_flavor_text = "Кований метал і деталі для обладнання"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.250000, 0.050633, 0.478622, 0.879747)
+recurring_group = &"blacksmith_curse"

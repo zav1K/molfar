@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/blacksmith_curse_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Штефан, коваль"
+problem_text = "\"Залізо, що куюсь, чогось тримає холод довше, ніж повинно б, навіть просто з горна. Може, й я вже заразився тим неспокоєм, що по селу ходить. Виріж мені кривульку на двері кузні, про всяк випадок.\""
+true_threat = 0
+desired_result_id = &"zigzag_ward"
+satisfied_text = "\"Дякую. Тепер хоч спокійніше буде коло горна стояти.\""
+unhelped_text = "\"Не той знак. Ну, якось перебуду.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.250000, 0.050633, 0.478622, 0.879747)
+payment_type = 1
+payment_item_id = &"mat_metal"
+payment_flavor_text = "Кований метал і деталі для обладнання"
+recurring_group = &"blacksmith_curse"

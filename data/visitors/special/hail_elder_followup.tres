@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/hail_elder_1.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_restrain"]
+script = ExtResource("3")
+label = "Стримай їх, поки не пізно."
+response = "\"Спробую. Хоч не знаю вже, чи мене послухають.\"\n\nВін каже це так, як кажуть про погоду — ніби й сам не вірить, що від нього тут щось залежить. Староста він уже другий десяток років, і вперше за всі ті роки йому нíчого пообіцяти."
+satisfies = true
+sets_flag = &"urged_elder_to_restrain"
+path_shift = 1
+
+[sub_resource type="Resource" id="Reply_allow"]
+script = ExtResource("3")
+label = "Може, так і треба."
+response = "Він довго мовчить.\n\n\"Може.\" Тоді киває й іде, не кажучи більше нічого.\n\nТи сказав йому те, що він прийшов почути, і від того йому не полегшало, а тобі — тим більше."
+satisfies = true
+sets_flag = &"blessed_the_hunt"
+path_shift = -1
+
+[sub_resource type="Resource" id="Reply_self"]
+script = ExtResource("3")
+label = "А як вони прийдуть до мене, Прокопе?"
+response = "Він дивиться вбік — на піч, на двері, кудись, аби не на тебе.\n\n\"Та що ти... до тебе ж не прийдуть.\"\n\nПауза завелика для цих слів.\n\n\"Я скажу, щоб не йшли.\"\n\nВін і сам чує, як це прозвучало, і тому прощається швидше, ніж збирався."
+satisfies = true
+sets_flag = &"asked_elder_about_self"
+path_shift = 0
+
+[resource]
+script = ExtResource("1")
+display_name = "Прокіп, староста"
+problem_text = "\"Люди налякані, мольфаре. Після Миколи вже й самі хочуть діяти — хтось каже обходити хати, шукати, хто не такий, як усі. Я... я не знаю, чи правильно це, але зупинити їх уже не можу.\""
+true_threat = 0
+satisfied_text = "Він киває, не чекаючи відповіді, і йде — ніби сам не вірить у те, що щойно сказав."
+unhelped_text = "Він киває, не чекаючи відповіді, і йде — ніби сам не вірить у те, що щойно сказав."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.206745, 0.043945, 0.593842, 0.885742)
+required_flag = &"lisnyk_found_dead"
+knocked_sets_flag = &"elder_hunt_warning"
+recurring_group = &"hail_elder"
+replies = Array[Resource]([SubResource("Reply_restrain"), SubResource("Reply_allow"), SubResource("Reply_self")])

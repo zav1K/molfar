@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Keepsake" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/keepsake.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"looted_goods"
+display_name = "Награбоване добро"
+description = "Не подарунок — те, що не встигли забрати з собою, відходячи. Морочно тримати таке в хаті."
+placeholder_color = Color(0.3, 0.25, 0.28, 1)

@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/wake_guest_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Ничипір із сусіднього села"
+problem_text = "\"Ходив на поминки за родичем, а відтоді все мені не по собі, ніби причепилось щось. Кажуть, не можна з такого вертатись тим самим шляхом — а я, дурний, не послухав старших, пішов навпростець через цвинтар. Відтоді наче й тінь моя довша стала, чи то здається.\""
+true_threat = 1
+desired_result_id = &"cleansing_remedy"
+satisfied_text = "\"Наче камінь із душі зняли. Дякую, мольфаре.\""
+unhelped_text = "\"Не відпускає й досі...\""
+choice_prompt = "Що питаєш?"
+choice_a_label = "Чий то був цвинтар?"
+choice_a_response = "\"Та наш, сільський... хоча, здається, в тому кутку, де найстаріші могили, вже й хрестів не розбереш.\""
+choice_b_label = "Промовчати."
+choice_b_response = "Він просто хреститься й іде."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.253294, 0.077148, 0.527086, 0.833984)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Скромні речі — і, здається, родинна реліквія на додачу"
+knocked_sets_flag = &"wake_guest_treated"
+recurring_group = &"wake_guest"

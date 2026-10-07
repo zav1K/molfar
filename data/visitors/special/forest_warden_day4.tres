@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/forest_warden_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Микола, лісник"
+problem_text = "\"Вчора вночі... бачив вогник там, де вогню бути не мало. За старою стежкою, де хрестів не ставлять. Хтось копав, мольфаре. Не звір то копав. Я... я мав би комусь про це сказати, правда ж?\""
+desired_result_id = &"anti_curse_remedy"
+alt_desired_result_id = &"cleansing_remedy"
+satisfied_text = "\"Дякую. Може, це й справді просто нерви.\""
+unhelped_text = "\"Ну, піду тоді так. Може, само минеться.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.203812, 0.056641, 0.636364, 0.861328)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Дикі гриби, мед, рідкісні лісові трави"
+knocked_sets_flag = &"lisnyk_saw_digging"
+choice_prompt = "Що питаєш?"
+choice_a_label = "Піду з тобою, подивимось разом."
+choice_a_response = "\"Ні-ні. Не треба тобі туди. Я й сам не знаю, нащо йду.\""
+choice_b_label = "Нікому поки не кажи. Почекай."
+choice_b_response = "\"Чекав уже досить. Не можу більше сам це носити.\""
+
+required_flag = &"__chapter1_scripted_only__"

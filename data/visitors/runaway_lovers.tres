@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/runaway_lovers_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Маріка й Петрик"
+problem_text = "\"Батьки проти... ми не по приворот, мольфаре — нам би оберіг на дорогу, щоб безпечно дійти і щоб гнів їхній колись ущух. Підемо завтра, вдосвіта, поки ніхто не прокинувся.\""
+true_threat = 0
+desired_result_id = &"spiral_ward"
+satisfied_text = "\"Дякуємо, мольфаре.\""
+unhelped_text = "\"Що ж... підемо й так. Іншого виходу нема.\""
+choice_prompt = "Що питаєш?"
+choice_a_label = "Далеко зібрались?"
+choice_a_response = "\"Поки й самі не знаємо. Аби разом.\""
+choice_b_label = "Бережіть одне одного."
+choice_b_response = "Обоє кивають, тримаючись за руки міцніше."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.137628, 0.068359, 0.751098, 0.854492)
+payment_flavor_text = "Обіцянка й саморобний знак кохання — нічого, що покладеш у скриню"
+knocked_sets_flag = &"met_runaway_lovers"

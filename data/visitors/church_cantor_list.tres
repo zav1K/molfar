@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/church_cantor.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Тимко, дяк"
+problem_text = "Він приходить із чорнильною плямою на пальцях і тримає руки за спиною, щоб не було видно.\n\n\"Я мусив вас спитати. Отець велить переписувати з ваших слів.\" Він ковтає. \"Він питає, хто до вас ходить. Хто стукає, в який час. Я мушу щось принести, бо він уже двічі перепитував.\" Дяк дивиться в підлогу. \"Скажіть мені щось, що не зашкодить. Будь-що. Я запишу те й на цьому стане.\""
+true_threat = 0
+desired_result_id = &"calming_remedy"
+satisfied_text = "Він випиває й витирає пальці об спідницю рясного каптана, розмазуючи чорнило ще гірше.\n\n\"Я напишу, що в вас ходять із кашлем і за зіллям на корову. Так і є ж.\" Він киває сам собі. \"Так і є.\""
+unhelped_text = "\"Нічого. Я щось придумаю.\" І оце \"щось придумаю\" лишається з тобою на цілий день."
+payment_type = 3
+payment_flag_id = &"cantor_writes_about_molfar"
+payment_flavor_text = "Ти знаєш тепер, що твої відвідувачі переписуються на папір"
+recurring_group = &"church_cantor"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.262009, 0.062500, 0.465793, 0.896484)
