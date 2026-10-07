@@ -1,6 +1,7 @@
-[gd_scene load_steps=53 format=3]
+[gd_scene load_steps=54 format=3]
 
 [ext_resource type="Script" path="res://scripts/hut.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/threshold_portrait_box.gd" id="34"]
 [ext_resource type="Script" path="res://scripts/interaction_zone.gd" id="2"]
 [ext_resource type="Texture2D" path="res://assets/hut/shelfs.PNG" id="4"]
 [ext_resource type="Texture2D" path="res://assets/hut/chest.png" id="5"]
@@ -719,6 +720,7 @@ expand_mode = 1
 stretch_mode = 0
 
 [node name="PortraitBox" type="Control" parent="ThresholdDialogue/Panel"]
+script = ExtResource("34")
 clip_contents = true
 mouse_filter = 2
 offset_left = 416.0

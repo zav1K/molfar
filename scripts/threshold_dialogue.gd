@@ -20,7 +20,7 @@ signal resolved(invited: bool)
 
 const MAX_FIT_FRACTION := 0.98 ## small margin so the figure doesn't touch the box edges.
 
-@onready var portrait_box: Control = $Panel/PortraitBox
+@onready var portrait_box: ThresholdPortraitBox = $Panel/PortraitBox
 @onready var portrait_icon: TextureRect = $Panel/PortraitBox/Icon
 @onready var name_label: Label = $Panel/DialogueBox/NameLabel
 @onready var problem_label: TypewriterLabel = $Panel/DialogueBox/ProblemLabel
@@ -40,6 +40,7 @@ func _ready() -> void:
 func show_visitor(visitor: Visitor, aside: String = "") -> void:
 	var tex := visitor.portrait_door
 	portrait_icon.visible = tex != null
+	portrait_box.set_silhouette(tex == null)
 	if tex != null:
 		portrait_icon.texture = tex
 		_fit_portrait(visitor, tex)

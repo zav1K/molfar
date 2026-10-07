@@ -54,6 +54,8 @@ signal clicked
 
 @onready var icon: TextureRect = $Icon
 
+var _silhouette: bool = false
+
 func _ready() -> void:
 	clip_contents = true
 	mouse_filter = Control.MOUSE_FILTER_STOP
@@ -61,7 +63,14 @@ func _ready() -> void:
 
 func show_visitor(visitor: Visitor) -> void:
 	var tex := visitor.get_waiting_portrait()
-	visible = tex != null
+	# Shown either way. A visitor with no portrait used to be drawn as
+	# nothing, and since getting on with them means clicking the figure
+	# standing by the door, nothing was also nothing to click — see
+	# VisitorSilhouette.
+	visible = true
+	icon.visible = tex != null
+	_silhouette = tex == null
+	queue_redraw()
 	if tex == null:
 		return
 	icon.texture = tex
@@ -98,6 +107,10 @@ func show_visitor(visitor: Visitor) -> void:
 	var top := maxf(0.0, size.y + below_edge - content_height)
 	icon.position = Vector2(side_margin, top) \
 		- Vector2(rect.position.x * tex_size.x, rect.position.y * tex_size.y) * content_scale
+
+func _draw() -> void:
+	if _silhouette:
+		VisitorSilhouette.draw_into(self, size)
 
 func hide_visitor() -> void:
 	visible = false
