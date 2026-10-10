@@ -45,37 +45,53 @@
 **Промт (референс для вирізання, на чорному):**
 
 ```
-Full-body view from directly behind of an elderly Carpathian Hutsul
-mountain healer, about seventy years old, standing still. Long
-iron-grey hair falling to his collar from beneath a dark worn felt hat
-with a narrow brim. He wears a knee-length dark brown wool overcoat
-with faded red and ochre woven trim along the hem and cuffs, over a
-coarse undyed linen shirt showing at the collar. A wide leather belt
-with tarnished brass studs. A leather shoulder bag on a long strap
-rests at his right hip. A long-handled Hutsul axe-staff with a small
-brass-inlaid head is slung diagonally across his back on a leather
-thong, its head rising above his left shoulder. Heavy worn leather
+Full-body view from directly behind of a very old, frail Carpathian
+Hutsul mountain healer, about eighty years old.
+
+His posture carries his whole age, because his face will never be seen.
+His upper back is strongly curved forward into a pronounced hunch. His
+shoulders are rounded and pulled in, narrow and bony, and his head sits
+low between them with the neck craning forward. His whole weight rests
+on his right leg; the left knee is bent and the left heel is lifted
+clear off the ground. One shoulder hangs visibly lower than the other.
+He is thin, and the coat is plainly too big for him — it hangs loose and
+empty off his frame rather than fitting.
+
+Long, unkempt, straggling white hair hangs past his collar from beneath
+a battered dark felt hat, its brim soft and drooping unevenly. He wears
+a knee-length dark brown wool overcoat, old and sun-faded, the nap worn
+bald at the shoulders, one elbow crudely patched, the hem frayed and
+stained with dried mud. Faded red and ochre woven trim runs along the
+hem and cuffs. A wide leather belt with tarnished brass studs. A
+battered leather shoulder bag on a long strap at his right hip. Several
+small bundles of dried herbs are tied to his belt and hang against his
+hip.
+
+Slung diagonally across his back, clearly visible, a long wooden
+axe-staff: its dark shaft runs from above his left shoulder down to his
+right hip, and its small flat metal axe head stands out plainly against
+the coat above the left shoulder. Heavy, cracked, mud-caked leather
 boots.
 
-Both arms hang down and slightly forward, his hands brought together
-in front of his stomach and completely concealed behind his torso from
-this rear view. No hands, no fingers, no wrists are visible anywhere in
-the image. The overcoat's long sleeves fall past his knuckles. His
-elbows read only as soft folds at his sides.
+Both arms hang down and slightly forward, his hands brought together in
+front of his stomach and completely concealed behind his torso from this
+rear view. No hands, no fingers, no wrists are visible anywhere in the
+image. The overcoat's long sleeves fall past his knuckles. His elbows
+read only as soft folds at his sides.
 
-Slightly stooped, weight settled on one leg, the stance of a man who
-has stood on slopes his whole life. Seen strictly from behind — his
-face is not visible at all. Detailed digital painting, the same tight
-painterly rendering as the other character portraits, muted earth
-palette of browns and ochres, soft even light with no hard shadows.
-Plain pure black background, nothing else in the frame. Full figure
-from hat to boots, centred, vertical composition.
+Seen strictly from behind — his face is not visible at all. Detailed
+digital painting, the same tight painterly rendering as the other
+character portraits, muted earth palette of browns and ochres, soft even
+light with no hard shadows. Plain flat background, nothing else in the
+frame. Full figure from hat to boots, centred, vertical composition.
 ```
 
 **Негативне:** `hands, fingers, visible hands, hand holding object,
-arms outstretched, face, facial features, looking over shoulder,
-profile view, three-quarter view, turning head, photograph, 3d render,
-text, watermark, modern clothing`
+arms outstretched, straight back, upright posture, military stance,
+symmetrical stance, feet together, broad shoulders, young man,
+middle-aged, clean new clothing, tidy, face, facial features, looking
+over shoulder, profile view, three-quarter view, turning head,
+photograph, 3d render, text, watermark, modern clothing`
 
 **Чому руки заховані.** Генератор майже завжди псує кисті, а тут їх
 можна прибрати чесно, не вигадуючи пози: зі спини складені перед собою
@@ -98,8 +114,24 @@ text, watermark, modern clothing`
 - **Сердак** із тканою крайкою по подолу — те, що в'яже його з рештою
   села, бо червоно-вохриста ткана смуга вже є в портретах лісника й
   вівчаря.
-- **Згорблений, вага на одну ногу** — вік має читатися з силуету, бо
-  обличчя нема.
+- **Згорблений, вага на одну ногу, п'ята відірвана від землі** — вік
+  має читатися з силуету, бо обличчя нема. Перша спроба провалилася
+  саме тут: на `slightly stooped` генератор не зважає взагалі й ставить
+  симетричну фігуру з рівними плечима, а це постава сорокарічного. Тому
+  тепер поза описана окремим абзацом, із конкретикою — вигин спини,
+  висота плечей, зігнуте коліно, завелике пальто на худих плечах.
+- **Витертий, латаний, у болоті** — інакше виходить заможний селянин у
+  добрій одежі, а не чоловік, до якого піднімаються в гору. Пучки
+  сухого зілля на поясі роблять найбільше: їх не носить більше ніхто.
+
+### Якщо бартка знову зникне
+
+Перша спроба її просто викинула, хоч вона й була в промті. Тепер опис
+розгорнутий — куди йде держак, де головка, на тлі чого вона видна.
+Якщо генератор усе одно її не малює, це єдина річ, за яку варто
+перегенерувати ще кілька разів: без неї силует не відрізняється від
+будь-якого діда в сердаку, а відрізнятися він мусить із першого
+погляду.
 
 ---
 
