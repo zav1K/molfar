@@ -52,10 +52,19 @@ with a narrow brim. He wears a knee-length dark brown wool overcoat
 with faded red and ochre woven trim along the hem and cuffs, over a
 coarse undyed linen shirt showing at the collar. A wide leather belt
 with tarnished brass studs. A leather shoulder bag on a long strap
-rests at his right hip. In his left hand, held low, a long-handled
-Hutsul axe-staff with a small brass-inlaid head. Heavy worn leather
-boots. Slightly stooped, weight settled on one leg, the stance of a man
-who has stood on slopes his whole life. Seen strictly from behind — his
+rests at his right hip. A long-handled Hutsul axe-staff with a small
+brass-inlaid head is slung diagonally across his back on a leather
+thong, its head rising above his left shoulder. Heavy worn leather
+boots.
+
+Both arms hang down and slightly forward, his hands brought together
+in front of his stomach and completely concealed behind his torso from
+this rear view. No hands, no fingers, no wrists are visible anywhere in
+the image. The overcoat's long sleeves fall past his knuckles. His
+elbows read only as soft folds at his sides.
+
+Slightly stooped, weight settled on one leg, the stance of a man who
+has stood on slopes his whole life. Seen strictly from behind — his
 face is not visible at all. Detailed digital painting, the same tight
 painterly rendering as the other character portraits, muted earth
 palette of browns and ochres, soft even light with no hard shadows.
@@ -63,15 +72,27 @@ Plain pure black background, nothing else in the frame. Full figure
 from hat to boots, centred, vertical composition.
 ```
 
-**Негативне:** `face, facial features, looking over shoulder, profile
-view, three-quarter view, turning head, photograph, 3d render, text,
-watermark, modern clothing`
+**Негативне:** `hands, fingers, visible hands, hand holding object,
+arms outstretched, face, facial features, looking over shoulder,
+profile view, three-quarter view, turning head, photograph, 3d render,
+text, watermark, modern clothing`
+
+**Чому руки заховані.** Генератор майже завжди псує кисті, а тут їх
+можна прибрати чесно, не вигадуючи пози: зі спини складені перед собою
+руки затуляє власний тулуб. Тому бартка й переїхала за спину на
+ремінець — у руці вона вимагала б видимої кисті, а на спині лишається в
+силуеті задарма.
+
+Якщо генератор усе одно вилазить кистю з-за боку — додай у промт
+`his arms are not visible at all, only the coat's silhouette`. Останній
+засіб: кадрувати по пояс, бо для кадрів 1 і 3 цього вистачає.
 
 **Що тут не випадкове:**
 
 - **Бартка** (топірець на довгому держаку) — найвпізнаваніша річ
   мольфара, і єдина, що читається зі спини з першого погляду. Без неї
-  він просто старий у плащі.
+  він просто старий у плащі. За спиною на ремінці, а не в руці, —
+  щоб не доводилося малювати кисть.
 - **Тобівка** — шкіряна наплічна торба з латунню, гуцульська й доречна
   саме для нього.
 - **Сердак** із тканою крайкою по подолу — те, що в'яже його з рештою
