@@ -67,11 +67,11 @@ battered leather shoulder bag on a long strap at his right hip. Several
 small bundles of dried herbs are tied to his belt and hang against his
 hip.
 
-Slung diagonally across his back, clearly visible, a long wooden
-axe-staff: its dark shaft runs from above his left shoulder down to his
-right hip, and its small flat metal axe head stands out plainly against
-the coat above the left shoulder. Heavy, cracked, mud-caked leather
-boots.
+Across the upper back of the coat, spanning from shoulder to shoulder
+like a yoke, a broad woven band of a continuous zigzag wave motif in
+faded red and ochre thread — the same weaving as the trim at the hem,
+worked into the cloth itself, flat and soft, not an applied object.
+Heavy, cracked, mud-caked leather boots.
 
 Both arms hang down and slightly forward, his hands brought together in
 front of his stomach and completely concealed behind his torso from this
@@ -95,9 +95,9 @@ photograph, 3d render, text, watermark, modern clothing`
 
 **Чому руки заховані.** Генератор майже завжди псує кисті, а тут їх
 можна прибрати чесно, не вигадуючи пози: зі спини складені перед собою
-руки затуляє власний тулуб. Тому бартка й переїхала за спину на
-ремінець — у руці вона вимагала б видимої кисті, а на спині лишається в
-силуеті задарма.
+руки затуляє власний тулуб. Перевірено — працює, у першій спробі кистей
+не видно взагалі. Побічний наслідок: нічого, що тримають у руці, він
+нести не може — ще одна причина, чому знак переїхав на спину сердака.
 
 Якщо генератор усе одно вилазить кистю з-за боку — додай у промт
 `his arms are not visible at all, only the coat's silhouette`. Останній
@@ -105,10 +105,29 @@ photograph, 3d render, text, watermark, modern clothing`
 
 **Що тут не випадкове:**
 
-- **Бартка** (топірець на довгому держаку) — найвпізнаваніша річ
-  мольфара, і єдина, що читається зі спини з першого погляду. Без неї
-  він просто старий у плащі. За спиною на ремінці, а не в руці, —
-  щоб не доводилося малювати кисть.
+- **Кривулька на спині сердака** — замість бартки. Бартку з першої
+  спроби прибрали: довга діагональ через м'яко написану фігуру читалася
+  як приклеєний реквізит. Але щось мусить відрізняти його силует від
+  будь-якого селянина, і спина — найбільша видима площина в кадрі зі
+  спини, тож знак іде туди.
+
+  Кривулька — справжній гуцульський оберіг, яким крили сволок і
+  одвірки, **щоб лихе не переступило поріг** (`data/sigils/zigzag_ward.tres`).
+  Розділ називається «Поріг», і цей знак носить на спині чоловік, який
+  щоночі вирішує, кого пускати. Це той самий знак, який гравець ріже
+  ножем у грі, — а в повній версії його впізнає спадкоємець.
+
+  Вона вткана в полотно, а не причеплена, тож із силуету нічого не
+  стирчить — саме те, чим не влаштувала бартка.
+
+  **Якщо зі спини він усе одно читається як звичайний селянин**, є
+  сильніший варіант: не смуга через плечі, а **сонячна спіраль між
+  лопатками** (`data/sigils/spiral_ward.tres`) — помітніша з першого
+  погляду, але ризикує виглядати як нашивка. Починав би зі смуги.
+  ```
+  ...and between his shoulder blades a single large woven spiral motif
+  in faded red and ochre thread, worked into the cloth of the coat.
+  ```
 - **Тобівка** — шкіряна наплічна торба з латунню, гуцульська й доречна
   саме для нього.
 - **Сердак** із тканою крайкою по подолу — те, що в'яже його з рештою
@@ -124,14 +143,11 @@ photograph, 3d render, text, watermark, modern clothing`
   добрій одежі, а не чоловік, до якого піднімаються в гору. Пучки
   сухого зілля на поясі роблять найбільше: їх не носить більше ніхто.
 
-### Якщо бартка знову зникне
+### Що в першій спробі вийшло добре
 
-Перша спроба її просто викинула, хоч вона й була в промті. Тепер опис
-розгорнутий — куди йде держак, де головка, на тлі чого вона видна.
-Якщо генератор усе одно її не малює, це єдина річ, за яку варто
-перегенерувати ще кілька разів: без неї силует не відрізняється від
-будь-якого діда в сердаку, а відрізнятися він мусить із першого
-погляду.
+Руки. Їх не видно взагалі, жодного покрученого пальця — трюк із
+«складені перед собою, затулені тулубом» працює, і цю частину промта
+чіпати не треба.
 
 ---
 
