@@ -5,23 +5,21 @@
 
 ---
 
-## Спершу — одне рішення про стиль
+## Про стиль
 
-У проєкті зараз два різні стилі, і досі вони не зустрічалися в одному
-кадрі:
+Усе в грі мальоване — і персонажі, і фони. Різниця між ними тільки в
+щільності письма: фігури написані тугіше й детальніше
+(`mavka.png`, `forest_warden_1.png`), пейзаж — вільнішим мазком із
+видимою фактурою (`menu_backdrop_day.png`).
 
-| | Стиль | Приклад |
-|---|---|---|
-| Персонажі | майже фотореалістичні фігури на чорному | `forest_warden_1.png` |
-| Екстер'єр | олійний живопис, сепія з оливковим | `menu_backdrop_day.png` |
+Це не конфлікт, і перевіряти не треба — портрети вже стоять на
+мальованому інтер'єрі хати й тримаються там добре.
 
-У кат-сцені вони зустрінуться. Фотореалістична фігура на мальованому
-пейзажі виглядає наклеєною — тому **обидва арти нижче в олійному
-стилі**, під уже наявний фон меню.
+Тому мольфар пишеться **як решта персонажів**, а хата — **як фон меню**.
+Нижче в кожному промті письмо задане відповідно; не плутай їх місцями.
 
-Побічний зиск: густий мазок пробачає генераторові відео куди більше, ніж
-фотореалізм. На живописі артефакти руху майже не читаються, на
-фотореалістичній тканині — одразу.
+Для генератора відео це ще й зручно: мазок пробачає артефакти руху
+куди краще, ніж фотографія, — на пейзажі їх майже не видно.
 
 ---
 
@@ -35,6 +33,14 @@
 
 Тому зі спини він має бути **завжди**, у всіх кадрах. Жодного профілю,
 жодного повороту голови через плече.
+
+**Його не обов'язково вклеювати у відео.** Оскільки він вирізка на
+чорному, як усі персонажі, рушій може покласти його шаром поверх
+готового ролика з хатою — із ледь помітним `SWAY`, наче вітер у полі
+сердака. Це дає дві переваги: не треба генерувати «мольфар + хата»
+одним роликом і сподіватися, що він вийде тим самим чоловіком, і один
+його арт обслуговує скільки завгодно кадрів. Генеруй фігуру окремо,
+краєвиди окремо.
 
 **Промт (референс для вирізання, на чорному):**
 
@@ -50,15 +56,15 @@ rests at his right hip. In his left hand, held low, a long-handled
 Hutsul axe-staff with a small brass-inlaid head. Heavy worn leather
 boots. Slightly stooped, weight settled on one leg, the stance of a man
 who has stood on slopes his whole life. Seen strictly from behind — his
-face is not visible at all. Painted in thick oil brushwork, visible
-brush texture, muted sepia and olive palette, warm desaturated earth
-tones, soft diffused light. Plain pure black background, nothing else
-in the frame. Full figure from hat to boots, centred, vertical
-composition.
+face is not visible at all. Detailed digital painting, the same tight
+painterly rendering as the other character portraits, muted earth
+palette of browns and ochres, soft even light with no hard shadows.
+Plain pure black background, nothing else in the frame. Full figure
+from hat to boots, centred, vertical composition.
 ```
 
 **Негативне:** `face, facial features, looking over shoulder, profile
-view, three-quarter view, turning head, photorealistic skin, text,
+view, three-quarter view, turning head, photograph, 3d render, text,
 watermark, modern clothing`
 
 **Що тут не випадкове:**
