@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/mavka.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_refuse"]
+script = ExtResource("3")
+label = "Не сьогодні."
+response = "\"Не сьогодні,\" — повторює вона, ніби пробує слово на смак. \"Усі так кажуть. І всі колись кажуть інакше.\"\n\nВона йде без образи, і вода в яру співає до ранку."
+satisfies = true
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_silent"]
+script = ExtResource("3")
+label = "Промовчати."
+response = "Вона чекає рівно стільки, скільки чекають від живого, і не діждавшись, сміється — тихо й не зловісно.\n\n\"Мовчиш. Значить, думав про це.\" І зникає сама."
+satisfies = true
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_remember"]
+script = ExtResource("3")
+label = "Я пам'ятаю, як тебе ховали."
+response = "Вона перестає всміхатися. Уперше за ніч вона схожа не на воду, а на дівчину, яку поховали без імені на табличці, бо не було кому його написати.\n\n\"Тоді ти пам'ятаєш і те, що ховали за цвинтарем.\" Довга пауза. \"Добре. Хоч хтось.\"\n\nВона йде, не кличучи більше. Яр цієї ночі мовчить."
+satisfies = true
+sets_flag = &"named_the_mavka"
+path_shift = 1
+
+[resource]
+script = ExtResource("1")
+display_name = "Мавка"
+problem_text = "\"Мольфаре... чуєш, як вода в яру співає? Приходь танцювати, поки місяць високо.\"\n\nВона чекає відповіді й не кліпає."
+true_threat = 2
+satisfied_text = "Вона схиляє голову й зникає."
+unhelped_text = "Вона зникає, так і не дочекавшись відповіді."
+night_visitor = true
+required_flag = &"__chapter1_scripted_only__"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.314410, 0.066406, 0.331878, 0.888672)
+replies = Array[Resource]([SubResource("Reply_refuse"), SubResource("Reply_silent"), SubResource("Reply_remember")])

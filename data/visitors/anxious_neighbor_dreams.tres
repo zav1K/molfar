@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/anxious_neighbor_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Паранька з-за потоку"
+problem_text = "\"Сню дивне відтоді, як чоловік поїхав — ніби хтось стукає у вікно, а нікого нема. Прокидаюсь, а серце калатає. Чи є якесь зілля на міцніший сон, без снів тих?\""
+true_threat = 0
+desired_result_id = &"sleep_remedy"
+satisfied_text = "\"Дякую, мольфаре. Може, тепер хоч сни лишать мене у спокої.\""
+unhelped_text = "\"Не те... і далі сню те саме.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.226841, 0.055775, 0.569477, 0.879351)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Яйця, сир, вовняна пряжа"
+recurring_group = &"anxious_neighbor"

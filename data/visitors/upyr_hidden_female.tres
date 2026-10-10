@@ -1,0 +1,45 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_hidden_female_1.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_teach"]
+script = ExtResource("3")
+label = "Дим. Сідай там, де дим, і три очі, як усі."
+response = "Вона не розуміє, і це видно.\n\n\"У хаті взимку дим стоїть до пояса. Усі сидять і труть очі, і всі плачуть, і ніхто того не помічає, бо всі.\" Ти даєш їй час. \"Тебе викаже не тінь і не поріг. Тебе викаже, що ти одна сидиш у диму з сухими очима.\"\n\nВона мовчить довго.\n\n\"Отже, треба вдавати не людину. Треба вдавати, що мені незручно.\" — \"Людина — це той, кому незручно.\""
+satisfies = true
+sets_flag = &"helped_hidden_upyr"
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_mislead"]
+script = ExtResource("3")
+label = "Іди до церкви. Ставай попереду, бери хліб із рук."
+response = "Вона дивиться на тебе довше, ніж дивилася досі.\n\n\"Я боялася, що ти скажеш ховатися.\" Голос у неї стає молодший. \"А ти кажеш — виходь на люди.\"\n\nВона йде швидше, ніж прийшла, і ти лишаєшся при своїх дверях із тим, що зробив. Хто перейшов той поріг, того більше не питають. Їй туди не перейти."
+satisfies = true
+sets_flag = &"misled_hidden_upyr"
+path_shift = -2
+
+[sub_resource type="Resource" id="Reply_refuse"]
+script = ExtResource("3")
+label = "Я людей бережу від таких, як ти."
+response = "\"Знаю.\" Вона не сперечається — вона, здається, цього й чекала. \"Тоді я й далі буду тінню. Аби тільки не помітили раніше за тебе.\""
+satisfies = false
+path_shift = 0
+
+[resource]
+script = ExtResource("1")
+display_name = "Причаєна упириця"
+problem_text = "\"Мольфаре... люди в селі надто пильні очі мають. Навчи мене, як здаватися однією з них, поки мене не спалили на вигоні.\"\n\nВона не просить ні відвару, ні знаку. Вона просить слова."
+true_threat = 2
+satisfied_text = "\"...може, тепер вдасться просто жити.\""
+unhelped_text = "\"Тоді я й далі буду тінню. Аби тільки не помітили раніше за тебе.\""
+night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.231332, 0.060547, 0.578331, 0.865234)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Виглядає як звичайний дарунок..."
+payment_is_deceptive = true
+knocked_sets_flag = &"met_hidden_upyr"
+replies = Array[Resource]([SubResource("Reply_teach"), SubResource("Reply_mislead"), SubResource("Reply_refuse")])

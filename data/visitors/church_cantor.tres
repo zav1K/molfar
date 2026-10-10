@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/church_cantor.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Тимко, дяк"
+problem_text = "\"Я на хвильку, і я тут не був, добре?\" Він озирається на стежку. \"Горло зірвав — у неділю співати, а я й слова не витягну. Отець казав: хто горлом не вийшов, той і душею недбалий. Дай чогось, бо він з мене шкуру здере.\""
+true_threat = 0
+desired_result_id = &"cold_remedy"
+satisfied_text = "\"Дай Боже здоров'я.\" Він ховає пляшечку глибоко за пазуху й поправляє одежу, щоб не було видно горбика."
+unhelped_text = "\"Нема? Ну... буду шепотом співати, а він хай думає, що то побожність.\" Він іде, похиливши голову."
+payment_type = 1
+payment_item_id = &"groshi"
+payment_amount = 1
+payment_flavor_text = "Дрібна монета, видно що своя, не церковна"
+recurring_group = &"church_cantor"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.262009, 0.062500, 0.465793, 0.896484)

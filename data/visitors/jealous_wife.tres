@@ -1,0 +1,25 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/jealous_wife_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Горпина"
+problem_text = "\"Приворожила його якась... я знаю, відчуваю. Він дивиться крізь мене, мовчить вечорами, тягнеться геть із хати, щойно смеркає. Зніми з нього ті чари, або... чи знаєш — може, просто поверни мені те, що моє. Я вже сама не знаю, що страшніше: що хтось його зачарував, чи що він просто розлюбив.\""
+true_threat = 0
+desired_result_id = &"love_potion"
+alt_desired_result_id = &"anti_curse_remedy"
+satisfied_text = "\"Дякую, мольфаре. Тепер я знаю правду.\""
+unhelped_text = "\"Ти мені не допоміг. Доведеться самій щось робити.\""
+choice_prompt = "Що питаєш?"
+choice_a_label = "А чи не ти сама це придумала?"
+choice_a_response = "\"Може, й я. Легше вірити у чари, ніж у те, що розлюбив сам, без жодних чарів.\""
+choice_b_label = "Промовчати."
+choice_b_response = "Вона забирає зілля мовчки, вдячно киваючи."
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Консерви, тканини"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.244868, 0.073242, 0.511730, 0.853516)
+knocked_sets_flag = &"met_jealous_wife"

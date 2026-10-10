@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_male_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Упир"
+problem_text = "\"Мольфаре... не питай сьогодні нічого. Просто... зачини двері міцніше цієї ночі.\""
+true_threat = 2
+satisfied_text = "Він зникає, нічого не взявши й не попросивши."
+unhelped_text = "Він зникає, нічого не взявши й не попросивши."
+night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.232796, 0.052734, 0.527086, 0.873047)
+knocked_sets_flag = &"strange_night_before_death"
+
+required_flag = &"__chapter1_scripted_only__"
+recurring_group = &"upyr_brutal_male"

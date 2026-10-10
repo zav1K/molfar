@@ -1,0 +1,34 @@
+class_name InteractionZone
+extends Area2D
+## A clickable hotspot in the hut (cauldron, garden window, shelves, entrance, ...).
+## Placeholder-friendly: visuals are just a ColorRect + Label until final art lands.
+
+signal activated(zone: InteractionZone)
+signal hover_started(zone: InteractionZone)
+signal hover_ended(zone: InteractionZone)
+
+@export var zone_id: StringName
+@export var zone_label: String
+
+func _ready() -> void:
+	input_pickable = true
+	input_event.connect(_on_input_event)
+	mouse_entered.connect(_on_mouse_entered)
+	mouse_exited.connect(_on_mouse_exited)
+
+## Area2D has no mouse_default_cursor_shape (that's Control-only), so the
+## pointing-hand cursor every point-and-click uses to say "this is
+## clickable" has to be set by hand on enter/exit. Second affordance
+## alongside the hover outline — the cursor reacts even while the outline
+## is still fading in.
+func _on_mouse_entered() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_POINTING_HAND)
+	hover_started.emit(self)
+
+func _on_mouse_exited() -> void:
+	Input.set_default_cursor_shape(Input.CURSOR_ARROW)
+	hover_ended.emit(self)
+
+func _on_input_event(_viewport: Node, event: InputEvent, _shape_idx: int) -> void:
+	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
+		activated.emit(self)

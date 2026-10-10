@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/nichnytsia.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_deny"]
+script = ExtResource("3")
+label = "Я не боюся."
+response = "\"Ще й як боїшся. Просто вмієш це ховати.\"\n\nВона дивиться довше, ніж годиться, і те безсоння, що лежало по кутках, помітно не меншає."
+satisfies = true
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_silent"]
+script = ExtResource("3")
+label = "Промовчати."
+response = "Вона схиляє голову, ніби оцінює, і йде сама, нічого не сказавши більше. Це чомусь гірше, ніж якби сказала."
+satisfies = true
+path_shift = 0
+
+[sub_resource type="Resource" id="Reply_admit"]
+script = ExtResource("3")
+label = "Боюся. І що з того?"
+response = "Вона спиняється — цього вона не чекала.\n\n\"Та нічого.\" Їй незатишно вперше за всю ніч. \"Мені з тих, хто зізнається, нема чого брати. Я ж не страхом годуюся. Я годуюся тим, що його ховають.\"\n\nВона йде раніше, ніж збиралася. В хаті стає тихше, ніж було до неї."
+satisfies = true
+sets_flag = &"named_own_fear"
+path_shift = 1
+
+[resource]
+script = ExtResource("1")
+display_name = "Нічниця"
+problem_text = "\"Тут стільки безсоння назбиралось, мольфаре... аж мені затишно. Чим більше боїтесь — тим довше лишуся.\"\n\nВона чекає відповіді, не кліпаючи."
+true_threat = 2
+satisfied_text = "Вона зникає, не сказавши більше нічого."
+unhelped_text = "Вона зникає, так і не дочекавшись відповіді."
+night_visitor = true
+required_flag = &"__chapter1_scripted_only__"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.086675, 0.097310, 0.800708, 0.839794)
+replies = Array[Resource]([SubResource("Reply_deny"), SubResource("Reply_silent"), SubResource("Reply_admit")])

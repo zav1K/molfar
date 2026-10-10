@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/forest_warden_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Микола, лісник"
+problem_text = "\"Сьогодні бачив слід на стежці, де вчора нічого не було. Ніби хтось ходив туди й назад, туди й назад... і завжди в одне місце. Я вже й сам не знаю, мариться мені, чи справді щось не так.\""
+desired_result_id = &"calming_remedy"
+satisfied_text = "\"Дякую. Може, це й справді просто нерви.\""
+unhelped_text = "\"Ну, піду тоді так. Може, само минеться.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.203812, 0.056641, 0.636364, 0.861328)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Дикі гриби, мед, рідкісні лісові трави"
+
+required_flag = &"__chapter1_scripted_only__"

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="Ingredient" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/ingredient.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/herb_bundle_nettle.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+id = &"nettle"
+display_name = "Кропива"
+description = "Пекуча кропива — здавна проганяє нечисть, з неї ж і найміцніші весняні відвари."
+source = 0
+rarity = 2
+season_start_day = 1
+season_end_day = 21
+festival_id = &""
+placeholder_color = Color(0.3, 0.45, 0.2, 1)
+bundle_icon = ExtResource("2")
+ward_threat = 2
+ward_hint_text = "листя кропиви наче саме тягнеться до дверей..."

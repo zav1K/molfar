@@ -1,0 +1,36 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=6 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/lisovyk.png" id="2"]
+[ext_resource type="Script" path="res://scripts/resources/visitor_reply.gd" id="3"]
+
+[sub_resource type="Resource" id="Reply_allow"]
+script = ExtResource("3")
+label = "Відведи їх."
+response = "\"Добре.\" Він відходить од вікна, і мох сиплеться з бороди на підвіконня.\n\n\"Вони блукатимуть, замерзнуть і злякаються, і скажуть, що то нечисть їх водила. І будуть праві.\"\n\nЦілу ніч із лісу чути, як хтось кличе когось і не знаходить. Удосвіта вони вийдуть самі — голодні, злі й упевнені в тому, в чому доти тільки підозрювали."
+satisfies = true
+sets_flag = &"let_lisovyk_mislead"
+path_shift = -1
+
+[sub_resource type="Resource" id="Reply_refuse"]
+script = ExtResource("3")
+label = "Хай ідуть. Ліс їх і так навчить."
+response = "\"Отже, ти досі з ними.\" Він каже це без докору, скоріше з подивом — так дивляться на річку, що чомусь тече вгору.\n\n\"Ну хай. Побачимо, чим це скінчиться для тебе.\" І він випростується в темряву, якої на тому місці більше, ніж мало би бути."
+satisfies = false
+sets_flag = &"refused_lisovyk_bargain"
+path_shift = 1
+
+[resource]
+script = ExtResource("1")
+display_name = "Лісовик"
+problem_text = "Цієї ночі він не згинається під дашок — просто дивиться у вікно, і вікно нижче за його пояс.\n\n\"Люди ходять по моєму лісі з ломаками й кличуть мене на ім'я. Імені вони не знають, тому кличуть усяке.\" Пауза така довга, що ти встигаєш подумати, що він пішов. \"Я можу відвести їх од стежок. Усіх. Вони блукатимуть до ранку й вернуться додому самі. Скажи слово — і я відведу.\""
+true_threat = 2
+night_visitor = true
+required_flag = &"met_lisovyk"
+knocked_sets_flag = &"lisovyk_offered_to_mislead"
+satisfied_text = "Він відходить од вікна."
+unhelped_text = "\"Як хочеш.\" Мох сиплеться йому з бороди на підвіконня."
+recurring_group = &"lisovyk"
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.211063, 0.036133, 0.529840, 0.902344)
+replies = Array[Resource]([SubResource("Reply_allow"), SubResource("Reply_refuse")])

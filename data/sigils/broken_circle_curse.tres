@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="Sigil" load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/sigil.gd" id="1"]
+
+[resource]
+script = ExtResource("1")
+id = &"broken_circle_curse"
+display_name = "Зламане коло"
+description = "Розірване коло — знак, що не тримає, а випускає. Ним не захищають, а зичать шкоди; вигаданий для гри темний відповідник оберігальних кіл, не задокументований фольклорний символ."
+kind = 1
+path_points = PackedVector2Array(0.803, 0.675, 0.701, 0.787, 0.561, 0.845, 0.409, 0.838, 0.275, 0.768, 0.183, 0.648, 0.15, 0.5, 0.183, 0.352, 0.275, 0.232, 0.409, 0.162, 0.561, 0.155, 0.701, 0.213, 0.803, 0.325)

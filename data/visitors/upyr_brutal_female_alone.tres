@@ -1,0 +1,20 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/upyr_brutal_female_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Голодна упириця"
+problem_text = "\"Чоловіче добрий, ніч холодна, а я сама в дорозі. Пусти хоч на часинку — обіцяю, тихою буду, як мишка.\""
+true_threat = 2
+satisfied_text = "\"Дякую. Рідко хто жінку саму пускає, не питаючи зайвого.\""
+unhelped_text = "\"Ну що ж. Сама собі раду дам, як завжди давала.\""
+night_visitor = true
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.269002, 0.061709, 0.499406, 0.876187)
+refusal_loot_chance = 0.35
+refusal_loot_item_id = &"looted_goods"
+recurring_group = &"upyr_brutal_female"
+invited_sets_flag = &"knows_vurdalak_mimicry"
+invited_flavor_text = "Перед тим як піти, вона каже тихо: \"Як почуєш під дверима знайомого — слухай, чи він дихає між словами. Ті, що вже обернулися, дихати забувають.\""

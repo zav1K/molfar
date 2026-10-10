@@ -1,0 +1,22 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/coughing_child_mother.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Василина, молода мати"
+problem_text = "\"Дитина вже здорова, дякувати Богу і тобі, мольфаре. А от я сама вночі заснути не можу — все чутки ці... Може, і мені щось даси, для спокою?\""
+true_threat = 0
+desired_result_id = &"sleep_remedy"
+alt_desired_result_id = &"calming_remedy"
+satisfied_text = "\"Дякую. Хоч сама засну нарешті.\""
+unhelped_text = "\"Не те... і далі не сплю.\""
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.057416, 0, 0.861244, 0.992367)
+payment_type = 1
+payment_item_id = &"mat_goods"
+payment_flavor_text = "Трохи сиру, на подяку"
+required_flag = &"child_cough_treated"
+knocked_sets_flag = &"anxious_mother_returned"
+recurring_group = &"coughing_child_mother"

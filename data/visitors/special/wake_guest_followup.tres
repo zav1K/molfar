@@ -1,0 +1,17 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/wake_guest_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Ничипір із сусіднього села"
+problem_text = "\"Мольфаре, вже легше, як ти казав. Та люди в селі знову шепочуться — про цвинтар, про те, що там хтось чужий лежить. Може, я таки накликав щось тоді, навпростець ідучи...\""
+true_threat = 0
+satisfied_text = "Він хреститься й іде, озираючись частіше, ніж звик."
+unhelped_text = "Він хреститься й іде, озираючись частіше, ніж звик."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.253294, 0.077148, 0.527086, 0.833984)
+required_flag = &"wake_guest_treated"
+knocked_sets_flag = &"wake_guest_returned"
+recurring_group = &"wake_guest"

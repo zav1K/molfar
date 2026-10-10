@@ -1,0 +1,21 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/found_doll_1.png" id="2"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Матвій"
+problem_text = "\"Знайшов оце на подвір'ї... лялечку якусь, вузлик. Боюсь навіть довше в руках тримати — ще й шнурочком перев'язана, ніби навмисне. Забери, будь ласка, не хочу, щоб воно в хаті лежало.\""
+true_threat = 0
+satisfied_text = "\"Дякую, що забрав це від мене.\""
+unhelped_text = "\"То я... і далі маю це тримати?\""
+offers_item_id = &"straw_doll"
+choice_prompt = "Що питаєш?"
+choice_a_label = "Хто міг це лишити?"
+choice_a_response = "\"Не знаю... чи ворог якийсь, чи просто діти бавились. Не хочу навіть думати.\""
+choice_b_label = "Промовчати."
+choice_b_response = "Він лише киває, явно радий, що вже позбувся."
+portrait_door = ExtResource("2")
+waiting_portrait_content_rect = Rect2(0.085044, 0.068359, 0.826979, 0.821289)
+knocked_sets_flag = &"met_found_doll"

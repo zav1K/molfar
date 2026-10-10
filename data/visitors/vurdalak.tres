@@ -1,0 +1,26 @@
+[gd_resource type="Resource" script_class="Visitor" load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/visitor.gd" id="1"]
+[ext_resource type="Texture2D" path="res://assets/hut/fake_semen.png" id="2"]
+[ext_resource type="Texture2D" path="res://assets/hut/vurdalak_female.png" id="3"]
+
+[resource]
+script = ExtResource("1")
+display_name = "Голос за дверима"
+problem_text = "\"Онуфрію. Онуфрію, відчини, це я.\"\n\nГолос Семена — того самого вівчаря, що приходив до тебе з вовною. Тільки Семен казав \"мольфаре\", а не на ім'я, і ніколи не приходив поночі.\n\n\"Я ногу підвернув, я до села не дійду. Чуєш? Відчини.\"\n\nМіж словами воно не дихає. Жодного разу."
+true_threat = 2
+night_visitor = true
+required_flag = &"lisnyk_decided_to_tell"
+knocked_sets_flag = &"met_vurdalak"
+satisfied_text = "Те, що заходить, уже не вдає Семена. Воно не поспішає і не дивиться на тебе — воно обходить хату, бере, що бере, і виходить над ранок через ті самі двері.\n\nДо світанку ти стоїш у кутку й не рухаєшся."
+unhelped_text = "\"Онуфрію. Онуфрію. Онуфрію.\"\n\nВоно повторює це рівно, без змін у голосі, до самого світанку. Потім замовкає на півслові."
+invited_steals_count = 3
+invited_destroys_ward = true
+invited_shortens_next_day = 2
+refused_shortens_next_day = 1
+satisfied_sets_flag = &"let_vurdalak_in"
+satisfied_path_shift = -1
+portrait_door = ExtResource("2")
+portrait_waiting = ExtResource("3")
+door_portrait_content_rect = Rect2(0.183406, 0.046875, 0.636099, 0.917969)
+waiting_portrait_content_rect = Rect2(0.189229, 0.073242, 0.676856, 0.861328)
