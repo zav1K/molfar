@@ -122,10 +122,21 @@ func _process(delta: float) -> void:
 		_revealing = false
 		set_process(false)
 
+## Whether text is still printing. Read by anything that wants a click
+## to finish the line before it does anything else of its own — see
+## CutscenePlayer, where the alternative is a mistimed click skipping a
+## shot the player had not finished reading.
+func is_revealing() -> bool:
+	return _revealing
+
+## Jumps to the full text, as clicking the box does.
+func reveal_all() -> void:
+	label.visible_characters = -1
+	_revealing = false
+	set_process(false)
+	scroll_vertical = MAX_SCROLL
+
 func _gui_input(event: InputEvent) -> void:
 	if _revealing and event is InputEventMouseButton and event.pressed:
-		label.visible_characters = -1
-		_revealing = false
-		set_process(false)
-		scroll_vertical = MAX_SCROLL
+		reveal_all()
 		accept_event()

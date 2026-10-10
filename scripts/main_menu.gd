@@ -16,6 +16,8 @@ extends Control
 
 const HUT_SCENE := "res://scenes/Hut.tscn"
 const CHAPTER_END_SCENE := "res://scenes/ChapterEnd.tscn"
+const CUTSCENE_SCENE := "res://scenes/Cutscene.tscn"
+const INTRO_CUTSCENE := "res://data/cutscenes/intro.tres"
 
 @onready var continue_button: Button = $Panel/Buttons/Continue
 @onready var new_game_button: Button = $Panel/Buttons/NewGame
@@ -61,7 +63,12 @@ func _on_new_game_pressed() -> void:
 	# the scene change and would otherwise carry the last playthrough in.
 	SaveGame.pending_load = false
 	SaveGame.reset_for_new_game()
-	get_tree().change_scene_to_file(HUT_SCENE)
+	# Only a new game gets the opening — "Продовжити" must never make a
+	# returning player sit through it again. The cutscene's own next_scene
+	# carries on into the hut; fallback_scene covers the file being gone.
+	CutscenePlayer.pending_path = INTRO_CUTSCENE
+	CutscenePlayer.fallback_scene = HUT_SCENE
+	get_tree().change_scene_to_file(CUTSCENE_SCENE)
 
 func _on_quit_pressed() -> void:
 	get_tree().quit()

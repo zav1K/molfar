@@ -1,0 +1,39 @@
+[gd_resource type="Resource" script_class="Cutscene" load_steps=7 format=3]
+
+[ext_resource type="Script" path="res://scripts/resources/cutscene.gd" id="1"]
+[ext_resource type="Script" path="res://scripts/resources/cutscene_shot.gd" id="2"]
+
+[sub_resource type="Resource" id="Shot_valley"]
+script = ExtResource("2")
+caption = "Хату мою видно з долини, і це єдине, що про мене знають напевно."
+duration = 4.5
+fade_from_previous = 2.0
+
+[sub_resource type="Resource" id="Shot_village"]
+script = ExtResource("2")
+caption = "Сорок років вони піднімаються сюди по те, чого не скажуть у церкві. Сорок років удають, що йдуть по трави."
+duration = 5.5
+fade_from_previous = 1.2
+
+[sub_resource type="Resource" id="Shot_hut"]
+script = ExtResource("2")
+caption = "Я знаю всіх на ім'я. Знаю, хто з них чим хворіє, і хто з них бреше, коли каже чим."
+duration = 5.0
+fade_from_previous = 1.2
+
+[sub_resource type="Resource" id="Shot_night"]
+script = ExtResource("2")
+caption = "А після заходу сонця в мої двері стукає й те, що на ім'я не називають. Їм я теж колись відчиняв."
+duration = 5.5
+fade_from_previous = 1.2
+
+[sub_resource type="Resource" id="Shot_door"]
+script = ExtResource("2")
+caption = "Цього тижня стукати будуть частіше, ніж звикле."
+duration = 4.0
+fade_from_previous = 1.2
+
+[resource]
+script = ExtResource("1")
+shots = Array[Resource]([SubResource("Shot_valley"), SubResource("Shot_village"), SubResource("Shot_hut"), SubResource("Shot_night"), SubResource("Shot_door")])
+next_scene = "res://scenes/Hut.tscn"
